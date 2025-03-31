@@ -17,7 +17,9 @@ CREATE TABLE Funcionario (
     cidade VARCHAR(100),
     numero VARCHAR(10),
     bairro VARCHAR(100),
-    rua VARCHAR(150)
+    rua VARCHAR(150),
+    fk_supervisor_matricula VARCHAR(20),
+    FOREIGN KEY (fk_supervisor_matricula) REFERENCES Funcionario(matricula)
 );
 
 CREATE TABLE Emprega (
@@ -64,16 +66,16 @@ CREATE TABLE PessoaJuridica (
 CREATE TABLE Servico (
     id VARCHAR(20) PRIMARY KEY,
     data DATE NOT NULL,
-    max VARCHAR(20),
-    funcionario VARCHAR(20),
-    FOREIGN KEY (funcionario) REFERENCES Funcionario(matricula)
+    tipo VARCHAR(50),
+    fk_Funcionario_matricula VARCHAR(20),
+    FOREIGN KEY (fk_Funcionario_matricula) REFERENCES Funcionario(matricula)
 );
 
 CREATE TABLE VooPanoramico (
     fk_Servico_id VARCHAR(20) PRIMARY KEY,
-    fk_operadorDrone_Funcionario VARCHAR(20),
+    fk_OperadorDrone_matricula VARCHAR(20),
     FOREIGN KEY (fk_Servico_id) REFERENCES Servico(id),
-    FOREIGN KEY (fk_operadorDrone_Funcionario) REFERENCES OperadorDrone(fk_Funcionario_matricula)
+    FOREIGN KEY (fk_OperadorDrone_matricula) REFERENCES OperadorDrone(fk_Funcionario_matricula)
 );
 
 CREATE TABLE MapeamentoTradicional (
@@ -119,12 +121,11 @@ CREATE TABLE Possui (
     FOREIGN KEY (fk_Empresa_cnpj) REFERENCES Empresa(cnpj)
 );
 
-CREATE TABLE RelatorioServico(
-	fk_Servico_id VARCHAR (20),
-	area float,
-	data date,
-	observacoes VARCHAR(500),
-	PRIMARY KEY (fk_Servico_id),
-	FOREIGN KEY (fk_Servico_id) REFERENCES Servico(id)
-
+CREATE TABLE RelatorioServico (
+    fk_Servico_id VARCHAR(20),
+    area FLOAT,
+    data DATE,
+    observacoes VARCHAR(500),
+    PRIMARY KEY (fk_Servico_id),
+    FOREIGN KEY (fk_Servico_id) REFERENCES Servico(id)
 );
