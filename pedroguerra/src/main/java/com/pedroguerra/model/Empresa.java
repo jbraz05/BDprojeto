@@ -8,7 +8,6 @@ public class Empresa {
     private String bairro;
     private String cidade;
     private String rua;
-
     public String getCnpj() {
         return cnpj;
     }
