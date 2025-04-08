@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.*;
 
 public class EmpresaDAO {
-    private final String url = "jdbc:mysql://localhost:3306/Pedrog";
+    private final String url = "jdbc:mysql://localhost:3306/pedroguerra";
     private final String user = "root";
     private final String password = "Felipe2006$";
 
@@ -50,33 +50,5 @@ public class EmpresaDAO {
             e.printStackTrace();
         }
         return lista;
-    }
-
-    public boolean atualizar(Empresa empresa) {
-        String sql = "UPDATE Empresa SET nome=?, contato=?, numero=?, bairro=?, cidade=?, rua=? WHERE cnpj=?";
-        try (Connection conn = conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, empresa.getNome());
-            stmt.setString(2, empresa.getContato());
-            stmt.setString(3, empresa.getNumero());
-            stmt.setString(4, empresa.getBairro());
-            stmt.setString(5, empresa.getCidade());
-            stmt.setString(6, empresa.getRua());
-            stmt.setString(7, empresa.getCnpj());
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean deletar(String cnpj) {
-        String sql = "DELETE FROM Empresa WHERE cnpj=?";
-        try (Connection conn = conectar(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, cnpj);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }
