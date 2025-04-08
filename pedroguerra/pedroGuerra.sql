@@ -1,4 +1,4 @@
-create database Pedrog;
+create database pedroguerra;
 
 CREATE TABLE Empresa (
     cnpj VARCHAR(20) PRIMARY KEY,
