@@ -20,14 +20,4 @@ public class EmpresaController {
     public List<Empresa> listar() {
         return dao.listar();
     }
-
-    @PutMapping
-    public String atualizar(@RequestBody Empresa empresa) {
-        return dao.atualizar(empresa) ? "Atualizado com sucesso!" : "Erro ao atualizar.";
-    }
-
-    @DeleteMapping("/{cnpj}")
-    public String deletar(@PathVariable String cnpj) {
-        return dao.deletar(cnpj) ? "Deletado com sucesso!" : "Erro ao deletar.";
-    }
 }
