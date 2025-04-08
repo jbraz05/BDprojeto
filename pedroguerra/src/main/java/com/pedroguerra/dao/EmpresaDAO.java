@@ -1,4 +1,4 @@
-package main.java.com.pedroguerra.dao;
+package com.pedroguerra.dao;
 
 import com.pedroguerra.model.Empresa;
 import java.sql.*;

@@ -1,4 +1,5 @@
-package main.java.com.pedroguerra.model;
+package com.pedroguerra.model;
+
 import java.util.Date;
 
 public class Servico {

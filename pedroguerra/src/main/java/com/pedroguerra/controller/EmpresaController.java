@@ -1,4 +1,4 @@
-package main.java.com.pedroguerra.controller;
+package com.pedroguerra.controller;
 
 import com.pedroguerra.dao.EmpresaDAO;
 import com.pedroguerra.model.Empresa;

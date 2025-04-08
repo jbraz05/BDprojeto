@@ -1,4 +1,4 @@
-package main.java.com.pedroguerra.model;
+package com.pedroguerra.model;
 
 public class Pais {
     private String codigo;

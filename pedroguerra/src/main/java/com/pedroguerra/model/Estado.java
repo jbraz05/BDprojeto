@@ -1,4 +1,4 @@
-package main.java.com.pedroguerra.model;
+package com.pedroguerra.model;
 
 public class Estado {
     private String codigo; 
@@ -28,13 +28,5 @@ public class Estado {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getPaisCodigo() {
-        return paisCodigo;
-    }
-
-    public void setPaisCodigo(String paisCodigo) {
-        this.paisCodigo = paisCodigo;
     }
 }

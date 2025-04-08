@@ -1,0 +1,35 @@
+# Compilação e build
+/target/
+!/src/main/resources/static/
+/bin/
+/build/
+
+# Dependências
+/.mvn/
+/.mvn/wrapper/maven-wrapper.jar
+!/.mvn/wrapper/maven-wrapper.properties
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# IDEs
+/.classpath
+/.project
+/.settings/
+/.idea/
+/*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
