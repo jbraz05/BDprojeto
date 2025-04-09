@@ -1,17 +1,12 @@
 package com.pedroguerra.model;
 
-public class Cliente{
-
-    // lembrar de Adicionar cidade como atributo para cliente aqui e no banco de dado
+public class Cliente {
 
     private String cnpjCpf;
     private String nome;
     private String numero;
     private String bairro;
     private String rua;
-
-    public Cliente() {
-    }
 
     public Cliente(String cnpjCpf, String nome, String numero, String bairro, String rua) {
         this.cnpjCpf = cnpjCpf;
@@ -20,7 +15,7 @@ public class Cliente{
         this.bairro = bairro;
         this.rua = rua;
     }
-
+    
     public String getCnpjCpf() {
         return cnpjCpf;
     }

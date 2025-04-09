@@ -6,13 +6,15 @@ public class Servico {
     private String id;
     private Date data;
     private String tipo;
+    private String fkMatriculaFuncionario;
 
     public Servico() {}
 
-    public Servico(String id, Date data, String tipo) {
+    public Servico(String id, Date data, String tipo, String fkMatriculaFuncionario) {
         this.id = id;
         this.data = data;
         this.tipo = tipo;
+        this.fkMatriculaFuncionario = fkMatriculaFuncionario;
     }
 
     public String getId() {
@@ -37,5 +39,13 @@ public class Servico {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getfkMatriculaFuncionario() {
+        return fkMatriculaFuncionario;
+    }
+
+    public void setfkMatriculaFuncionario(String fkMatriculaFuncionario) {
+        this.fkMatriculaFuncionario = fkMatriculaFuncionario;
     }
 }
