@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Empresa</title>
+</head>
+<body>
+    <h1>Cadastro de Empresa</h1>
+
+    <form id="empresaForm">
+        <label>CNPJ:</label><br>
+        <input type="text" name="cnpj" required><br><br>
+
+        <label>Nome:</label><br>
+        <input type="text" name="nome" required><br><br>
+
+        <label>Contato:</label><br>
+        <input type="text" name="contato"><br><br>
+
+        <label>Rua:</label><br>
+        <input type="text" name="rua"><br><br>
+
+        <label>Número:</label><br>
+        <input type="text" name="numero"><br><br>
+
+        <label>Bairro:</label><br>
+        <input type="text" name="bairro"><br><br>
+
+        <label>Cidade:</label><br>
+        <input type="text" name="cidade"><br><br>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById("empresaForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const dados = {
+                cnpj: event.target.cnpj.value,
+                nome: event.target.nome.value,
+                contato: event.target.contato.value,
+                rua: event.target.rua.value,
+                numero: event.target.numero.value,
+                bairro: event.target.bairro.value,
+                cidade: event.target.cidade.value
+            };
+
+            fetch("/empresa/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(res => res.text())
+            .then(msg => {
+                document.getElementById("resultado").innerText = msg;
+            })
+            .catch(err => {
+                document.getElementById("resultado").innerText = "Erro ao enviar dados: " + err;
+            });
+        });
+    </script>
+</body>
+</html>
