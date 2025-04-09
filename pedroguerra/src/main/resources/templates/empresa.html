@@ -58,6 +58,7 @@
             .then(res => res.text())
             .then(msg => {
                 document.getElementById("resultado").innerText = msg;
+                event.target.reset();
             })
             .catch(err => {
                 document.getElementById("resultado").innerText = "Erro ao enviar dados: " + err;

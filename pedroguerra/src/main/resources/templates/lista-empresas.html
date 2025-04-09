@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Empresas Cadastradas</title>
+</head>
+<body>
+    <h1>Empresas Cadastradas</h1>
+
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>CNPJ</th>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="empresa : ${empresas}">
+                <td th:text="${empresa.cnpj}">CNPJ</td>
+                <td th:text="${empresa.nome}">Nome</td>
+                <td th:text="${empresa.contato}">Contato</td>
+                <td th:text="${empresa.rua}">Rua</td>
+                <td th:text="${empresa.numero}">Número</td>
+                <td th:text="${empresa.bairro}">Bairro</td>
+                <td th:text="${empresa.cidade}">Cidade</td>
+                <td>
+                    <form th:action="@{/empresa/remover}" method="post">
+                        <input type="hidden" name="cnpj" th:value="${empresa.cnpj}" />                    
+                        <button type="submit">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/" style="text-decoration: none;">Voltar ao menu</a>
+</body>
+</html>
