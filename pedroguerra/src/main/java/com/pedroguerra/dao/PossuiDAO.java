@@ -1,27 +1,20 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.Possui;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class PossuiDAO {
 
-    private List<Possui> registros = new ArrayList<>();
+    public void inserir(String servicoId, String codigoLocal, String cnpj) throws SQLException {
+        String sql = "INSERT INTO Possui (fk_Servico_id, fk_Localizacao_Atuacao_codigo, fk_Empresa_cnpj) VALUES (?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Possui p) {
-        return registros.add(p);
-    }
-
-    public List<Possui> buscarPorEmpresa(String cnpj) {
-        List<Possui> result = new ArrayList<>();
-        for (Possui p : registros) {
-            if (p.getEmpresaCnpj().equals(cnpj)) {
-                result.add(p);
-            }
+            stmt.setString(1, servicoId);
+            stmt.setString(2, codigoLocal);
+            stmt.setString(3, cnpj);
+            stmt.executeUpdate();
         }
-        return result;
-    }
-
-    public List<Possui> listarTodos() {
-        return registros;
     }
 }

@@ -1,27 +1,19 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.Emprega;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class EmpregaDAO {
 
-    private List<Emprega> registros = new ArrayList<>();
+    public void inserir(String cnpj, String matricula) throws SQLException {
+        String sql = "INSERT INTO Emprega (fk_Empresa_cnpj, fk_Funcionario_matricula) VALUES (?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Emprega e) {
-        return registros.add(e);
-    }
-
-    public List<Emprega> listarPorEmpresa(String cnpj) {
-        List<Emprega> result = new ArrayList<>();
-        for (Emprega e : registros) {
-            if (e.getEmpresaCnpj().equals(cnpj)) {
-                result.add(e);
-            }
+            stmt.setString(1, cnpj);
+            stmt.setString(2, matricula);
+            stmt.executeUpdate();
         }
-        return result;
-    }
-
-    public List<Emprega> listarTodos() {
-        return registros;
     }
 }

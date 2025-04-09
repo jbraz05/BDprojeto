@@ -1,24 +1,18 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.Engenheiro;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class EngenheiroDAO {
 
-    private List<Engenheiro> engenheiros = new ArrayList<>();
+    public void inserir(String matricula) throws SQLException {
+        String sql = "INSERT INTO Engenheiro (fk_Funcionario_matricula) VALUES (?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Engenheiro e) {
-        return engenheiros.add(e);
-    }
-
-    public List<Engenheiro> listarTodos() {
-        return engenheiros;
-    }
-
-    public Engenheiro buscarPorMatricula(String matricula) {
-        for (Engenheiro e : engenheiros) {
-            if (e.getMatricula().equals(matricula)) return e;
+            stmt.setString(1, matricula);
+            stmt.executeUpdate();
         }
-        return null;
     }
 }

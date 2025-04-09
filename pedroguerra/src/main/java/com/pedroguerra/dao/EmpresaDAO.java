@@ -1,24 +1,25 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
 import com.pedroguerra.model.Empresa;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class EmpresaDAO {
 
-    private List<Empresa> empresas = new ArrayList<>();
+    public void inserir(Empresa empresa) throws SQLException {
+        String sql = "INSERT INTO Empresa (cnpj, nome, contato, numero, bairro, cidade, rua) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Empresa e) {
-        return empresas.add(e);
-    }
-
-    public Empresa buscarPorCnpj(String cnpj) {
-        for (Empresa e : empresas) {
-            if (e.getCnpj().equals(cnpj)) return e;
+            stmt.setString(1, empresa.getCnpj());
+            stmt.setString(2, empresa.getNome());
+            stmt.setString(3, empresa.getContato());
+            stmt.setString(4, empresa.getNumero());
+            stmt.setString(5, empresa.getBairro());
+            stmt.setString(6, empresa.getCidade());
+            stmt.setString(7, empresa.getRua());
+            stmt.executeUpdate();
         }
-        return null;
-    }
-
-    public List<Empresa> listarTodos() {
-        return empresas;
     }
 }

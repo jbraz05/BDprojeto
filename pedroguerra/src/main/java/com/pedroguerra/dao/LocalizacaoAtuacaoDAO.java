@@ -1,24 +1,22 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
 import com.pedroguerra.model.LocalizacaoAtuacao;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class LocalizacaoAtuacaoDAO {
 
-    private List<LocalizacaoAtuacao> locais = new ArrayList<>();
+    public void inserir(LocalizacaoAtuacao l) throws SQLException {
+        String sql = "INSERT INTO LocalizacaoAtuacao (codigo, nome_pais, nome_estado, regiao) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(LocalizacaoAtuacao l) {
-        return locais.add(l);
-    }
-
-    public LocalizacaoAtuacao buscarPorCodigo(String codigo) {
-        for (LocalizacaoAtuacao l : locais) {
-            if (l.getCodigo().equals(codigo)) return l;
+            stmt.setString(1, l.getCodigo());
+            stmt.setString(2, l.getNomePais());
+            stmt.setString(3, l.getNomeEstado());
+            stmt.setString(4, l.getRegiao());
+            stmt.executeUpdate();
         }
-        return null;
-    }
-
-    public List<LocalizacaoAtuacao> listarTodos() {
-        return locais;
     }
 }

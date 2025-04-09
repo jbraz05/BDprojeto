@@ -1,34 +1,19 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.VooPanoramico;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class VooPanoramicoDAO {
 
-    private List<VooPanoramico> voos = new ArrayList<>();
+    public void inserir(String id, String operadorMatricula) throws SQLException {
+        String sql = "INSERT INTO VooPanoramico (fk_Servico_id, fk_OperadorDrone_matricula) VALUES (?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(VooPanoramico v) {
-        return voos.add(v);
-    }
-
-    public VooPanoramico buscarPorId(String id) {
-        for (VooPanoramico v : voos) {
-            if (v.getId().equals(id)) return v;
+            stmt.setString(1, id);
+            stmt.setString(2, operadorMatricula);
+            stmt.executeUpdate();
         }
-        return null;
-    }
-
-    public List<VooPanoramico> listarTodos() {
-        return voos;
-    }
-
-    public List<VooPanoramico> buscarPorFuncionario(String matricula) {
-        List<VooPanoramico> resultado = new ArrayList<>();
-        for (VooPanoramico v : voos) {
-            if (v.getfkMatriculaFuncionario().equals(matricula)) {
-                resultado.add(v);
-            }
-        }
-        return resultado;
     }
 }

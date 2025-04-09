@@ -1,24 +1,18 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.OperadorDrone;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class OperadorDroneDAO {
 
-    private List<OperadorDrone> operadores = new ArrayList<>();
+    public void inserir(String matricula) throws SQLException {
+        String sql = "INSERT INTO OperadorDrone (fk_Funcionario_matricula) VALUES (?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(OperadorDrone o) {
-        return operadores.add(o);
-    }
-
-    public List<OperadorDrone> listarTodos() {
-        return operadores;
-    }
-
-    public OperadorDrone buscarPorMatricula(String matricula) {
-        for (OperadorDrone o : operadores) {
-            if (o.getMatricula().equals(matricula)) return o;
+            stmt.setString(1, matricula);
+            stmt.executeUpdate();
         }
-        return null;
     }
 }

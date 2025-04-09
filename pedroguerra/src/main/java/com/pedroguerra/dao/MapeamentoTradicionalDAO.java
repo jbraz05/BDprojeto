@@ -4,15 +4,14 @@ import com.pedroguerra.config.ConnectionFactory;
 
 import java.sql.*;
 
-public class ContrataDAO {
+public class MapeamentoTradicionalDAO {
 
-    public void inserir(String notaFiscal, String cnpjCpf) throws SQLException {
-        String sql = "INSERT INTO Contrato (nota_fiscal, fk_Cliente_cnpj_cpf) VALUES (?, ?)";
+    public void inserir(String id) throws SQLException {
+        String sql = "INSERT INTO MapeamentoTradicional (fk_Servico_id) VALUES (?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, notaFiscal);
-            stmt.setString(2, cnpjCpf);
+            stmt.setString(1, id);
             stmt.executeUpdate();
         }
     }

@@ -1,23 +1,23 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
 import com.pedroguerra.model.Cliente;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class ClienteDAO {
 
-    private List<Cliente> clientes = new ArrayList<>();
+    public void inserir(Cliente cliente) throws SQLException {
+        String sql = "INSERT INTO Cliente (cnpj_cpf, nome, numero, bairro, rua) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Cliente cliente) {
-        return clientes.add(cliente);
-    }
-
-    public Cliente buscarPorDocumento(String doc) {
-        for (Cliente c : clientes) {
-            if (c.getCnpjCpf().equals(doc)) return c;
+            stmt.setString(1, cliente.getCnpjCpf());
+            stmt.setString(2, cliente.getNome());
+            stmt.setString(3, cliente.getNumero());
+            stmt.setString(4, cliente.getBairro());
+            stmt.setString(5, cliente.getRua());
+            stmt.executeUpdate();
         }
-        return null;
-    }
-    public List<Cliente> listarTodos() {
-        return clientes;
     }
 }

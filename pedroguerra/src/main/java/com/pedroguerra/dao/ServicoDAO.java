@@ -1,34 +1,22 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
 import com.pedroguerra.model.Servico;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class ServicoDAO {
 
-    private List<Servico> servicos = new ArrayList<>();
+    public void inserir(Servico servico) throws SQLException {
+        String sql = "INSERT INTO Servico (id, data, tipo, fk_Funcionario_matricula) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Servico s) {
-        return servicos.add(s);
-    }
-
-    public Servico buscarPorId(String id) {
-        for (Servico s : servicos) {
-            if (s.getId().equals(id)) return s;
+            stmt.setString(1, servico.getId());
+            stmt.setDate(2, new java.sql.Date(servico.getData().getTime()));
+            stmt.setString(3, servico.getTipo());
+            stmt.setString(4, servico.getfkMatriculaFuncionario());
+            stmt.executeUpdate();
         }
-        return null;
-    }
-
-    public List<Servico> listarTodos() {
-        return servicos;
-    }
-
-    public List<Servico> buscarPorFuncionario(String matricula) {
-        List<Servico> resultado = new ArrayList<>();
-        for (Servico s : servicos) {
-            if (s.getfkMatriculaFuncionario().equals(matricula)) {
-                resultado.add(s);
-            }
-        }
-        return resultado;
     }
 }

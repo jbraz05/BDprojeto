@@ -1,26 +1,19 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.Atua;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class AtuaDAO {
 
-    private List<Atua> atuaList = new ArrayList<>();
+    public void inserir(String cnpj, String codigoLocal) throws SQLException {
+        String sql = "INSERT INTO Atua (fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo) VALUES (?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Atua atua) {
-        return atuaList.add(atua);
-    }
-
-    public List<Atua> listarTodos() {
-        return atuaList;
-    }
-
-    public Atua buscarPorEmpresa(String cnpj) {
-        for (Atua a : atuaList) {
-            if (a.getEmpresaCnpj().equals(cnpj)) {
-                return a;
-            }
+            stmt.setString(1, cnpj);
+            stmt.setString(2, codigoLocal);
+            stmt.executeUpdate();
         }
-        return null;
     }
 }

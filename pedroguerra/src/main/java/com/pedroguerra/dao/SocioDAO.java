@@ -1,24 +1,18 @@
 package com.pedroguerra.dao;
 
-import java.util.*;
-import com.pedroguerra.model.Socio;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class SocioDAO {
 
-    private List<Socio> socios = new ArrayList<>();
+    public void inserir(String matricula) throws SQLException {
+        String sql = "INSERT INTO Socio (fk_Funcionario_matricula) VALUES (?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(Socio s) {
-        return socios.add(s);
-    }
-
-    public Socio buscarPorMatricula(String matricula) {
-        for (Socio s : socios) {
-            if (s.getMatricula().equals(matricula)) return s;
+            stmt.setString(1, matricula);
+            stmt.executeUpdate();
         }
-        return null;
-    }
-
-    public List<Socio> listarTodos() {
-        return socios;
     }
 }

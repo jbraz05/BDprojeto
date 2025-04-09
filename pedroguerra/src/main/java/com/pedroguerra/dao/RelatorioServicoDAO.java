@@ -1,24 +1,23 @@
+// RelatorioServicoDAO.java
 package com.pedroguerra.dao;
 
-import java.util.*;
 import com.pedroguerra.model.RelatorioServico;
+import com.pedroguerra.config.ConnectionFactory;
+
+import java.sql.*;
 
 public class RelatorioServicoDAO {
 
-    private List<RelatorioServico> relatorios = new ArrayList<>();
+    public void inserir(RelatorioServico r) throws SQLException {
+        String sql = "INSERT INTO RelatorioServico (fk_Servico_id, area, data, observacoes) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public boolean adicionar(RelatorioServico r) {
-        return relatorios.add(r);
-    }
-
-    public List<RelatorioServico> listarTodos() {
-        return relatorios;
-    }
-
-    public RelatorioServico buscarPorServico(String id) {
-        for (RelatorioServico r : relatorios) {
-            if (r.getfkServicoId().equals(id)) return r;
+            stmt.setString(1, r.getfkServicoId());
+            stmt.setFloat(2, r.getArea());
+            stmt.setDate(3, new java.sql.Date(r.getData().getTime()));
+            stmt.setString(4, r.getObservacoes());
+            stmt.executeUpdate();
         }
-        return null;
     }
 }
