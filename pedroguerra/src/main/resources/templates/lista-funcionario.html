@@ -1,0 +1,36 @@
+<!-- templates/lista-funcionario.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Funcionários</title>
+</head>
+<body>
+    <h1>Funcionários Cadastrados</h1>
+
+    <table border="1">
+        <tr>
+            <th>Matrícula</th>
+            <th>Nome</th>
+            <th>Contato</th>
+            <th>Cidade</th>
+            <th>Número</th>
+            <th>Bairro</th>
+            <th>Rua</th>
+            <th>Supervisor</th>
+        </tr>
+        <tr th:each="func : ${funcionarios}">
+            <td th:text="${func.matricula}"></td>
+            <td th:text="${func.nome}"></td>
+            <td th:text="${func.contato}"></td>
+            <td th:text="${func.cidade}"></td>
+            <td th:text="${func.numero}"></td>
+            <td th:text="${func.bairro}"></td>
+            <td th:text="${func.rua}"></td>
+            <td th:text="${func.fkSupervisorMatricula}"></td>
+        </tr>
+    </table>
+
+    <br/>
+    <a th:href="@{/funcionario}">Cadastrar novo funcionário</a>
+</body>
+</html>

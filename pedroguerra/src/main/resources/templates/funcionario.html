@@ -1,0 +1,41 @@
+<!-- templates/funcionario.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastrar Funcionário</title>
+</head>
+<body>
+    <h1>Cadastrar Funcionário</h1>
+
+    <form th:action="@{/funcionario/cadastrar}" th:object="${funcionario}" method="post">
+        <label>Matrícula:</label>
+        <input type="text" th:field="*{matricula}" required /><br/>
+
+        <label>Nome:</label>
+        <input type="text" th:field="*{nome}" required /><br/>
+
+        <label>Contato:</label>
+        <input type="text" th:field="*{contato}" /><br/>
+
+        <label>Cidade:</label>
+        <input type="text" th:field="*{cidade}" /><br/>
+
+        <label>Número:</label>
+        <input type="text" th:field="*{numero}" /><br/>
+
+        <label>Bairro:</label>
+        <input type="text" th:field="*{bairro}" /><br/>
+
+        <label>Rua:</label>
+        <input type="text" th:field="*{rua}" /><br/>
+
+        <label>Supervisor (Matrícula):</label>
+        <input type="text" th:field="*{fkSupervisorMatricula}" /><br/>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <br/>
+    <a th:href="@{/funcionario/listar}">Ver lista de funcionários</a>
+</body>
+</html>
