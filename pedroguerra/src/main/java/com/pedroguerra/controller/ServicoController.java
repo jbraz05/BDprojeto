@@ -62,6 +62,37 @@ public class ServicoController {
             return "erro";
         }
     }
+
+
+    @PostMapping("/empresa/atualizar")
+    public String atualizarEmpresa(@ModelAttribute Empresa empresa, Model model) {
+        try {
+            EmpresaDAO dao = new EmpresaDAO();
+            dao.atualizar(empresa);
+            return "redirect:/empresa/listar";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao atualizar empresa: " + e.getMessage());
+            return "erro";
+        }
+    }
+    
+@GetMapping("/empresa/editar")
+public String mostrarFormularioEdicao(@RequestParam String cnpj, Model model) {
+    try {
+        EmpresaDAO dao = new EmpresaDAO();
+        Empresa empresa = dao.buscarPorCnpj(cnpj);
+        model.addAttribute("empresa", empresa);
+        return "editar-empresa"; // Nome do HTML que vamos criar
+    } catch (SQLException e) {
+        e.printStackTrace();
+        model.addAttribute("erro", "Erro ao buscar empresa: " + e.getMessage());
+        return "erro";
+    }
+}
+
+
+
     @GetMapping("/cliente")
     public String mostrarCliente() {
         return "cliente";
