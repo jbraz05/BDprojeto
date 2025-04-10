@@ -17,7 +17,6 @@
             <th>Bairro</th>
             <th>Rua</th>
             <th>Supervisor</th>
-        </tr>
         <tr th:each="func : ${funcionarios}">
             <td th:text="${func.matricula}"></td>
             <td th:text="${func.nome}"></td>
@@ -27,7 +26,15 @@
             <td th:text="${func.bairro}"></td>
             <td th:text="${func.rua}"></td>
             <td th:text="${func.fkSupervisorMatricula}"></td>
+            <td>
+                <form th:action="@{/funcionario/remover}" method="post">
+                    <input type="hidden" name="matricula" th:value="${func.matricula}" />
+                    <button type="submit">Remover</button>
+                </form>
+            </td>
         </tr>
+        
+
     </table>
 
     <br/>

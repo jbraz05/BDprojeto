@@ -100,17 +100,39 @@ public String mostrarFormularioFuncionario(Model model) {
 }
 
 @PostMapping("/funcionario/cadastrar")
-public String cadastrarFuncionario(@ModelAttribute Funcionario funcionario, Model model) {
+public String cadastrarFuncionario(@ModelAttribute Funcionario funcionario,
+                                   @RequestParam String tipo, Model model) {
     try {
-        FuncionarioDAO dao = new FuncionarioDAO();
-        dao.inserir(funcionario);
-        return "redirect:/"; // ou onde quiser redirecionar depois do cadastro
-    } catch (SQLException e) {
+        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+        funcionarioDAO.inserir(funcionario); // insere na tabela Funcionario
+
+        // Agora insere na tabela correspondente ao tipo:
+        switch (tipo) {
+            case "engenheiro":
+                EngenheiroDAO engenheiroDAO = new EngenheiroDAO();
+                engenheiroDAO.inserir(funcionario.getMatricula());
+                break;
+            case "socio":
+                SocioDAO socioDAO = new SocioDAO();
+                socioDAO.inserir(funcionario.getMatricula());
+                break;
+            case "operador":
+                OperadorDroneDAO operadorDAO = new OperadorDroneDAO();
+                operadorDAO.inserir(funcionario.getMatricula());
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de funcionário inválido.");
+        }
+
+        return "redirect:/funcionario/listar";
+
+    } catch (SQLException | IllegalArgumentException e) {
         e.printStackTrace();
         model.addAttribute("erro", "Erro ao cadastrar funcionário: " + e.getMessage());
-        return "erro"; // criar erro.html se quiser
+        return "erro";
     }
 }
+
 
 @GetMapping("/funcionario/listar")
 public String listarFuncionarios(Model model) {
@@ -122,6 +144,18 @@ public String listarFuncionarios(Model model) {
     } catch (SQLException e) {
         e.printStackTrace();
         model.addAttribute("erro", "Erro ao listar funcionários: " + e.getMessage());
+        return "erro";
+    }
+}
+@PostMapping("/funcionario/remover")
+public String removerFuncionario(@RequestParam String matricula, Model model) {
+    try {
+        FuncionarioDAO dao = new FuncionarioDAO();
+        dao.removerPorMatricula(matricula);
+        return "redirect:/funcionario/listar";
+    } catch (SQLException e) {
+        e.printStackTrace();
+        model.addAttribute("erro", "Erro ao remover funcionário: " + e.getMessage());
         return "erro";
     }
 }

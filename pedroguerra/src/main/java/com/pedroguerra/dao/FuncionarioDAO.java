@@ -55,4 +55,14 @@ public class FuncionarioDAO {
         }
         return lista;
     }
+
+    public void removerPorMatricula(String matricula) throws SQLException {
+        String sql = "DELETE FROM Funcionario WHERE matricula = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            stmt.executeUpdate();
+        }
+    }
+    
 }

@@ -32,7 +32,16 @@
         <label>Supervisor (Matrícula):</label>
         <input type="text" th:field="*{fkSupervisorMatricula}" /><br/>
 
-        <button type="submit">Cadastrar</button>
+        
+        <label>Tipo de Funcionário:</label>
+    <select name="tipo" required>
+        <option value="">-- Selecione --</option>
+        <option value="engenheiro">Engenheiro</option>
+        <option value="socio">Sócio</option>
+        <option value="operador">Operador de Drone</option>
+    </select><br/>
+
+    <button type="submit">Cadastrar</button>
     </form>
 
     <br/>
