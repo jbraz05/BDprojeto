@@ -1,0 +1,26 @@
+<h1>Localizações de Atuação</h1>
+
+<table>
+    <tr>
+        <th>Código</th>
+        <th>País</th>
+        <th>Estado</th>
+        <th>Região</th>
+        <th>Ações</th>
+    </tr>
+    <tr th:each="l : ${localizacoes}">
+        <td th:text="${l.codigo}"></td>
+        <td th:text="${l.nomePais}"></td>
+        <td th:text="${l.nomeEstado}"></td>
+        <td th:text="${l.regiao}"></td>
+        <td>
+            <a th:href="@{'/localizacao/editar?codigo=' + ${l.codigo}}">Editar</a>
+            <form th:action="@{/localizacao/remover}" method="post" style="display:inline;">
+                <input type="hidden" name="codigo" th:value="${l.codigo}" />
+                <button type="submit">Remover</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<a href="/localizacao">Nova Localização</a>

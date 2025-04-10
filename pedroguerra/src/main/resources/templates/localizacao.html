@@ -1,0 +1,15 @@
+<form action="#" th:action="@{${localizacao.codigo} != null ? '/localizacao/atualizar' : '/localizacao/cadastrar'}" th:object="${localizacao}" method="post">
+    <label>Código:</label>
+    <input type="text" th:field="*{codigo}" th:readonly="${localizacao.codigo != null}" required><br>
+
+    <label>País:</label>
+    <input type="text" th:field="*{nomePais}" required><br>
+
+    <label>Estado:</label>
+    <input type="text" th:field="*{nomeEstado}" required><br>
+
+    <label>Região:</label>
+    <input type="text" th:field="*{regiao}" required><br>
+
+    <button type="submit">Salvar</button>
+</form>
