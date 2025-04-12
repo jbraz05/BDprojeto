@@ -5,6 +5,7 @@ import com.pedroguerra.model.*;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,29 +17,49 @@ public class EmpresaController {
         return "home";
     }
 
+    // FORMULÁRIO DE CADASTRO DE EMPRESA
     @GetMapping("/empresa")
-    public String mostrarEmpresa() {
+    public String mostrarFormularioEmpresa(Model model) {
+        model.addAttribute("empresa", new Empresa());
+
+        try {
+            LocalizacaoAtuacaoDAO localizacaoDAO = new LocalizacaoAtuacaoDAO();
+            List<LocalizacaoAtuacao> localizacoes = localizacaoDAO.listarTodas();
+            model.addAttribute("localizacoes", localizacoes);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao carregar localizações.");
+        }
+
         return "empresa";
     }
 
+    // CADASTRO DA EMPRESA E RELAÇÃO COM A LOCALIZAÇÃO (ATUA)
     @PostMapping("/empresa/cadastrar")
-    @ResponseBody
-    public String cadastrarEmpresa(@RequestBody Empresa empresa) {
+    public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
+                                   @RequestParam String localizacaoCodigo,
+                                   Model model) {
         try {
-            EmpresaDAO dao = new EmpresaDAO();
-            dao.inserir(empresa);
-            return "Empresa cadastrada com sucesso!";
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            empresaDAO.inserir(empresa);
+
+            AtuaDAO atuaDAO = new AtuaDAO();
+            atuaDAO.inserir(empresa.getCnpj(), localizacaoCodigo);
+
+            return "redirect:/empresa/listar";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Erro ao cadastrar empresa: " + e.getMessage();
+            model.addAttribute("erro", "Erro ao cadastrar empresa: " + e.getMessage());
+            return "erro";
         }
     }
 
+    // LISTA TODAS AS EMPRESAS
     @GetMapping("/empresa/listar")
     public String listarEmpresas(Model model) {
         try {
             EmpresaDAO dao = new EmpresaDAO();
-            List<Empresa> empresas = dao.listarTodas();
+            List<String[]> empresas = dao.listarTodasComLocalizacao();
             model.addAttribute("empresas", empresas);
             return "lista-empresas";
         } catch (SQLException e) {
@@ -48,7 +69,7 @@ public class EmpresaController {
         }
     }
 
-
+    // REMOÇÃO POR CNPJ
     @PostMapping("/empresa/remover")
     public String removerEmpresa(@RequestParam String cnpj, Model model) {
         try {
@@ -62,7 +83,7 @@ public class EmpresaController {
         }
     }
 
-
+    // ATUALIZAÇÃO DE DADOS DA EMPRESA
     @PostMapping("/empresa/atualizar")
     public String atualizarEmpresa(@ModelAttribute Empresa empresa, Model model) {
         try {
@@ -75,18 +96,26 @@ public class EmpresaController {
             return "erro";
         }
     }
-    
-@GetMapping("/empresa/editar")
-public String mostrarFormularioEdicao(@RequestParam String cnpj, Model model) {
-    try {
-        EmpresaDAO dao = new EmpresaDAO();
-        Empresa empresa = dao.buscarPorCnpj(cnpj);
-        model.addAttribute("empresa", empresa);
-        return "editar-empresa"; 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        model.addAttribute("erro", "Erro ao buscar empresa: " + e.getMessage());
-        return "erro";
+
+    // FORMULÁRIO DE EDIÇÃO DA EMPRESA
+    @GetMapping("/empresa/editar")
+    public String mostrarFormularioEdicao(@RequestParam String cnpj, Model model) {
+        try {
+            EmpresaDAO dao = new EmpresaDAO();
+            Empresa empresa = dao.buscarPorCnpj(cnpj);
+            model.addAttribute("empresa", empresa);
+
+            // Também carrega as localizações (caso queira editar depois)
+            LocalizacaoAtuacaoDAO localizacaoDAO = new LocalizacaoAtuacaoDAO();
+            List<LocalizacaoAtuacao> localizacoes = localizacaoDAO.listarTodas();
+            model.addAttribute("localizacoes", localizacoes);
+
+            return "editar-empresa";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao buscar empresa: " + e.getMessage());
+            return "erro";
+        }
     }
-}
+    
 }

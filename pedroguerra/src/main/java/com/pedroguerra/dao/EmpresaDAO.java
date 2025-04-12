@@ -46,13 +46,33 @@ public class EmpresaDAO {
         }
         return lista;
     }
+    
     public void removerPorCnpj(String cnpj) throws SQLException {
-        String sql = "DELETE FROM Empresa WHERE cnpj = ?";
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, cnpj);
-            stmt.executeUpdate();
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            conn.setAutoCommit(false);
+    
+            try {
+                // Primeiro remove da tabela Atua (relacionamento)
+                try (PreparedStatement stmtAtua = conn.prepareStatement(
+                        "DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
+                    stmtAtua.setString(1, cnpj);
+                    stmtAtua.executeUpdate();
+                }
+    
+                // Depois remove da tabela Empresa
+                try (PreparedStatement stmtEmpresa = conn.prepareStatement(
+                        "DELETE FROM Empresa WHERE cnpj = ?")) {
+                    stmtEmpresa.setString(1, cnpj);
+                    stmtEmpresa.executeUpdate();
+                }
+    
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
         }
     }
 
@@ -96,6 +116,38 @@ public class EmpresaDAO {
             stmt.executeUpdate();
         }
     }
+    public List<String[]> listarTodasComLocalizacao() throws SQLException {
+        List<String[]> lista = new ArrayList<>();
     
+        String sql = """
+            SELECT e.cnpj, e.nome, e.contato, e.rua, e.numero, e.bairro, e.cidade,
+                   l.nome_estado, l.nome_pais, l.regiao
+            FROM Empresa e
+            LEFT JOIN Atua a ON e.cnpj = a.fk_Empresa_cnpj
+            LEFT JOIN LocalizacaoAtuacao l ON l.codigo = a.fk_Localizacao_Atuacao_codigo
+        """;
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                String[] linha = new String[10];
+                linha[0] = rs.getString("cnpj");
+                linha[1] = rs.getString("nome");
+                linha[2] = rs.getString("contato");
+                linha[3] = rs.getString("rua");
+                linha[4] = rs.getString("numero");
+                linha[5] = rs.getString("bairro");
+                linha[6] = rs.getString("cidade");
+                linha[7] = rs.getString("nome_estado");
+                linha[8] = rs.getString("nome_pais");
+                linha[9] = rs.getString("regiao");
+                lista.add(linha);
+            }
+        }
+    
+        return lista;
+    }
     
 }
