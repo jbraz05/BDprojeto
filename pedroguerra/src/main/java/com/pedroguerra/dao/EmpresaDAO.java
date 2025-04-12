@@ -1,6 +1,7 @@
 package com.pedroguerra.dao;
 
 import com.pedroguerra.model.Empresa;
+import com.pedroguerra.model.Funcionario;
 import com.pedroguerra.config.ConnectionFactory;
 
 import java.sql.*;
@@ -48,33 +49,46 @@ public class EmpresaDAO {
     }
     
     public void removerPorCnpj(String cnpj) throws SQLException {
-        try (Connection conn = ConnectionFactory.getConnection()) {
-            conn.setAutoCommit(false);
-    
-            try {
-                // Primeiro remove da tabela Atua (relacionamento)
-                try (PreparedStatement stmtAtua = conn.prepareStatement(
-                        "DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
-                    stmtAtua.setString(1, cnpj);
-                    stmtAtua.executeUpdate();
-                }
-    
-                // Depois remove da tabela Empresa
-                try (PreparedStatement stmtEmpresa = conn.prepareStatement(
-                        "DELETE FROM Empresa WHERE cnpj = ?")) {
-                    stmtEmpresa.setString(1, cnpj);
-                    stmtEmpresa.executeUpdate();
-                }
-    
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
-            } finally {
-                conn.setAutoCommit(true);
+    try (Connection conn = ConnectionFactory.getConnection()) {
+        conn.setAutoCommit(false); // inicia transação
+
+        try {
+            // 1. Buscar todos os funcionários da empresa
+            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+            List<Funcionario> funcionarios = funcionarioDAO.listarPorEmpresa(cnpj);
+
+            // 2. Remover cada funcionário
+            for (Funcionario f : funcionarios) {
+                funcionarioDAO.removerPorMatricula(f.getMatricula());
             }
+
+            // 3. Apagar vínculos na tabela Atua e Possui (se aplicável)
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
+                stmt.setString(1, cnpj);
+                stmt.executeUpdate();
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Empresa_cnpj = ?")) {
+                stmt.setString(1, cnpj);
+                stmt.executeUpdate();
+            }
+
+            // 4. Apagar empresa
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Empresa WHERE cnpj = ?")) {
+                stmt.setString(1, cnpj);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
         }
     }
+}
 
     public Empresa buscarPorCnpj(String cnpj) throws SQLException {
         String sql = "SELECT * FROM Empresa WHERE cnpj = ?";
