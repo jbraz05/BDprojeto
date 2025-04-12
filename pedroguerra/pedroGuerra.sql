@@ -47,12 +47,19 @@ CREATE TABLE OperadorDrone (
     FOREIGN KEY (fk_Funcionario_matricula) REFERENCES Funcionario(matricula)
 );
 
+CREATE TABLE Endereco (
+    cep VARCHAR(20) PRIMARY KEY,
+    numero VARCHAR(10),
+    cidade VARCHAR(100),
+    bairro VARCHAR(100),
+    rua VARCHAR(150)
+);
+
 CREATE TABLE Cliente (
     cnpj_cpf VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    numero VARCHAR(10),
-    bairro VARCHAR(100),
-    rua VARCHAR(150)
+    fk_Endereco_cep VARCHAR(20),
+    FOREIGN KEY (fk_Endereco_cep) REFERENCES Endereco(cep)
 );
 
 CREATE TABLE PessoaFisica (
@@ -85,7 +92,7 @@ CREATE TABLE MapeamentoTradicional (
     FOREIGN KEY (fk_Servico_id) REFERENCES Servico(id)
 );
 
-CREATE TABLE Contrato (
+CREATE TABLE Contrata (
     nota_fiscal VARCHAR(50) PRIMARY KEY,
     fk_Cliente_cnpj_cpf VARCHAR(20),
     FOREIGN KEY (fk_Cliente_cnpj_cpf) REFERENCES Cliente(cnpj_cpf)
