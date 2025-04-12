@@ -11,7 +11,7 @@ import java.util.List;
 
 @Controller
 public class FuncionarioController {
-    
+
     @GetMapping("/funcionario")
     public String mostrarFormularioFuncionario(Model model) {
         model.addAttribute("funcionario", new Funcionario());
@@ -75,6 +75,18 @@ public class FuncionarioController {
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao remover funcionário: " + e.getMessage());
+            return "erro";
+        }
+    }
+    @PostMapping("/funcionario/atualizar")
+    public String atualizarFuncionario(@ModelAttribute Funcionario funcionario, Model model) {
+        try {
+            FuncionarioDAO dao = new FuncionarioDAO();
+            dao.atualizar(funcionario);
+            return "redirect:/funcionario/listar";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao atualizar funcionário: " + e.getMessage());
             return "erro";
         }
     }

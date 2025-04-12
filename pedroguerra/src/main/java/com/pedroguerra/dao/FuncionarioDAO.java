@@ -95,5 +95,27 @@ public class FuncionarioDAO {
             }
         }
     }
+    public void atualizar(Funcionario f) throws SQLException {
+        String sql = "UPDATE Funcionario SET nome = ?, contato = ?, cidade = ?, numero = ?, bairro = ?, rua = ?, fk_supervisor_matricula = ? WHERE matricula = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+            stmt.setString(1, f.getNome());
+            stmt.setString(2, f.getContato());
+            stmt.setString(3, f.getCidade());
+            stmt.setString(4, f.getNumero());
+            stmt.setString(5, f.getBairro());
+            stmt.setString(6, f.getRua());
+    
+            if (f.getFkSupervisorMatricula() == null || f.getFkSupervisorMatricula().trim().isEmpty()) {
+                stmt.setNull(7, Types.VARCHAR);
+            } else {
+                stmt.setString(7, f.getFkSupervisorMatricula());
+            }
+    
+            stmt.setString(8, f.getMatricula()); // WHERE matricula = ?
+            stmt.executeUpdate();
+        }
+    }
     
 }

@@ -1,46 +1,47 @@
-<!-- templates/lista-funcionario.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lista de Funcionários</title>
 </head>
 <body>
-    <h1>Funcionários Cadastrados</h1>
+<h1>Funcionários Cadastrados</h1>
 
-    <table border="1">
-        <tr>
-            <th>Matrícula</th>
-            <th>Nome</th>
-            <th>Contato</th>
-            <th>Cidade</th>
-            <th>Número</th>
-            <th>Bairro</th>
-            <th>Rua</th>
-            <th>Supervisor</th>
-        <tr th:each="func : ${funcionarios}">
-            <td th:text="${func.matricula}"></td>
-            <td th:text="${func.nome}"></td>
-            <td th:text="${func.contato}"></td>
-            <td th:text="${func.cidade}"></td>
-            <td th:text="${func.numero}"></td>
-            <td th:text="${func.bairro}"></td>
-            <td th:text="${func.rua}"></td>
-            <td th:text="${func.fkSupervisorMatricula}"></td>
+<table border="1">
+    <tr>
+        <th>Matrícula</th>
+        <th>Nome</th>
+        <th>Contato</th>
+        <th>Cidade</th>
+        <th>Número</th>
+        <th>Bairro</th>
+        <th>Rua</th>
+        <th>Supervisor</th>
+        <th>Ações</th>
+    </tr>
+    <tr th:each="func : ${funcionarios}">
+        <form th:action="@{/funcionario/atualizar}" method="post">
+            <td><input type="text" name="matricula" th:value="${func.matricula}" readonly /></td>
+            <td><input type="text" name="nome" th:value="${func.nome}" /></td>
+            <td><input type="text" name="contato" th:value="${func.contato}" /></td>
+            <td><input type="text" name="cidade" th:value="${func.cidade}" /></td>
+            <td><input type="text" name="numero" th:value="${func.numero}" /></td>
+            <td><input type="text" name="bairro" th:value="${func.bairro}" /></td>
+            <td><input type="text" name="rua" th:value="${func.rua}" /></td>
+            <td><input type="text" name="fkSupervisorMatricula" th:value="${func.fkSupervisorMatricula}" /></td>
             <td>
-                <form th:action="@{/funcionario/remover}" method="post">
-                    <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                    <button type="submit">Remover</button>
-                </form>
+                <button type="submit">Salvar</button>
+        </form>
+        <form th:action="@{/funcionario/remover}" method="post" style="display:inline;">
+            <input type="hidden" name="matricula" th:value="${func.matricula}" />
+            <button type="submit">Remover</button>
+        </form>
             </td>
-        </tr>
-        
+    </tr>
+</table>
 
-    </table>
-
-    <br/>
-    <a th:href="@{/funcionario}">Cadastrar novo funcionário</a>
-
-    <a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+<br/>
+<a th:href="@{/funcionario}">Cadastrar novo funcionário</a>
+<a th:href="@{/}"><button type="button">Voltar para Home</button></a>
 
 </body>
 </html>
