@@ -8,15 +8,13 @@ import java.sql.*;
 public class ClienteDAO {
 
     public void inserir(Cliente cliente) throws SQLException {
-        String sql = "INSERT INTO Cliente (cnpj_cpf, nome, numero, bairro, rua) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Cliente (cnpj_cpf, nome, fk_Endereco_cep) VALUES (?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, cliente.getCnpjCpf());
             stmt.setString(2, cliente.getNome());
-            stmt.setString(3, cliente.getNumero());
-            stmt.setString(4, cliente.getBairro());
-            stmt.setString(5, cliente.getRua());
+            stmt.setString(3, cliente.getFkEnderecoCep());
             stmt.executeUpdate();
         }
     }

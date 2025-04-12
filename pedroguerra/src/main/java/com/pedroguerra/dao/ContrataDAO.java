@@ -7,7 +7,7 @@ import java.sql.*;
 public class ContrataDAO {
 
     public void inserir(String notaFiscal, String cnpjCpf) throws SQLException {
-        String sql = "INSERT INTO Contrato (nota_fiscal, fk_Cliente_cnpj_cpf) VALUES (?, ?)";
+        String sql = "INSERT INTO Contrata (nota_fiscal, fk_Cliente_cnpj_cpf) VALUES (?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

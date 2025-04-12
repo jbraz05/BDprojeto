@@ -66,7 +66,7 @@ public class FuncionarioDAO {
     
     public void removerPorMatricula(String matricula) throws SQLException {
         try (Connection conn = ConnectionFactory.getConnection()) {
-            conn.setAutoCommit(false); // transação
+            conn.setAutoCommit(false); // inicia transação
     
             try {
                 // Remove de tabelas filhas primeiro
@@ -83,10 +83,16 @@ public class FuncionarioDAO {
                     stmt3.executeUpdate();
                 }
     
-                // Remove quem ele supervisiona, se for o caso
-                try (PreparedStatement stmt4 = conn.prepareStatement("UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
+                // Remove da tabela Emprega (evita erro de integridade referencial)
+                try (PreparedStatement stmt4 = conn.prepareStatement("DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
                     stmt4.setString(1, matricula);
                     stmt4.executeUpdate();
+                }
+    
+                // Remove quem ele supervisiona, se for o caso
+                try (PreparedStatement stmt5 = conn.prepareStatement("UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
+                    stmt5.setString(1, matricula);
+                    stmt5.executeUpdate();
                 }
     
                 // Agora sim remove o funcionário
@@ -94,6 +100,7 @@ public class FuncionarioDAO {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
+    
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();

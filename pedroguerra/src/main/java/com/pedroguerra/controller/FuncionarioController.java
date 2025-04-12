@@ -58,7 +58,7 @@ public class FuncionarioController {
                 throw new IllegalArgumentException("Tipo de funcionário inválido.");
         }
 
-        return "redirect:/funcionario/listar";
+        return "redirect:/empresa/" + empresaCnpj + "/funcionarios";
 
     } catch (SQLException | IllegalArgumentException e) {
         e.printStackTrace();
@@ -97,9 +97,13 @@ public class FuncionarioController {
     @PostMapping("/funcionario/remover")
     public String removerFuncionario(@RequestParam String matricula, Model model) {
         try {
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            Empresa empresa = empresaDAO.buscarPorFuncionario(matricula); // pega CNPJ antes de remover
+
             FuncionarioDAO dao = new FuncionarioDAO();
             dao.removerPorMatricula(matricula);
-            return "redirect:/funcionario/listar";
+
+            return "redirect:/empresa/" + empresa.getCnpj() + "/funcionarios";
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao remover funcionário: " + e.getMessage());

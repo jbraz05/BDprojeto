@@ -1,7 +1,10 @@
 package com.pedroguerra.model;
 
 public class PessoaJuridica extends Cliente {
-    public PessoaJuridica(String cnpjCpf, String nome, String numero, String bairro, String rua) {
-        super(cnpjCpf, nome, numero, bairro, rua);
+    public PessoaJuridica(String cnpj, String nome, String fkEnderecoCep) {
+            super(cnpj, nome, fkEnderecoCep);
+    }
+    public String getCnpj() {
+        return getCnpjCpf();
     }
 }

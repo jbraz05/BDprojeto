@@ -1,21 +1,16 @@
 package com.pedroguerra.model;
 
 public class Cliente {
-
     private String cnpjCpf;
     private String nome;
-    private String numero;
-    private String bairro;
-    private String rua;
+    private String fkEnderecoCep;
 
-    public Cliente(String cnpjCpf, String nome, String numero, String bairro, String rua) {
+    public Cliente(String cnpjCpf, String nome, String fkEnderecoCep) {
         this.cnpjCpf = cnpjCpf;
         this.nome = nome;
-        this.numero = numero;
-        this.bairro = bairro;
-        this.rua = rua;
+        this.fkEnderecoCep = fkEnderecoCep;
     }
-    
+
     public String getCnpjCpf() {
         return cnpjCpf;
     }
@@ -32,27 +27,11 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public String getNumero() {
-        return numero;
+    public String getFkEnderecoCep() {
+        return fkEnderecoCep;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
+    public void setFkEnderecoCep(String fkEnderecoCep) {
+        this.fkEnderecoCep = fkEnderecoCep;
     }
 }
