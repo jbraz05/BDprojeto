@@ -33,7 +33,8 @@
 
 # Arquivo de configuração local (não versionar)
 src/main/resources/config.properties
-
+# Arquivos conceituais logicos
+pedroGueraConceitual.brM3
 
 # Sistema operacional
 .DS_Store

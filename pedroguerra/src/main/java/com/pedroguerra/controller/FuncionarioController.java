@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Controller
 public class FuncionarioController {
 
@@ -115,7 +114,11 @@ public class FuncionarioController {
         try {
             FuncionarioDAO dao = new FuncionarioDAO();
             dao.atualizar(funcionario);
-            return "redirect:/funcionario/listar";
+
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            Empresa empresa = empresaDAO.buscarPorFuncionario(funcionario.getMatricula());
+
+            return "redirect:/empresa/" + empresa.getCnpj() + "/funcionarios";
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao atualizar funcionário: " + e.getMessage());
