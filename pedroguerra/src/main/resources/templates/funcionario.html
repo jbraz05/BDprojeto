@@ -40,7 +40,13 @@
         <option value="socio">Sócio</option>
         <option value="operador">Operador de Drone</option>
     </select><br/>
-
+    <label>Empresa:</label>
+    <select name="empresaCnpj" required>
+        <option value="">-- Selecione uma empresa --</option>
+        <th:block th:each="empresa : ${empresas}">
+            <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+        </th:block>
+    </select><br/>
     <button type="submit">Cadastrar</button>
     </form>
 

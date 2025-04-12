@@ -14,43 +14,56 @@ public class FuncionarioController {
 
     @GetMapping("/funcionario")
     public String mostrarFormularioFuncionario(Model model) {
-        model.addAttribute("funcionario", new Funcionario());
-        return "funcionario";
+        try {
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            List<Empresa> empresas = empresaDAO.listarTodas();
+    
+            model.addAttribute("funcionario", new Funcionario());
+            model.addAttribute("empresas", empresas); // envia as empresas para o formulário
+            return "funcionario";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao carregar empresas: " + e.getMessage());
+            return "erro";
+        }
     }
 
     @PostMapping("/funcionario/cadastrar")
     public String cadastrarFuncionario(@ModelAttribute Funcionario funcionario,
-                                    @RequestParam String tipo, Model model) {
-        try {
-            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-            funcionarioDAO.inserir(funcionario); //insere na tabela Funcionario
+                                   @RequestParam String tipo,
+                                   @RequestParam String empresaCnpj, // novo campo
+                                   Model model) {
+    try {
+        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+        funcionarioDAO.inserir(funcionario);
 
-            // Agora insere na tabela correspondente ao tipo:
-            switch (tipo) {
-                case "engenheiro":
-                    EngenheiroDAO engenheiroDAO = new EngenheiroDAO();
-                    engenheiroDAO.inserir(funcionario.getMatricula());
-                    break;
-                case "socio":
-                    SocioDAO socioDAO = new SocioDAO();
-                    socioDAO.inserir(funcionario.getMatricula());
-                    break;
-                case "operador":
-                    OperadorDroneDAO operadorDAO = new OperadorDroneDAO();
-                    operadorDAO.inserir(funcionario.getMatricula());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Tipo de funcionário inválido.");
-            }
+        // Insere vínculo com empresa
+        EmpregaDAO empregaDAO = new EmpregaDAO();
+        empregaDAO.inserir(empresaCnpj, funcionario.getMatricula());
 
-            return "redirect:/funcionario/listar";
-
-        } catch (SQLException | IllegalArgumentException e) {
-            e.printStackTrace();
-            model.addAttribute("erro", "Erro ao cadastrar funcionário: " + e.getMessage());
-            return "erro";
+        // Insere no tipo específico
+        switch (tipo) {
+            case "engenheiro":
+                new EngenheiroDAO().inserir(funcionario.getMatricula());
+                break;
+            case "socio":
+                new SocioDAO().inserir(funcionario.getMatricula());
+                break;
+            case "operador":
+                new OperadorDroneDAO().inserir(funcionario.getMatricula());
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de funcionário inválido.");
         }
+
+        return "redirect:/funcionario/listar";
+
+    } catch (SQLException | IllegalArgumentException e) {
+        e.printStackTrace();
+        model.addAttribute("erro", "Erro ao cadastrar funcionário: " + e.getMessage());
+        return "erro";
     }
+}
 
 
     @GetMapping("/funcionario/listar")
