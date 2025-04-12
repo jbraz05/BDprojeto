@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -65,20 +67,33 @@ public class FuncionarioController {
     }
 }
 
+    @GetMapping("/empresa/{cnpj}/funcionarios")
+    public String listarFuncionarios(@PathVariable String cnpj, Model model) {
+    try {
+        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+        List<Funcionario> funcionarios = funcionarioDAO.listarPorEmpresa(cnpj);
 
-    @GetMapping("/funcionario/listar")
-    public String listarFuncionarios(Model model) {
-        try {
-            FuncionarioDAO dao = new FuncionarioDAO();
-            List<Funcionario> funcionarios = dao.listarTodos();
-            model.addAttribute("funcionarios", funcionarios);
-            return "lista-funcionario";
-        } catch (SQLException e) {
-            e.printStackTrace();
-            model.addAttribute("erro", "Erro ao listar funcionários: " + e.getMessage());
-            return "erro";
+        EmpresaDAO empresaDAO = new EmpresaDAO();
+        Empresa empresa = empresaDAO.buscarPorCnpj(cnpj);
+
+        // Mapeia cada matrícula para a empresa correspondente (usando a tabela Emprega)
+        Map<String, Empresa> empresasPorFuncionario = new HashMap<>();
+        for (Funcionario f : funcionarios) {
+            Empresa emp = empresaDAO.buscarPorFuncionario(f.getMatricula());
+            empresasPorFuncionario.put(f.getMatricula(), emp);
         }
+
+        model.addAttribute("funcionarios", funcionarios);
+        model.addAttribute("empresa", empresa);
+        model.addAttribute("empresasPorFuncionario", empresasPorFuncionario);
+        return "lista-funcionario";
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        model.addAttribute("erro", "Erro ao listar funcionários: " + e.getMessage());
+        return "erro";
     }
+}
     @PostMapping("/funcionario/remover")
     public String removerFuncionario(@RequestParam String matricula, Model model) {
         try {

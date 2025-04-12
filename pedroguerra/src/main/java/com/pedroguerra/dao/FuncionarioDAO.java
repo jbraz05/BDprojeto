@@ -33,29 +33,37 @@ public class FuncionarioDAO {
         }
     }
 
-    public List<Funcionario> listarTodos() throws SQLException {
+    public List<Funcionario> listarPorEmpresa(String cnpj) throws SQLException {
         List<Funcionario> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Funcionario";
+        String sql = """
+            SELECT f.*
+            FROM Funcionario f
+            JOIN Emprega e ON f.matricula = e.fk_Funcionario_matricula
+            WHERE e.fk_Empresa_cnpj = ?
+        """;
+    
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Funcionario f = new Funcionario();
-                f.setMatricula(rs.getString("matricula"));
-                f.setNome(rs.getString("nome"));
-                f.setContato(rs.getString("contato"));
-                f.setCidade(rs.getString("cidade"));
-                f.setNumero(rs.getString("numero"));
-                f.setBairro(rs.getString("bairro"));
-                f.setRua(rs.getString("rua"));
-                f.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
-                lista.add(f);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, cnpj);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Funcionario f = new Funcionario();
+                    f.setMatricula(rs.getString("matricula"));
+                    f.setNome(rs.getString("nome"));
+                    f.setContato(rs.getString("contato"));
+                    f.setCidade(rs.getString("cidade"));
+                    f.setNumero(rs.getString("numero"));
+                    f.setBairro(rs.getString("bairro"));
+                    f.setRua(rs.getString("rua"));
+                    f.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
+                    lista.add(f);
+                }
             }
         }
         return lista;
     }
-
+    
     public void removerPorMatricula(String matricula) throws SQLException {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false); // transação

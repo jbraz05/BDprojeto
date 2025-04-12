@@ -4,7 +4,7 @@
     <title>Lista de Funcionários</title>
 </head>
 <body>
-<h1>Funcionários Cadastrados</h1>
+<h1 th:text="'Funcionários da empresa: ' + ${empresa.nome}"></h1>
 
 <table border="1">
     <tr>
@@ -16,6 +16,7 @@
         <th>Bairro</th>
         <th>Rua</th>
         <th>Supervisor</th>
+        <th>Empresa</th>
         <th>Ações</th>
     </tr>
     <tr th:each="func : ${funcionarios}">
@@ -28,6 +29,7 @@
             <td><input type="text" name="bairro" th:value="${func.bairro}" /></td>
             <td><input type="text" name="rua" th:value="${func.rua}" /></td>
             <td><input type="text" name="fkSupervisorMatricula" th:value="${func.fkSupervisorMatricula}" /></td>
+            <td th:text="${empresasPorFuncionario[func.matricula]?.nome}">Empresa</td>
             <td>
                 <button type="submit">Salvar</button>
         </form>

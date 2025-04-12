@@ -149,5 +149,34 @@ public class EmpresaDAO {
     
         return lista;
     }
+    public Empresa buscarPorFuncionario(String matricula) throws SQLException {
+        String sql = """
+            SELECT e.*
+            FROM Empresa e
+            JOIN Emprega emp ON emp.fk_Empresa_cnpj = e.cnpj
+            WHERE emp.fk_Funcionario_matricula = ?
+        """;
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+            stmt.setString(1, matricula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Empresa empresa = new Empresa();
+                    empresa.setCnpj(rs.getString("cnpj"));
+                    empresa.setNome(rs.getString("nome"));
+                    empresa.setContato(rs.getString("contato"));
+                    empresa.setNumero(rs.getString("numero"));
+                    empresa.setBairro(rs.getString("bairro"));
+                    empresa.setCidade(rs.getString("cidade"));
+                    empresa.setRua(rs.getString("rua"));
+                    return empresa;
+                }
+            }
+        }
+    
+        return null;
+    }
     
 }

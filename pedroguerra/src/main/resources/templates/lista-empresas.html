@@ -23,7 +23,10 @@
     <tbody>
         <tr th:each="empresa : ${empresas}">
             <td th:text="${empresa[0]}">CNPJ</td>
-            <td th:text="${empresa[1]}">Nome</td>
+            <td>
+                <a th:href="@{'/empresa/' + ${empresa[0]} + '/funcionarios'}"
+                   th:text="${empresa[1]}">Nome</a>
+            </td>
             <td th:text="${empresa[2]}">Contato</td>
             <td th:text="${empresa[3]}">Rua</td>
             <td th:text="${empresa[4]}">Número</td>
