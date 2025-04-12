@@ -30,6 +30,11 @@
 # VS Code
 .vscode/
 
+
+# Arquivo de configuração local (não versionar)
+src/main/resources/config.properties
+
+
 # Sistema operacional
 .DS_Store
 Thumbs.db
