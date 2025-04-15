@@ -6,20 +6,25 @@ import com.pedroguerra.dao.EnderecoDAO;
 import com.pedroguerra.dto.EmpresaDTO;
 import com.pedroguerra.model.Empresa;
 import com.pedroguerra.model.Endereco;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class EmpresaService {
 
     private final EmpresaDAO empresaDAO = new EmpresaDAO();
     private final EnderecoDAO enderecoDAO = new EnderecoDAO();
     private final AtuaDAO atuaDAO = new AtuaDAO();
 
-    public void cadastrarEmpresa(Empresa empresa, Endereco endereco, String codigoLocalizacao) throws SQLException {
+    public void processarCadastro(Empresa empresa, String cep, String rua, String numero, String bairro, String cidade, String codigoLocalizacao) throws SQLException {
+        Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
         enderecoDAO.inserir(endereco);
-        empresa.setFkEnderecoCep(endereco.getCep());
+
+        empresa.setFkEnderecoCep(cep);
         empresaDAO.inserir(empresa);
+
         atuaDAO.inserir(empresa.getCnpj(), codigoLocalizacao);
     }
 
@@ -31,20 +36,17 @@ public class EmpresaService {
         return empresaDAO.buscarPorCnpj(cnpj);
     }
 
-    public void atualizarEmpresa(Empresa empresa) throws SQLException {
-        empresaDAO.atualizar(empresa);
-    }
+    public void atualizarEmpresaComEndereco(Empresa empresa, String cep, String rua, String numero, String bairro, String cidade, String codigoLocalizacao) throws SQLException {
+        Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
 
-    public void atualizarEmpresaComEndereco(Empresa empresa, Endereco endereco, String codigoLocalizacao) throws SQLException {
-        if (!enderecoDAO.cepExiste(endereco.getCep())) {
+        if (!enderecoDAO.cepExiste(cep)) {
             enderecoDAO.inserir(endereco);
         } else {
             enderecoDAO.atualizar(endereco);
         }
 
-        empresa.setFkEnderecoCep(endereco.getCep());
+        empresa.setFkEnderecoCep(cep);
         empresaDAO.atualizar(empresa);
-    
         atuaDAO.atualizar(empresa.getCnpj(), codigoLocalizacao);
     }
 

@@ -20,22 +20,25 @@ public class EmpresaController {
 
     private final EmpresaService empresaService = new EmpresaService();
     private final LocalizacaoService localizacaoService = new LocalizacaoService();
+    private final EnderecoService enderecoService = new EnderecoService();
 
-    @GetMapping("/empresa")
-    public String mostrarFormularioEmpresa(Model model) {
-        model.addAttribute("empresa", new Empresa());
-        model.addAttribute("endereco", new Endereco()); // <- adicionado aqui
-    
+    private void carregarLocalizacoes(Model model) {
         try {
             List<LocalizacaoAtuacao> localizacoes = localizacaoService.listar();
             model.addAttribute("localizacoes", localizacoes);
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao carregar localizações.");
         }
-    
+    }
+
+    @GetMapping("/empresa")
+    public String abrirFormularioCadastroEmpresa(Model model) {
+        model.addAttribute("empresa", new Empresa());
+        model.addAttribute("endereco", new Endereco());
+        carregarLocalizacoes(model);
         return "empresa";
     }
+
     @PostMapping("/empresa/cadastrar")
     public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
                                    @RequestParam String localizacaoCodigo,
@@ -46,11 +49,9 @@ public class EmpresaController {
                                    @RequestParam String cidade,
                                    Model model) {
         try {
-            Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
-            empresaService.cadastrarEmpresa(empresa, endereco, localizacaoCodigo);
+            empresaService.processarCadastro(empresa, cep, rua, numero, bairro, cidade, localizacaoCodigo);
             return "redirect:/empresa/listar";
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao cadastrar empresa: " + e.getMessage());
             model.addAttribute("empresa", new Empresa());
             return "empresa";
@@ -64,7 +65,6 @@ public class EmpresaController {
             model.addAttribute("empresas", empresas);
             return "lista-empresas";
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao listar empresas: " + e.getMessage());
             return "lista-empresas";
         }
@@ -76,27 +76,24 @@ public class EmpresaController {
             empresaService.removerEmpresa(cnpj);
             return "redirect:/empresa/listar";
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao remover empresa: " + e.getMessage());
             return "empresa";
         }
     }
 
     @GetMapping("/empresa/editar")
-    public String mostrarFormularioEdicao(@RequestParam String cnpj, Model model) {
+    public String abrirFormularioEdicaoEmpresa(@RequestParam String cnpj, Model model) {
         try {
             Empresa empresa = empresaService.buscarEmpresaPorCnpj(cnpj);
             model.addAttribute("empresa", empresa);
-    
-            Endereco endereco = new EnderecoService().buscar(empresa.getFkEnderecoCep());
-            model.addAttribute("endereco", endereco); // <- ESSENCIAL
-    
-            List<LocalizacaoAtuacao> localizacoes = localizacaoService.listar();
-            model.addAttribute("localizacoes", localizacoes);
-    
+
+            Endereco endereco = enderecoService.buscar(empresa.getFkEnderecoCep());
+            model.addAttribute("endereco", endereco);
+
+            carregarLocalizacoes(model);
+
             return "empresa";
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao buscar empresa: " + e.getMessage());
             return "empresa";
         }
@@ -112,12 +109,9 @@ public class EmpresaController {
                                    @RequestParam String cidade,
                                    Model model) {
         try {
-            Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
-            empresaService.atualizarEmpresaComEndereco(empresa, endereco, localizacaoCodigo);  // novo método
-    
+            empresaService.atualizarEmpresaComEndereco(empresa, cep, rua, numero, bairro, cidade, localizacaoCodigo);
             return "redirect:/empresa/listar";
         } catch (SQLException e) {
-            e.printStackTrace();
             model.addAttribute("erro", "Erro ao atualizar empresa: " + e.getMessage());
             model.addAttribute("empresa", empresa);
             return "empresa";
