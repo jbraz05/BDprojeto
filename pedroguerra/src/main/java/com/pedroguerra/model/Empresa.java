@@ -4,10 +4,7 @@ public class Empresa {
     private String cnpj;
     private String nome;
     private String contato;
-    private String numero;
-    private String bairro;
-    private String cidade;
-    private String rua;
+    private String fk_endereco_cep;
     public String getCnpj() {
         return cnpj;
     }
@@ -26,29 +23,11 @@ public class Empresa {
     public void setContato(String contato) {
         this.contato = contato;
     }
-    public String getNumero() {
-        return numero;
+    public String getFkEnderecoCep() {
+        return fk_endereco_cep;
     }
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-    public String getBairro() {
-        return bairro;
-    }
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-    public String getCidade() {
-        return cidade;
-    }
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-    public String getRua() {
-        return rua;
-    }
-    public void setRua(String rua) {
-        this.rua = rua;
+    public void setFkEnderecoCep(String fk_endereco_cep) {
+        this.fk_endereco_cep = fk_endereco_cep;
     }
 
 }

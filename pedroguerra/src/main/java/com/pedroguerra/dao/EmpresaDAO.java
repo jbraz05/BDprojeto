@@ -1,3 +1,4 @@
+
 package com.pedroguerra.dao;
 
 import com.pedroguerra.model.Empresa;
@@ -11,38 +12,32 @@ import java.util.List;
 public class EmpresaDAO {
 
     public void inserir(Empresa empresa) throws SQLException {
-        String sql = "INSERT INTO Empresa (cnpj, nome, contato, numero, bairro, cidade, rua) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Empresa (cnpj, nome, contato, fk_endereco_cep) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+    
             stmt.setString(1, empresa.getCnpj());
             stmt.setString(2, empresa.getNome());
             stmt.setString(3, empresa.getContato());
-            stmt.setString(4, empresa.getNumero());
-            stmt.setString(5, empresa.getBairro());
-            stmt.setString(6, empresa.getCidade());
-            stmt.setString(7, empresa.getRua());
+            stmt.setString(4, empresa.getFkEnderecoCep());
             stmt.executeUpdate();
         }
     }
     public List<Empresa> listarTodas() throws SQLException {
         List<Empresa> lista = new ArrayList<>();
         String sql = "SELECT * FROM Empresa";
-
+    
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-
+    
             while (rs.next()) {
                 Empresa empresa = new Empresa();
                 empresa.setCnpj(rs.getString("cnpj"));
                 empresa.setNome(rs.getString("nome"));
                 empresa.setContato(rs.getString("contato"));
-                empresa.setNumero(rs.getString("numero"));
-                empresa.setBairro(rs.getString("bairro"));
-                empresa.setCidade(rs.getString("cidade"));
-                empresa.setRua(rs.getString("rua"));
-                lista.add(empresa);
+                empresa.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
+                lista.add(empresa); 
             }
         }
         return lista;
@@ -102,10 +97,7 @@ public class EmpresaDAO {
                     empresa.setCnpj(rs.getString("cnpj"));
                     empresa.setNome(rs.getString("nome"));
                     empresa.setContato(rs.getString("contato"));
-                    empresa.setNumero(rs.getString("numero"));
-                    empresa.setBairro(rs.getString("bairro"));
-                    empresa.setCidade(rs.getString("cidade"));
-                    empresa.setRua(rs.getString("rua"));
+                    empresa.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                     return empresa;
                 }
             }
@@ -115,18 +107,14 @@ public class EmpresaDAO {
     
 
     public void atualizar(Empresa empresa) throws SQLException {
-        String sql = "UPDATE Empresa SET nome = ?, contato = ?, numero = ?, bairro = ?, cidade = ?, rua = ? WHERE cnpj = ?";
+        String sql = "UPDATE Empresa SET nome = ?, contato = ?, fk_endereco_cep = ? WHERE cnpj = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
     
             stmt.setString(1, empresa.getNome());
             stmt.setString(2, empresa.getContato());
-            stmt.setString(3, empresa.getNumero());
-            stmt.setString(4, empresa.getBairro());
-            stmt.setString(5, empresa.getCidade());
-            stmt.setString(6, empresa.getRua());
-            stmt.setString(7, empresa.getCnpj());
-    
+            stmt.setString(3, empresa.getFkEnderecoCep());
+            stmt.setString(4, empresa.getCnpj());
             stmt.executeUpdate();
         }
     }
@@ -134,9 +122,11 @@ public class EmpresaDAO {
         List<String[]> lista = new ArrayList<>();
     
         String sql = """
-            SELECT e.cnpj, e.nome, e.contato, e.rua, e.numero, e.bairro, e.cidade,
+            SELECT e.cnpj, e.nome, e.contato,
+                   en.rua, en.numero, en.bairro, en.cidade,
                    l.nome_estado, l.nome_pais, l.regiao
             FROM Empresa e
+            JOIN Endereco en ON e.fk_endereco_cep = en.cep
             LEFT JOIN Atua a ON e.cnpj = a.fk_Empresa_cnpj
             LEFT JOIN LocalizacaoAtuacao l ON l.codigo = a.fk_Localizacao_Atuacao_codigo
         """;
@@ -163,6 +153,7 @@ public class EmpresaDAO {
     
         return lista;
     }
+    
     public Empresa buscarPorFuncionario(String matricula) throws SQLException {
         String sql = """
             SELECT e.*
@@ -181,10 +172,7 @@ public class EmpresaDAO {
                     empresa.setCnpj(rs.getString("cnpj"));
                     empresa.setNome(rs.getString("nome"));
                     empresa.setContato(rs.getString("contato"));
-                    empresa.setNumero(rs.getString("numero"));
-                    empresa.setBairro(rs.getString("bairro"));
-                    empresa.setCidade(rs.getString("cidade"));
-                    empresa.setRua(rs.getString("rua"));
+                    empresa.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                     return empresa;
                 }
             }

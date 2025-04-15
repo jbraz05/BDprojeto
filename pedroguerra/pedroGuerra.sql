@@ -2,25 +2,29 @@ create database pedroguerra;
 
 use pedroguerra;
 
+CREATE TABLE Endereco (
+    cep VARCHAR(20) PRIMARY KEY,
+    numero VARCHAR(10),
+    cidade VARCHAR(100),
+    bairro VARCHAR(100),
+    rua VARCHAR(150)
+);
+
 CREATE TABLE Empresa (
     cnpj VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     contato VARCHAR(100),
-    numero VARCHAR(10),
-    bairro VARCHAR(100),
-    cidade VARCHAR(100),
-    rua VARCHAR(150)
+    fk_endereco_cep VARCHAR(20),
+    FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep)
 );
 
 CREATE TABLE Funcionario (
     matricula VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     contato VARCHAR(100),
-    cidade VARCHAR(100),
-    numero VARCHAR(10),
-    bairro VARCHAR(100),
-    rua VARCHAR(150),
     fk_supervisor_matricula VARCHAR(20),
+    fk_endereco_cep VARCHAR(20),
+    FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep),
     FOREIGN KEY (fk_supervisor_matricula) REFERENCES Funcionario(matricula)
 );
 
@@ -45,14 +49,6 @@ CREATE TABLE Engenheiro (
 CREATE TABLE OperadorDrone (
     fk_Funcionario_matricula VARCHAR(20) PRIMARY KEY,
     FOREIGN KEY (fk_Funcionario_matricula) REFERENCES Funcionario(matricula)
-);
-
-CREATE TABLE Endereco (
-    cep VARCHAR(20) PRIMARY KEY,
-    numero VARCHAR(10),
-    cidade VARCHAR(100),
-    bairro VARCHAR(100),
-    rua VARCHAR(150)
 );
 
 CREATE TABLE Cliente (
@@ -108,7 +104,7 @@ CREATE TABLE LocalizacaoAtuacao (
 
 CREATE TABLE Atua (
     fk_Empresa_cnpj VARCHAR(20),
-    fk_Localizacao_Atuacao_codigo VARCHAR(10),
+    fk_Localizacao_Atuacao_codigo VARCHAR(20),
     PRIMARY KEY (fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo),
     FOREIGN KEY (fk_Empresa_cnpj) REFERENCES Empresa(cnpj),
     FOREIGN KEY (fk_Localizacao_Atuacao_codigo) REFERENCES LocalizacaoAtuacao(codigo)
@@ -127,7 +123,7 @@ CREATE TABLE Possui (
 CREATE TABLE RelatorioServico (
     fk_Servico_id VARCHAR(20),
     area FLOAT,
-    data DATE,
+    data_relatorio DATE,
     observacoes VARCHAR(500),
     PRIMARY KEY (fk_Servico_id),
     FOREIGN KEY (fk_Servico_id) REFERENCES Servico(id)

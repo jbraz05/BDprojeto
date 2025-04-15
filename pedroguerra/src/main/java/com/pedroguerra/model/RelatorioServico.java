@@ -5,13 +5,13 @@ import java.util.Date;
 public class RelatorioServico {
     private String fkServicoId;
     private float area;
-    private Date data;
+    private Date data_relatorio;
     private String observacoes;
 
-    public RelatorioServico(String fkServicoId, float area, Date data, String observacoes) {
+    public RelatorioServico(String fkServicoId, float area, Date data_relatorio, String observacoes) {
         this.fkServicoId = fkServicoId;
         this.area = area;
-        this.data = data;
+        this.data_relatorio = data_relatorio;
         this.observacoes = observacoes;
     }
 
@@ -31,12 +31,12 @@ public class RelatorioServico {
         this.area = area;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDataRelatorio() {
+        return data_relatorio;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDataRelatorio(Date data_relatorio) {
+        this.data_relatorio = data_relatorio;
     }
 
     public String getObservacoes() {

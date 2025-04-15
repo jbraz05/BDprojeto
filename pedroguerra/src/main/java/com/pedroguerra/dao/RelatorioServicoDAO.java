@@ -15,7 +15,7 @@ public class RelatorioServicoDAO {
 
             stmt.setString(1, r.getfkServicoId());
             stmt.setFloat(2, r.getArea());
-            stmt.setDate(3, new java.sql.Date(r.getData().getTime()));
+            stmt.setDate(3, new java.sql.Date(r.getDataRelatorio().getTime()));
             stmt.setString(4, r.getObservacoes());
             stmt.executeUpdate();
         }

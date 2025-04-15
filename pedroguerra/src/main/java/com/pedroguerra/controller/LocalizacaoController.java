@@ -31,7 +31,9 @@ public class LocalizacaoController {
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao cadastrar: " + e.getMessage());
-            return "erro";
+            model.addAttribute("localizacao", l); // ← ESSENCIAL
+
+            return "localizacao";
         }
     }
 

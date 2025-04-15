@@ -5,24 +5,18 @@ public class Funcionario {
     private String matricula;
     private String nome;
     private String contato;
-    private String cidade;
-    private String numero;
-    private String bairro;
-    private String rua;
+    private String fk_endereco_cep;
     private String fkSupervisorMatricula;
 
     public Funcionario() {
     }
 
-    public Funcionario(String matricula, String nome, String contato, String cidade, String numero, String bairro, String rua, String fkSupervisorMatricula) {
+    public Funcionario(String matricula, String nome, String contato, String fk_endereco_cep, String fkSupervisorMatricula) {
         this.matricula = matricula;
         this.nome = nome;
         this.contato = contato;
-        this.cidade = cidade;
-        this.numero = numero;
-        this.bairro = bairro;
-        this.rua = rua;
         this.fkSupervisorMatricula = fkSupervisorMatricula;
+        this.fk_endereco_cep = fk_endereco_cep;
     }
 
     public String getMatricula() {
@@ -49,44 +43,18 @@ public class Funcionario {
         this.contato = contato;
     }
 
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
     public String getFkSupervisorMatricula() {
         return fkSupervisorMatricula;
     }
 
     public void setFkSupervisorMatricula(String fkSupervisorMatricula) {
         this.fkSupervisorMatricula = fkSupervisorMatricula;
+    }
+    public String getFkEnderecoCep() {
+        return fk_endereco_cep;
+    }
+    public void setFkEnderecoCep(String fk_endereco_cep) {
+        this.fk_endereco_cep = fk_endereco_cep;
     }
 }
 
