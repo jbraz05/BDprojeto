@@ -1,50 +1,41 @@
-<!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Empresa</title>
 </head>
 <body>
-<h1>Cadastro de Empresa</h1>
+<h1>Cadastrar Empresa</h1>
 
-<form th:action="@{/empresa/cadastrar}" th:object="${empresa}" method="post">
-    <label>CNPJ:</label><br>
-    <input type="text" th:field="*{cnpj}" required><br><br>
+<form th:action="${empresa.cnpj} != null ? @{/empresa/atualizar} : @{/empresa/cadastrar}" method="post">
+    <label>CNPJ:</label>
+    <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required><br> <!--Ele so pode ler, não editar-->
 
-    <label>Nome:</label><br>
-    <input type="text" th:field="*{nome}" required><br><br>
+    <label>Nome:</label>
+    <input type="text" name="nome" th:value="${empresa.nome}" required><br>
 
-    <label>Contato:</label><br>
-    <input type="text" th:field="*{contato}"><br><br>
+    <label>Contato:</label>
+    <input type="text" name="contato" th:value="${empresa.contato}" required><br>
+    <input type="text" name="cep" th:value="${endereco.cep}" required>
+    <input type="text" name="rua" th:value="${endereco.rua}" required>
+    <input type="text" name="numero" th:value="${endereco.numero}" required>
+    <input type="text" name="bairro" th:value="${endereco.bairro}" required>
+    <input type="text" name="cidade" th:value="${endereco.cidade}" required>
 
-    <label>CEP:</label><br>
-    <input type="text" name="cep" required><br><br>
-
-    <!-- Dados da tabela endereço -->
-    <label>Rua:</label><br>
-    <input type="text" name="rua" required><br><br>
-
-    <label>Número:</label><br>
-    <input type="text" name="numero" required><br><br>
-
-    <label>Bairro:</label><br>
-    <input type="text" name="bairro" required><br><br>
-
-    <label>Cidade:</label><br>
-    <input type="text" name="cidade" required><br><br>
-
-    <label>Localização de Atuação:</label><br>
-    <select name="localizacaoCodigo" required>
-        <option value="">-- Selecione --</option>
-        <option th:each="loc : ${localizacoes}"
-                th:value="${loc.codigo}"
-                th:text="${loc.nomeEstado + ' - ' + loc.nomePais + ' (' + loc.regiao + ')'}">
+    <h3>Localização de Atuação</h3>
+    <label>Localização:</label>
+    <select name="localizacaoCodigo">
+        <option th:each="localizacao : ${localizacoes}" 
+                th:value="${localizacao.codigo}" 
+                th:text="${localizacao.nomeEstado + ' - ' + localizacao.nomePais}">
         </option>
     </select><br><br>
 
-    <button type="submit">Cadastrar</button>
+    <button type="submit" th:text="${empresa.cnpj} != null ? 'Atualizar' : 'Cadastrar'"></button>
+
 </form>
 
-<a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+<div th:if="${erro}" style="color:red">
+    <p th:text="${erro}"></p>
+</div>
 </body>
 </html>

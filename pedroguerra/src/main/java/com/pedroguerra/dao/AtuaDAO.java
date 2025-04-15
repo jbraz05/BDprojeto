@@ -16,4 +16,15 @@ public class AtuaDAO {
             stmt.executeUpdate();
         }
     }
+
+    public void atualizar(String cnpj, String novoCodigoLocalizacao) throws SQLException {
+        String sql = "UPDATE Atua SET fk_Localizacao_Atuacao_codigo = ? WHERE fk_Empresa_cnpj = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+            stmt.setString(1, novoCodigoLocalizacao);
+            stmt.setString(2, cnpj);
+            stmt.executeUpdate();
+        }
+    }
 }

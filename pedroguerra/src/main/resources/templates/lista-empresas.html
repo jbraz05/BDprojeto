@@ -1,50 +1,56 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Empresas Cadastradas</title>
+    <meta charset="UTF-8">
+    <title>Lista de Empresas</title>
 </head>
 <body>
 <h1>Empresas Cadastradas</h1>
 
-<table border="1" cellpadding="10">
+<table border="1">
     <thead>
-        <tr>
-            <th>CNPJ</th>
-            <th>Nome</th>
-            <th>Contato</th>
-            <th>Rua</th>
-            <th>Número</th>
-            <th>Bairro</th>
-            <th>Cidade</th>
-            <th>Localização</th>
-            <th>Ações</th>
-        </tr>
+    <tr>
+        <th>CNPJ</th>
+        <th>Nome</th>
+        <th>Contato</th>
+        <th>Rua</th>
+        <th>Número</th>
+        <th>Bairro</th>
+        <th>Cidade</th>
+        <th>Estado</th>
+        <th>País</th>
+        <th>Região</th>
+        <th>Ações</th>
+    </tr>
     </thead>
     <tbody>
-        <tr th:each="empresa : ${empresas}">
-            <td th:text="${empresa[0]}">CNPJ</td>
-            <td>
-                <a th:href="@{'/empresa/' + ${empresa[0]} + '/funcionarios'}"
-                   th:text="${empresa[1]}">Nome</a>
-            </td>
-            <td th:text="${empresa[2]}">Contato</td>
-            <td th:text="${empresa[3]}">Rua</td>
-            <td th:text="${empresa[4]}">Número</td>
-            <td th:text="${empresa[5]}">Bairro</td>
-            <td th:text="${empresa[6]}">Cidade</td>
-            <td th:text="${empresa[7] != null ? empresa[7] + ' - ' + empresa[8] + ' (' + empresa[9] + ')' : 'Não atribuída'}">Localização</td>
-            <td>
-                <form th:action="@{/empresa/remover}" method="post">
-                    <input type="hidden" name="cnpj" th:value="${empresa[0]}" />
-                    <button type="submit">Remover</button>
-                </form>
-            </td>
-        </tr>
+    <tr th:each="empresa : ${empresas}">
+        <td th:text="${empresa.cnpj}"></td>
+        <td th:text="${empresa.nome}"></td>
+        <td th:text="${empresa.contato}"></td>
+        <td th:text="${empresa.rua}"></td>
+        <td th:text="${empresa.numero}"></td>
+        <td th:text="${empresa.bairro}"></td>
+        <td th:text="${empresa.cidade}"></td>
+        <td th:text="${empresa.nomeEstado}"></td>
+        <td th:text="${empresa.nomePais}"></td>
+        <td th:text="${empresa.regiao}"></td>
+        <td>
+            <form th:action="@{/empresa/editar}" method="get" style="display:inline">
+                <input type="hidden" name="cnpj" th:value="${empresa.cnpj}"/>
+                <button type="submit">Editar</button>
+            </form>
+
+            <form th:action="@{/empresa/remover}" method="post" style="display:inline">
+                <input type="hidden" name="cnpj" th:value="${empresa.cnpj}"/>
+                <button type="submit" onclick="return confirm('Deseja realmente remover esta empresa?')">Remover</button>
+            </form>
+        </td>
+    </tr>
     </tbody>
 </table>
 
-<br>
-<a th:href="@{/empresa}">Cadastrar nova empresa</a><br>
-<a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+<div th:if="${erro}" style="color:red">
+    <p th:text="${erro}"></p>
+</div>
 </body>
 </html>

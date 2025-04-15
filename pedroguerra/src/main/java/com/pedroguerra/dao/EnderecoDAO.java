@@ -40,4 +40,31 @@ public class EnderecoDAO {
         }
         return null;
     }
+
+    public void atualizar(Endereco endereco) throws SQLException {
+        String sql = "UPDATE Endereco SET rua = ?, numero = ?, bairro = ?, cidade = ? WHERE cep = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, endereco.getRua());
+            stmt.setString(2, endereco.getNumero());
+            stmt.setString(3, endereco.getBairro());
+            stmt.setString(4, endereco.getCidade());
+            stmt.setString(5, endereco.getCep());
+            stmt.executeUpdate();
+        }
+    }
+
+    public boolean cepExiste(String cep) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Endereco WHERE cep = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cep);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
 } 
