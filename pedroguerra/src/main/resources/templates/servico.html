@@ -3,38 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Serviço</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #3a4353;
+            padding: 2rem 3rem;
+            padding-right:3rem;
+            padding-bottom: 2.5rem;
+            margin-top: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-top: 1rem;
+            display: block;
+            color: #e9ecf0;
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            margin-top: 5px;
+            background-color: #373d44;
+            border: 1px solid #282b2e;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+        }
+
+        .button-row button {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-voltar {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-salvar {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .button-row button:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
+<div class="form-container">
+    <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
-<h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
+    <form action="/salvar-servico" method="post" th:object="${servico}">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" th:field="*{id}" th:readonly="${servico.id != null}" required>
 
-<form action="/salvar-servico" method="post" th:object="${servico}">
-    <label for="id">ID:</label>
-    <input type="text" id="id" name="id" th:field="*{id}" th:readonly="${servico.id != null}" required>
-    <br>
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" th:field="*{data}" required>
 
-    <label for="data">Data:</label>
-    <input type="date" id="data" name="data" th:field="*{data}" required>
-    <br>
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" th:field="*{tipo}" required>
 
-    <label for="tipo">Tipo:</label>
-    <input type="text" id="tipo" name="tipo" th:field="*{tipo}" required>
-    <br>
+        <label for="fkFuncionarioMatricula">Funcionário:</label>
+        <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
+            <option value="">Selecione</option>
+            <option th:each="f : ${funcionarios}" 
+                    th:value="${f.matricula}" 
+                    th:text="${f.nome + ' (' + f.matricula + ')'}"
+                    th:selected="${f.matricula == servico.fkFuncionarioMatricula}">
+            </option>
+        </select>
 
-    <label for="fkFuncionarioMatricula">Funcionário:</label>
-    <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
-        <option value="">Selecione</option>
-        <option th:each="f : ${funcionarios}" 
-                th:value="${f.matricula}" 
-                th:text="${f.nome + ' (' + f.matricula + ')'}"
-                th:selected="${f.matricula == servico.fkFuncionarioMatricula}">
-        </option>
-    </select>
-    <br><br>
-
-    <button type="submit">Salvar</button>
-    <a href="/servicos">Cancelar</a>
-</form>
-
+        <div class="button-row">
+            <a th:href="@{/}">
+                <button type="button" class="btn-voltar">Voltar para Home</button>
+            </a>
+            <button type="submit" class="btn-salvar">Salvar</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
