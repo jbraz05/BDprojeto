@@ -50,7 +50,7 @@ public class FuncionarioDAO {
 
                 EmpregaDAO empregaDAO = new EmpregaDAO();
                 Emprega emprega = new Emprega(dto.getCnpjEmpresa(), dto.getMatricula());
-                empregaDAO.inserir(emprega);
+                empregaDAO.inserir(emprega, conn);
 
                 if (dto.isSocio()) try (PreparedStatement s = conn.prepareStatement(sqlSocio)) { s.setString(1, dto.getMatricula()); s.executeUpdate(); }
                 if (dto.isEngenheiro()) try (PreparedStatement s = conn.prepareStatement(sqlEngenheiro)) { s.setString(1, dto.getMatricula()); s.executeUpdate(); }
