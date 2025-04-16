@@ -1,53 +1,69 @@
 package com.pedroguerra.controller;
 
-import com.pedroguerra.dao.*;
-import com.pedroguerra.model.*;
+import com.pedroguerra.dao.EmpresaDAO;
+import com.pedroguerra.dto.FuncionarioDTO;
+import com.pedroguerra.model.Funcionario;
+import com.pedroguerra.service.FuncionarioService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Controller
 public class FuncionarioController {
 
+    private final FuncionarioService service = new FuncionarioService();
+    private final EmpresaDAO empresaDAO = new EmpresaDAO();
+
     @GetMapping("/funcionario")
-    public String mostrarFormularioFuncionario(Model model) {
+    public String exibirFormularioCadastro(Model model) {
         try {
-            model.addAttribute("funcionario", new Funcionario());
+            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+            model.addAttribute("supervisores", service.listarTodos());
+            model.addAttribute("funcionario", new FuncionarioDTO());
             return "funcionario";
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("erro", "Erro ao carregar formulário: " + e.getMessage());
-            return "erro";
+            throw new RuntimeException("Erro ao carregar formulário de cadastro", e);
         }
     }
 
-    @PostMapping("/funcionario/cadastrar")
-    public String cadastrarFuncionario(@ModelAttribute Funcionario funcionario, Model model) {
+    @PostMapping("/salvar-funcionario")
+    public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto) {
         try {
-            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-            funcionarioDAO.inserir(funcionario);
-            return "redirect:/funcionario/listar";
-        } catch (SQLException e) {
+            service.salvarFuncionario(dto);
+            return "redirect:/funcionarios";
+        } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("erro", "Erro ao cadastrar funcionário: " + e.getMessage());
-            return "erro";
+            throw new RuntimeException("Erro ao salvar funcionário", e);
         }
     }
 
-    @GetMapping("/funcionario/listar")
-    public String listarFuncionarios(Model model) {
+    @GetMapping("/funcionarios")
+    public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
         try {
-            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-            List<Funcionario> funcionarios = funcionarioDAO.listarTodos();
+            List<Funcionario> funcionarios = (cnpj != null && !cnpj.isEmpty())
+                    ? service.listarFuncionariosPorEmpresa(cnpj)
+                    : service.listarTodos();
+
+            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
             model.addAttribute("funcionarios", funcionarios);
-            return "lista-funcionario";
-        } catch (SQLException e) {
+            return "lista-funcionarios";
+        } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("erro", "Erro ao listar funcionários: " + e.getMessage());
-            return "erro";
+            throw new RuntimeException("Erro ao listar funcionários", e);
+        }
+    }
+
+    @GetMapping("/remover-funcionario")
+    public String removerFuncionario(@RequestParam String matricula) {
+        try {
+            service.removerFuncionario(matricula);
+            return "redirect:/funcionarios";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao remover funcionário", e);
         }
     }
 }

@@ -1,4 +1,3 @@
-<!-- templates/funcionario.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,7 +6,7 @@
 <body>
     <h1>Cadastrar Funcionário</h1>
 
-    <form th:action="@{/funcionario/cadastrar}" th:object="${funcionario}" method="post">
+    <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
         <label>Matrícula:</label>
         <input type="text" th:field="*{matricula}" required /><br/>
 
@@ -17,44 +16,42 @@
         <label>Contato:</label>
         <input type="text" th:field="*{contato}" /><br/>
 
-        <label>Cidade:</label>
-        <input type="text" th:field="*{cidade}" /><br/>
-
-        <label>Número:</label>
-        <input type="text" th:field="*{numero}" /><br/>
-
-        <label>Bairro:</label>
-        <input type="text" th:field="*{bairro}" /><br/>
+        <label>CEP:</label>
+        <input type="text" th:field="*{fkEnderecoCep}" required><br/>
 
         <label>Rua:</label>
-        <input type="text" th:field="*{rua}" /><br/>
+        <input type="text" th:field="*{ruaEndereco}" required><br/>
+
+        <label>Número:</label>
+        <input type="text" th:field="*{numeroEndereco}" required><br/>
+
+        <label>Bairro:</label>
+        <input type="text" th:field="*{bairroEndereco}" required><br/>
+
+        <label>Cidade:</label>
+        <input type="text" th:field="*{cidadeEndereco}" required><br/>
 
         <label>Supervisor (Matrícula):</label>
         <input type="text" th:field="*{fkSupervisorMatricula}" /><br/>
 
-        
-        <label>Tipo de Funcionário:</label>
-    <select name="tipo" required>
-        <option value="">-- Selecione --</option>
-        <option value="engenheiro">Engenheiro</option>
-        <option value="socio">Sócio</option>
-        <option value="operador">Operador de Drone</option>
-    </select><br/>
-    <label>Empresa:</label>
-    <select name="empresaCnpj" required>
-        <option value="">-- Selecione uma empresa --</option>
-        <th:block th:each="empresa : ${empresas}">
-            <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
-        </th:block>
-    </select><br/>
-    <button type="submit">Cadastrar</button>
+        <label>Tipo de Funcionário:</label><br/>
+        <label><input type="checkbox" th:field="*{socio}" /> Sócio</label><br/>
+        <label><input type="checkbox" th:field="*{engenheiro}" /> Engenheiro</label><br/>
+        <label><input type="checkbox" th:field="*{operadorDrone}" /> Operador de Drone</label><br/>
+
+        <label>Empresa:</label>
+        <select th:field="*{cnpjEmpresa}" required>
+            <option value="">-- Selecione uma empresa --</option>
+            <th:block th:each="empresa : ${empresas}">
+                <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+            </th:block>
+        </select><br/>
+
+        <button type="submit">Cadastrar</button>
     </form>
 
     <br/>
-    <a th:href="@{/funcionario/listar}">Ver lista de funcionários</a>
+    <a th:href="@{/funcionarios}">Ver lista de funcionários</a><br/>
+    <a th:href="@{/}"><button type="button">Voltar para Home</button></a>
 </body>
-
-
-<a th:href="@{/}"><button type="button">Voltar para Home</button></a>
-
 </html>

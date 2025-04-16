@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Funcionários</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Lista de Funcionários</h1>
+
+    <form method="get" action="/funcionarios">
+        <label for="empresa">Filtrar por Empresa:</label>
+        <select name="cnpj" id="empresa">
+            <option value="">Todas</option>
+            <th:block th:each="empresa : ${empresas}">
+                <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+            </th:block>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>Supervisor</th>
+                <th>CEP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="func : ${funcionarios}">
+                <td th:text="${func.matricula}"></td>
+                <td th:text="${func.nome}"></td>
+                <td th:text="${func.contato}"></td>
+                <td th:text="${func.fkSupervisorMatricula}"></td>
+                <td th:text="${func.fkEnderecoCep}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

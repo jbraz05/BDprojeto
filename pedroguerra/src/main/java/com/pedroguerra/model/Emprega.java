@@ -1,27 +1,29 @@
 package com.pedroguerra.model;
 
-public class Emprega{
-    private String empresaCnpj;
-    private String funcionarioMatricula;
+public class Emprega {
+    private String fkEmpresaCnpj;
+    private String fkFuncionarioMatricula;
 
-    public Emprega(String empresaCnpj, String funcionarioMatricula) {
-        this.empresaCnpj = empresaCnpj;
-        this.funcionarioMatricula = funcionarioMatricula;
+    public Emprega() {}
+
+    public Emprega(String fkEmpresaCnpj, String fkFuncionarioMatricula) {
+        this.fkEmpresaCnpj = fkEmpresaCnpj;
+        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
     }
 
-    public String getEmpresaCnpj(){
-        return empresaCnpj;
-    }
-    
-    public void setEmpresaCnpj(String empresaCnpj){
-        this.empresaCnpj = empresaCnpj;
+    public String getFkEmpresaCnpj() {
+        return fkEmpresaCnpj;
     }
 
-    public String getFuncionarioMatricula(){
-        return funcionarioMatricula;
+    public void setFkEmpresaCnpj(String fkEmpresaCnpj) {
+        this.fkEmpresaCnpj = fkEmpresaCnpj;
     }
 
-    public void setFuncionarioMatricula(String funcionarioMatricula){
-        this.funcionarioMatricula = funcionarioMatricula;
+    public String getFkFuncionarioMatricula() {
+        return fkFuncionarioMatricula;
+    }
+
+    public void setFkFuncionarioMatricula(String fkFuncionarioMatricula) {
+        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
     }
 }

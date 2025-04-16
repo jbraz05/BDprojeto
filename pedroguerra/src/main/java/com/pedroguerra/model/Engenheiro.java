@@ -1,8 +1,17 @@
 package com.pedroguerra.model;
 
-public class Engenheiro extends Funcionario {
-    public Engenheiro(String matricula, String nome, String contato, String cidade,String fk_endereco_cep, String fk_supervisor_matricula) {
-        super(matricula, nome, contato, fk_supervisor_matricula, fk_supervisor_matricula);
+public class Engenheiro {
+    private String fkFuncionarioMatricula;
+    public Engenheiro() {}
+    public Engenheiro(String fkFuncionarioMatricula) {
+        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
+    }
+
+    public String getFkFuncionarioMatricula() {
+        return fkFuncionarioMatricula;
+    }
+
+    public void setFkFuncionarioMatricula(String fkFuncionarioMatricula) {
+        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
     }
 }
-
