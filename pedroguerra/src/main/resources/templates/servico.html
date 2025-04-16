@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Serviço</title>
+</head>
+<body>
+
+<h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
+
+<form action="/salvar-servico" method="post" th:object="${servico}">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" th:field="*{id}" th:readonly="${servico.id != null}" required>
+    <br>
+
+    <label for="data">Data:</label>
+    <input type="date" id="data" name="data" th:field="*{data}" required>
+    <br>
+
+    <label for="tipo">Tipo:</label>
+    <input type="text" id="tipo" name="tipo" th:field="*{tipo}" required>
+    <br>
+
+    <label for="fkFuncionarioMatricula">Funcionário:</label>
+    <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
+        <option value="">Selecione</option>
+        <option th:each="f : ${funcionarios}" 
+                th:value="${f.matricula}" 
+                th:text="${f.nome + ' (' + f.matricula + ')'}"
+                th:selected="${f.matricula == servico.fkFuncionarioMatricula}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Salvar</button>
+    <a href="/servicos">Cancelar</a>
+</form>
+
+</body>
+</html>
