@@ -26,6 +26,7 @@
                 <th>Contato</th>
                 <th>Supervisor</th>
                 <th>CEP</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -35,8 +36,18 @@
                 <td th:text="${func.contato}"></td>
                 <td th:text="${func.fkSupervisorMatricula}"></td>
                 <td th:text="${func.fkEnderecoCep}"></td>
+                <td>
+                    <a th:href="@{/editar-funcionario(matricula=${func.matricula})}">Editar</a> |
+                    <a th:href="@{/remover-funcionario(matricula=${func.matricula})}"
+                       onclick="return confirm('Tem certeza que deseja remover este funcionário?');">
+                       Remover
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
+
+    <br>
+    <a th:href="@{/}"><button>Voltar</button></a>
 </body>
 </html>

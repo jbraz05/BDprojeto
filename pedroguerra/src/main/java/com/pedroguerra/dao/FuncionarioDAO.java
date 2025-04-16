@@ -146,4 +146,124 @@ public class FuncionarioDAO {
         }
         return lista;
     }
+
+    public FuncionarioDTO buscarFuncionarioDTO(String matricula) throws SQLException {
+        String sql = "SELECT f.*, e.rua, e.numero, e.cidade, e.bairro " +
+                     "FROM Funcionario f JOIN Endereco e ON f.fk_endereco_cep = e.cep " +
+                     "WHERE f.matricula = ?";
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            ResultSet rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                FuncionarioDTO dto = new FuncionarioDTO();
+                dto.setMatricula(rs.getString("matricula"));
+                dto.setNome(rs.getString("nome"));
+                dto.setContato(rs.getString("contato"));
+                dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
+                dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
+    
+                dto.setRuaEndereco(rs.getString("rua"));
+                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setCidadeEndereco(rs.getString("cidade"));
+                dto.setBairroEndereco(rs.getString("bairro"));
+    
+                // Você pode recuperar também o CNPJ da empresa se quiser
+    
+                return dto;
+            } else {
+                return null;
+            }
+        }
+    }
+    
+    public void atualizar(FuncionarioDTO dto) throws SQLException {
+        String sql = "UPDATE Funcionario SET nome = ?, contato = ?, fk_endereco_cep = ?, fk_supervisor_matricula = ? WHERE matricula = ?";
+    
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                EnderecoDAO enderecoDAO = new EnderecoDAO();
+                if (!enderecoDAO.cepExiste(dto.getFkEnderecoCep())) {
+                    Endereco novo = new Endereco(
+                        dto.getFkEnderecoCep(),
+                        dto.getNumeroEndereco(),
+                        dto.getCidadeEndereco(),
+                        dto.getBairroEndereco(),
+                        dto.getRuaEndereco()
+                    );
+                    enderecoDAO.inserir(novo);
+                }
+    
+                // Atualiza os dados principais
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, dto.getNome());
+                    stmt.setString(2, dto.getContato());
+                    stmt.setString(3, dto.getFkEnderecoCep());
+    
+                    if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isEmpty()) {
+                        stmt.setNull(4, Types.VARCHAR);
+                    } else {
+                        stmt.setString(4, dto.getFkSupervisorMatricula());
+                    }
+    
+                    stmt.setString(5, dto.getMatricula());
+                    stmt.executeUpdate();
+                }
+    
+                // Atualiza Emprega
+                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_Funcionario_matricula = ?")) {
+                    stmt.setString(1, dto.getMatricula());
+                    stmt.executeUpdate();
+                }
+                EmpregaDAO empregaDAO = new EmpregaDAO();
+                empregaDAO.inserir(new Emprega(dto.getCnpjEmpresa(), dto.getMatricula()), conn);
+    
+                // Remove tipos antigos
+                try (PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
+                    stmt1.setString(1, dto.getMatricula());
+                    stmt1.executeUpdate();
+                }
+                try (PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Engenheiro WHERE fk_funcionario_matricula = ?")) {
+                    stmt2.setString(1, dto.getMatricula());
+                    stmt2.executeUpdate();
+                }
+                try (PreparedStatement stmt3 = conn.prepareStatement("DELETE FROM OperadorDrone WHERE fk_funcionario_matricula = ?")) {
+                    stmt3.setString(1, dto.getMatricula());
+                    stmt3.executeUpdate();
+                }
+    
+                // Insere novamente os tipos selecionados
+                if (dto.isSocio()) {
+                    try (PreparedStatement s = conn.prepareStatement("INSERT INTO Socio (fk_funcionario_matricula) VALUES (?)")) {
+                        s.setString(1, dto.getMatricula());
+                        s.executeUpdate();
+                    }
+                }
+                if (dto.isEngenheiro()) {
+                    try (PreparedStatement s = conn.prepareStatement("INSERT INTO Engenheiro (fk_funcionario_matricula) VALUES (?)")) {
+                        s.setString(1, dto.getMatricula());
+                        s.executeUpdate();
+                    }
+                }
+                if (dto.isOperadorDrone()) {
+                    try (PreparedStatement s = conn.prepareStatement("INSERT INTO OperadorDrone (fk_funcionario_matricula) VALUES (?)")) {
+                        s.setString(1, dto.getMatricula());
+                        s.executeUpdate();
+                    }
+                }
+    
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+    
+    
 }

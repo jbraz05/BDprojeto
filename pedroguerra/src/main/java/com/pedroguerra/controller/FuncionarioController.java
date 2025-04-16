@@ -32,13 +32,18 @@ public class FuncionarioController {
     @PostMapping("/salvar-funcionario")
     public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto) {
         try {
-            service.salvarFuncionario(dto);
+            if (service.funcionarioExiste(dto.getMatricula())) {
+                service.atualizarFuncionario(dto);
+            } else {
+                service.salvarFuncionario(dto);
+            }
             return "redirect:/funcionarios";
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Erro ao salvar funcionário", e);
         }
     }
+    
 
     @GetMapping("/funcionarios")
     public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
@@ -66,4 +71,19 @@ public class FuncionarioController {
             throw new RuntimeException("Erro ao remover funcionário", e);
         }
     }
+
+    @GetMapping("/editar-funcionario")
+public String editarFuncionario(@RequestParam String matricula, Model model) {
+    try {
+        FuncionarioDTO dto = service.buscarFuncionarioParaEdicao(matricula);
+        model.addAttribute("funcionario", dto);
+        model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+        model.addAttribute("supervisores", service.listarTodos());
+        return "funcionario";
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Erro ao carregar dados para edição", e);
+    }
+}
+
 }

@@ -26,4 +26,16 @@ public class FuncionarioService {
     public List<Funcionario> listarTodos() throws SQLException {
         return dao.listarTodos();
     }
+
+    public FuncionarioDTO buscarFuncionarioParaEdicao(String matricula) throws SQLException {
+        return dao.buscarFuncionarioDTO(matricula);
+    }
+    public boolean funcionarioExiste(String matricula) throws SQLException {
+        return dao.buscarFuncionarioDTO(matricula) != null;
+    }
+    
+    public void atualizarFuncionario(FuncionarioDTO dto) throws SQLException {
+        dao.atualizar(dto);
+    }
+    
 }
