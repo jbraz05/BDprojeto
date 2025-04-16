@@ -1,46 +1,139 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Empresa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #3a4353;
+            padding: 2rem 3rem;
+            margin-top: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-top: 1rem;
+            display: block;
+            color: #e9ecf0;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            background-color: #373d44;
+            border: 1px solid #282b2e;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .row > div {
+            flex: 1;
+        }
+
+        button {
+            margin-top: 2rem;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-<h1>Cadastrar Empresa</h1>
+<div class="form-container">
+    <h1>Cadastrar Empresa</h1>
+    <form th:action="${empresa.cnpj} != null ? @{/empresa/atualizar} : @{/empresa/cadastrar}" method="post">
+        <label>CNPJ:</label>
+        <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required>
 
-<form th:action="${empresa.cnpj} != null ? @{/empresa/atualizar} : @{/empresa/cadastrar}" method="post">
-    <label>CNPJ:</label>
-    <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required><br> <!--Ele so pode ler, não editar-->
+        <label>Nome:</label>
+        <input type="text" name="nome" th:value="${empresa.nome}" required>
 
-    <label>Nome:</label>
-    <input type="text" name="nome" th:value="${empresa.nome}" required><br>
+        <label>Contato:</label>
+        <input type="text" name="contato" th:value="${empresa.contato}" required>
 
-    <label>Contato:</label>
-    <input type="text" name="contato" th:value="${empresa.contato}" required><br>
-    <label>CEP:</label>
-    <input type="text" name="cep" th:value="${endereco.cep}" required>
-    <label>Rua::</label>
-    <input type="text" name="rua" th:value="${endereco.rua}" required>
-    <label>Numero:</label>
-    <input type="text" name="numero" th:value="${endereco.numero}" required>
-    <label>Bairro:</label>
-    <input type="text" name="bairro" th:value="${endereco.bairro}" required>
-    <label>Cidade:</label>
-    <input type="text" name="cidade" th:value="${endereco.cidade}" required>
+        <label>CEP:</label>
+        <input type="text" name="cep" th:value="${endereco.cep}" required>
 
-    <h3>Localização de Atuação</h3>
-    <label>Localização:</label>
-    <select name="localizacaoCodigo">
-        <option th:each="localizacao : ${localizacoes}" 
-                th:value="${localizacao.codigo}" 
-                th:text="${localizacao.nomeEstado + ' - ' + localizacao.nomePais}">
-        </option>
-    </select><br><br>
+        <div class="row">
+            <div>
+                <label>Rua:</label>
+                <input type="text" name="rua" th:value="${endereco.rua}" required>
+            </div>
+            <div>
+                <label>Número:</label>
+                <input type="text" name="numero" th:value="${endereco.numero}" required>
+            </div>
+        </div>
 
-    <button type="submit" th:text="${empresa.cnpj} != null ? 'Atualizar' : 'Cadastrar'"></button>
+        <div class="row">
+            <div>
+                <label>Bairro:</label>
+                <input type="text" name="bairro" th:value="${endereco.bairro}" required>
+            </div>
+            <div>
+                <label>Cidade:</label>
+                <input type="text" name="cidade" th:value="${endereco.cidade}" required>
+            </div>
+        </div>
 
-</form>
+        <label>Localização de Atuação:</label>
+        <select name="localizacaoCodigo">
+            <option th:each="localizacao : ${localizacoes}" 
+                    th:value="${localizacao.codigo}" 
+                    th:text="${localizacao.nomeEstado + ' - ' + localizacao.nomePais}">
+            </option>
+        </select>
 
-<div th:if="${erro}" style="color:red">
-    <p th:text="${erro}"></p>
+        <button type="submit" th:text="${empresa.cnpj} != null ? 'Atualizar' : 'Cadastrar'"></button>
+    </form>
+
+    <div th:if="${erro}" class="error">
+        <p th:text="${erro}"></p>
+    </div>
 </div>
 </body>
 </html>

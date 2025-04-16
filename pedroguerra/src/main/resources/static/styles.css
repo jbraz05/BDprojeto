@@ -52,3 +52,9 @@ header {
 .btn:hover {
     background-color: #0056b3;
 }
+
+.error {
+    color: red;
+    text-align: center;
+    margin-top: 1rem;
+}
