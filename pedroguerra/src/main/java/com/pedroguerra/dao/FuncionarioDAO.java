@@ -21,7 +21,6 @@ public class FuncionarioDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                // Verifica se o endereço existe e insere se necessário
                 EnderecoDAO enderecoDAO = new EnderecoDAO();
                 if (!enderecoDAO.cepExiste(dto.getFkEnderecoCep())) {
                     Endereco endereco = new Endereco(
