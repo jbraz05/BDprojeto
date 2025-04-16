@@ -1,57 +1,204 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Cadastrar Funcionário</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #3a4353;
+            padding: 2rem 3rem;
+            padding-right: 4.5rem;
+            margin-top: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-top: 1rem;
+            display: block;
+            color: #e9ecf0;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            background-color: #373d44;
+            border: 1px solid #282b2e;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .row > div {
+            flex: 1;
+        }
+
+        button {
+            margin-top: 2rem;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .buttons .button-link,
+        .buttons button {
+            flex: 1;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn {
+            width: 100%;
+        }
+
+        .checkbox-group {
+            margin-top: 0rem;
+            padding-left: 0rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-group label {
+            color: #e9ecf0;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #282b2e;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .checkbox-group label:hover {
+            background-color: #373d44;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: #007bff;
+            width: 16px;
+            height: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Cadastrar Funcionário</h1>
+    <div class="form-container">
+        <h1>Cadastrar Funcionário</h1>
 
-    <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
-        <label>Matrícula:</label>
-        <input type="text" th:field="*{matricula}" required /><br/>
+        <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
+            <label>Matrícula:</label>
+            <input type="text" th:field="*{matricula}" required />
 
-        <label>Nome:</label>
-        <input type="text" th:field="*{nome}" required /><br/>
+            <label>Nome:</label>
+            <input type="text" th:field="*{nome}" required />
 
-        <label>Contato:</label>
-        <input type="text" th:field="*{contato}" /><br/>
+            <label>Contato:</label>
+            <input type="text" th:field="*{contato}" />
 
-        <label>CEP:</label>
-        <input type="text" th:field="*{fkEnderecoCep}" required><br/>
+            <label>CEP:</label>
+            <input type="text" th:field="*{fkEnderecoCep}" required />
 
-        <label>Rua:</label>
-        <input type="text" th:field="*{ruaEndereco}" required><br/>
+            <label>Rua:</label>
+            <input type="text" th:field="*{ruaEndereco}" required />
 
-        <label>Número:</label>
-        <input type="text" th:field="*{numeroEndereco}" required><br/>
+            <label>Número:</label>
+            <input type="text" th:field="*{numeroEndereco}" required />
 
-        <label>Bairro:</label>
-        <input type="text" th:field="*{bairroEndereco}" required><br/>
+            <label>Bairro:</label>
+            <input type="text" th:field="*{bairroEndereco}" required />
 
-        <label>Cidade:</label>
-        <input type="text" th:field="*{cidadeEndereco}" required><br/>
+            <label>Cidade:</label>
+            <input type="text" th:field="*{cidadeEndereco}" required />
 
-        <label>Supervisor (Matrícula):</label>
-        <input type="text" th:field="*{fkSupervisorMatricula}" /><br/>
+            <label>Supervisor (Matrícula):</label>
+            <input type="text" th:field="*{fkSupervisorMatricula}" />
 
-        <label>Tipo de Funcionário:</label><br/>
-        <label><input type="checkbox" th:field="*{socio}" /> Sócio</label><br/>
-        <label><input type="checkbox" th:field="*{engenheiro}" /> Engenheiro</label><br/>
-        <label><input type="checkbox" th:field="*{operadorDrone}" /> Operador de Drone</label><br/>
+            <label>Tipo de Funcionário:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" th:field="*{socio}" /> Sócio</label>
+                <label><input type="checkbox" th:field="*{engenheiro}" /> Engenheiro</label>
+                <label><input type="checkbox" th:field="*{operadorDrone}" /> Operador de Drone</label>
+            </div>
 
-        <label>Empresa:</label>
-        <select th:field="*{cnpjEmpresa}" required>
-            <option value="">-- Selecione uma empresa --</option>
-            <th:block th:each="empresa : ${empresas}">
-                <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
-            </th:block>
-        </select><br/>
+            <label>Empresa:</label>
+            <select th:field="*{cnpjEmpresa}" required>
+                <option value="">-- Selecione uma empresa --</option>
+                <th:block th:each="empresa : ${empresas}">
+                    <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+                </th:block>
+            </select>
 
-        <button type="submit">Cadastrar</button>
-    </form>
-
-    <br/>
-    <a th:href="@{/funcionarios}">Ver lista de funcionários</a><br/>
-    <a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+            <div class="buttons">
+                <a th:href="@{/}" class="button-link">
+                    <button type="button" class="back-btn">Voltar para Home</button>
+                </a>
+                <button type="submit" class="submit-btn">Cadastrar</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
