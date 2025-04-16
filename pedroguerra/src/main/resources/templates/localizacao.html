@@ -1,17 +1,129 @@
-<form action="#" th:action="@{${localizacao.codigo} != null ? '/localizacao/atualizar' : '/localizacao/cadastrar'}" th:object="${localizacao}" method="post">
-    <label>Código:</label>
-    <input type="text" th:field="*{codigo}" th:readonly="${localizacao.codigo != null}" required><br>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Localização</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <label>País:</label>
-    <input type="text" th:field="*{nomePais}" required><br>
+        .form-container {
+            background-color: #3a4353;
+            padding: 2.5rem 3rem;
+            padding-right: 4.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
 
-    <label>Estado:</label>
-    <input type="text" th:field="*{nomeEstado}" required><br>
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
 
-    <label>Região:</label>
-    <input type="text" th:field="*{regiao}" required><br>
+        label {
+            font-weight: 600;
+            display: block;
+            color: #e9ecf0;
+            margin-bottom: 0.5rem;
+        }
 
-    <button type="submit">Salvar</button>
-    <a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: #373d44;
+            border: 1px solid #282b2e;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 1.2rem;
+        }
 
-</form>
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .buttons button {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .buttons .submit-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .buttons .submit-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .buttons .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .buttons .back-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        a {
+            text-decoration: none;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Cadastrar Localização</h1>
+    <form th:action="@{${localizacao.codigo} != null ? '/localizacao/atualizar' : '/localizacao/cadastrar'}" 
+          th:object="${localizacao}" method="post">
+
+        <label>Código:</label>
+        <input type="text" th:field="*{codigo}" th:readonly="${localizacao.codigo != null}" required>
+
+        <label>País:</label>
+        <input type="text" th:field="*{nomePais}" required>
+
+        <label>Estado:</label>
+        <input type="text" th:field="*{nomeEstado}" required>
+
+        <label>Região:</label>
+        <input type="text" th:field="*{regiao}" required>
+
+        <div class="buttons">
+            <button type="submit" class="submit-btn">Salvar</button>
+            <a th:href="@{/}">
+                <button type="button" class="back-btn">Voltar para Home</button>
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
