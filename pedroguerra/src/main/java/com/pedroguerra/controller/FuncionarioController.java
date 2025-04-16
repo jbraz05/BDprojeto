@@ -45,21 +45,8 @@ public class FuncionarioController {
     }
     
 
-    @GetMapping("/funcionarios")
-    public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
-        try {
-            List<Funcionario> funcionarios = (cnpj != null && !cnpj.isEmpty())
-                    ? service.listarFuncionariosPorEmpresa(cnpj)
-                    : service.listarTodos();
+    
 
-            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
-            model.addAttribute("funcionarios", funcionarios);
-            return "lista-funcionarios";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao listar funcionários", e);
-        }
-    }
 
     @GetMapping("/remover-funcionario")
     public String removerFuncionario(@RequestParam String matricula) {
@@ -83,6 +70,21 @@ public String editarFuncionario(@RequestParam String matricula, Model model) {
     } catch (Exception e) {
         e.printStackTrace();
         throw new RuntimeException("Erro ao carregar dados para edição", e);
+    }
+}
+@GetMapping("/funcionarios")
+public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
+    try {
+        List<FuncionarioDTO> funcionarios = (cnpj != null && !cnpj.isEmpty())
+                ? service.listarFuncionariosPorEmpresaDTO(cnpj)
+                : service.listarTodosDTO();
+
+        model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+        model.addAttribute("funcionarios", funcionarios);
+        return "lista-funcionarios";
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Erro ao listar funcionários", e);
     }
 }
 

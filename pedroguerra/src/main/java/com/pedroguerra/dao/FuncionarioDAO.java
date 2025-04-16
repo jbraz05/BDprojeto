@@ -265,5 +265,85 @@ public class FuncionarioDAO {
         }
     }
     
+    public List<FuncionarioDTO> listarTodosDTO() throws SQLException {
+        List<FuncionarioDTO> lista = new ArrayList<>();
+        String sql = "SELECT f.*, e.rua, e.numero, e.cidade, e.bairro, emp.fk_Empresa_cnpj " +
+                     "FROM Funcionario f " +
+                     "JOIN Endereco e ON f.fk_endereco_cep = e.cep " +
+                     "JOIN Emprega emp ON f.matricula = emp.fk_funcionario_matricula";
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                FuncionarioDTO dto = new FuncionarioDTO();
+                dto.setMatricula(rs.getString("matricula"));
+                dto.setNome(rs.getString("nome"));
+                dto.setContato(rs.getString("contato"));
+                dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
+                dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
+                dto.setRuaEndereco(rs.getString("rua"));
+                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setCidadeEndereco(rs.getString("cidade"));
+                dto.setBairroEndereco(rs.getString("bairro"));
+                dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
+    
+                dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
+                dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));
+                dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", dto.getMatricula()));
+    
+                lista.add(dto);
+            }
+        }
+        return lista;
+    }
+    
+    public List<FuncionarioDTO> listarPorEmpresaDTO(String cnpj) throws SQLException {
+        List<FuncionarioDTO> lista = new ArrayList<>();
+        String sql = "SELECT f.*, e.rua, e.numero, e.cidade, e.bairro, emp.fk_Empresa_cnpj " +
+                     "FROM Funcionario f " +
+                     "JOIN Endereco e ON f.fk_endereco_cep = e.cep " +
+                     "JOIN Emprega emp ON f.matricula = emp.fk_funcionario_matricula " +
+                     "WHERE emp.fk_Empresa_cnpj = ?";
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+            stmt.setString(1, cnpj);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                FuncionarioDTO dto = new FuncionarioDTO();
+                dto.setMatricula(rs.getString("matricula"));
+                dto.setNome(rs.getString("nome"));
+                dto.setContato(rs.getString("contato"));
+                dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
+                dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
+                dto.setRuaEndereco(rs.getString("rua"));
+                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setCidadeEndereco(rs.getString("cidade"));
+                dto.setBairroEndereco(rs.getString("bairro"));
+                dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
+    
+                dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
+                dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));
+                dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", dto.getMatricula()));
+    
+                lista.add(dto);
+            }
+        }
+        return lista;
+    }
+    
+    private boolean registroExiste(Connection conn, String tabela, String matricula) throws SQLException {
+        String sql = "SELECT 1 FROM " + tabela + " WHERE fk_funcionario_matricula = ? LIMIT 1";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
     
 }

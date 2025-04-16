@@ -37,5 +37,12 @@ public class FuncionarioService {
     public void atualizarFuncionario(FuncionarioDTO dto) throws SQLException {
         dao.atualizar(dto);
     }
+    public List<FuncionarioDTO> listarTodosDTO() throws SQLException {
+        return dao.listarTodosDTO();
+    }
+    
+    public List<FuncionarioDTO> listarFuncionariosPorEmpresaDTO(String cnpj) throws SQLException {
+        return dao.listarPorEmpresaDTO(cnpj);
+    }
     
 }

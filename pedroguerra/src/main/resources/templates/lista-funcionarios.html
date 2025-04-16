@@ -25,7 +25,15 @@
                 <th>Nome</th>
                 <th>Contato</th>
                 <th>Supervisor</th>
+                <th>Empresa</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
                 <th>CEP</th>
+                <th>Socio</th>
+                <th>Engenheiro</th>
+                <th>Operador</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -35,19 +43,21 @@
                 <td th:text="${func.nome}"></td>
                 <td th:text="${func.contato}"></td>
                 <td th:text="${func.fkSupervisorMatricula}"></td>
+                <td th:text="${func.cnpjEmpresa}"></td>
+                <td th:text="${func.ruaEndereco}"></td>
+                <td th:text="${func.numeroEndereco}"></td>
+                <td th:text="${func.bairroEndereco}"></td>
+                <td th:text="${func.cidadeEndereco}"></td>
                 <td th:text="${func.fkEnderecoCep}"></td>
+                <td th:text="${func.socio ? 'Sim' : 'Não'}"></td>
+                <td th:text="${func.engenheiro ? 'Sim' : 'Não'}"></td>
+                <td th:text="${func.operadorDrone ? 'Sim' : 'Não'}"></td>
                 <td>
                     <a th:href="@{/editar-funcionario(matricula=${func.matricula})}">Editar</a> |
                     <a th:href="@{/remover-funcionario(matricula=${func.matricula})}"
-                       onclick="return confirm('Tem certeza que deseja remover este funcionário?');">
-                       Remover
-                    </a>
+                       onclick="return confirm('Tem certeza que deseja remover este funcionário?');">Remover</a>
                 </td>
             </tr>
         </tbody>
-    </table>
-
-    <br>
-    <a th:href="@{/}"><button>Voltar</button></a>
-</body>
+        
 </html>
