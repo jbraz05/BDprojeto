@@ -2,8 +2,8 @@ package com.pedroguerra.controller;
 
 import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.Servico;
-import com.pedroguerra.service.ServicoService;
 import com.pedroguerra.service.FuncionarioService;
+import com.pedroguerra.service.ServicoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +36,18 @@ public class ServicoController {
             boolean existe = servicoService.servicoExiste(servico.getId());
 
             if (existe) {
+                // Atualiza o serviço principal
                 servicoService.atualizarServico(servico);
+
+                // Remove entradas antigas das tabelas filhas
+                servicoService.removerVooPanoramico(servico.getId());
+                servicoService.removerMapeamentoTradicional(servico.getId());
             } else {
+                // Insere novo serviço
                 servicoService.salvarServico(servico);
             }
 
+            // Insere na tabela filha correta
             if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
                 if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
                     throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
@@ -77,7 +84,11 @@ public class ServicoController {
     @GetMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
-            servicoService.removerServico(id); // remover também de tabelas filhas (idealmente)
+            // Remove tabelas filhas antes do serviço principal
+            servicoService.removerVooPanoramico(id);
+            servicoService.removerMapeamentoTradicional(id);
+            servicoService.removerServico(id);
+
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();

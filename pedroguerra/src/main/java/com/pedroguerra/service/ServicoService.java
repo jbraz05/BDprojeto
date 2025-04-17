@@ -24,9 +24,7 @@ public class ServicoService {
         dao.atualizar(servico);
     }
 
-    public void removerServico(String id) throws SQLException {
-        dao.removerPorId(id);
-    }
+    
 
     public ServicoDTO buscarServicoDTO(String id) throws SQLException {
         return dao.buscarPorId(id);
@@ -52,6 +50,58 @@ public class ServicoService {
 
 public void salvarMapeamentoTradicional(String idServico) throws SQLException {
     String sql = "INSERT INTO MapeamentoTradicional (fk_Servico_id) VALUES (?)";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        stmt.executeUpdate();
+    }
+}
+
+public void removerServico(String id) throws SQLException {
+    try (Connection conn = ConnectionFactory.getConnection()) {
+        conn.setAutoCommit(false);
+
+        try {
+            // Primeiro tenta remover de VooPanoramico
+            String sqlVoo = "DELETE FROM VooPanoramico WHERE fk_Servico_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlVoo)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+
+            // Depois tenta remover de MapeamentoTradicional
+            String sqlMap = "DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlMap)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+
+            // Por fim remove da tabela Servico
+            String sqlServico = "DELETE FROM Servico WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlServico)) {
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        }
+    }
+}
+
+public void removerVooPanoramico(String idServico) throws SQLException {
+    String sql = "DELETE FROM VooPanoramico WHERE fk_Servico_id = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        stmt.executeUpdate();
+    }
+}
+
+public void removerMapeamentoTradicional(String idServico) throws SQLException {
+    String sql = "DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?";
     try (Connection conn = ConnectionFactory.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
         stmt.setString(1, idServico);
