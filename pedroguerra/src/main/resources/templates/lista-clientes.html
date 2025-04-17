@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+
+    <a class="btn" href="/cliente">Cadastrar Novo Cliente</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>CNPJ/CPF</th>
+                <th>Nome</th>
+                <th>CEP</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cliente : ${clientes}">
+                <td th:text="${cliente.cnpjCpf}"></td>
+                <td th:text="${cliente.nome}"></td>
+                <td th:text="${cliente.fkEnderecoCep}"></td>
+                <td th:text="${cliente.ruaEndereco}"></td>
+                <td th:text="${cliente.numeroEndereco}"></td>
+                <td th:text="${cliente.bairroEndereco}"></td>
+                <td th:text="${cliente.cidadeEndereco}"></td>
+                <td>
+                    <a th:href="@{'/editar-cliente'(cpf=${cliente.cnpjCpf})}">Editar</a> |
+                    <a th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
+                       onclick="return confirm('Tem certeza que deseja remover este cliente?');">Remover</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/">Voltar para o Menu</a>
+</body>
+</html>

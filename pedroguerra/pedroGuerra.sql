@@ -55,7 +55,7 @@ CREATE TABLE OperadorDrone (
 CREATE TABLE Cliente (
     cnpj_cpf VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    fk_Endereco_cep VARCHAR(20),
+    fk_Endereco_cep VARCHAR(20),    
     FOREIGN KEY (fk_Endereco_cep) REFERENCES Endereco(cep)
 );
 
