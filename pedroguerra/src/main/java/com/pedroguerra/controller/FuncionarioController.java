@@ -2,7 +2,6 @@ package com.pedroguerra.controller;
 
 import com.pedroguerra.dao.EmpresaDAO;
 import com.pedroguerra.dto.FuncionarioDTO;
-import com.pedroguerra.model.Funcionario;
 import com.pedroguerra.service.FuncionarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,7 +58,7 @@ public class FuncionarioController {
         }
     }
 
-    @GetMapping("/editar-funcionario")
+@GetMapping("/editar-funcionario")
 public String editarFuncionario(@RequestParam String matricula, Model model) {
     try {
         FuncionarioDTO dto = service.buscarFuncionarioParaEdicao(matricula);

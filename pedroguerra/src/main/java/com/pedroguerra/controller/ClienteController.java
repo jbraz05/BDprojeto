@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -53,8 +52,15 @@ public class ClienteController {
             dto.setCnpjCpf(cliente.getCnpjCpf());
             dto.setNome(cliente.getNome());
             dto.setFkEnderecoCep(cliente.getFkEnderecoCep());
-
-            // Campos extras de endereço podem ser preenchidos via form (ex: autocomplete)
+            
+            var endereco = enderecoDAO.buscarPorCep(cliente.getFkEnderecoCep());
+            if (endereco != null) {
+                dto.setRuaEndereco(endereco.getRua());
+                dto.setNumeroEndereco(endereco.getNumero());
+                dto.setBairroEndereco(endereco.getBairro());
+                dto.setCidadeEndereco(endereco.getCidade());
+            }
+    
             model.addAttribute("cliente", dto);
             return "cadastro-cliente";
         } catch (Exception e) {

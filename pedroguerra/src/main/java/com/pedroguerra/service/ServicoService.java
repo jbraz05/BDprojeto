@@ -6,9 +6,6 @@ import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.Servico;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
-
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
