@@ -345,5 +345,27 @@ public class FuncionarioDAO {
             }
         }
     }
+    public List<Funcionario> listarOperadoresDrone() throws SQLException {
+        List<Funcionario> lista = new ArrayList<>();
+        String sql = "SELECT f.* FROM Funcionario f " +
+                     "JOIN OperadorDrone o ON f.matricula = o.fk_Funcionario_matricula";
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                Funcionario f = new Funcionario();
+                f.setMatricula(rs.getString("matricula"));
+                f.setNome(rs.getString("nome"));
+                f.setContato(rs.getString("contato"));
+                f.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
+                f.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
+                lista.add(f);
+            }
+        }
+    
+        return lista;
+    }
     
 }

@@ -44,5 +44,11 @@ public class FuncionarioService {
     public List<FuncionarioDTO> listarFuncionariosPorEmpresaDTO(String cnpj) throws SQLException {
         return dao.listarPorEmpresaDTO(cnpj);
     }
+
+    private final FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+
+    public List<Funcionario> listarOperadoresDrone() throws SQLException {
+        return funcionarioDAO.listarOperadoresDrone();
+    }
     
 }

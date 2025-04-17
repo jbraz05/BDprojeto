@@ -21,6 +21,7 @@ public class ServicoController {
         try {
             model.addAttribute("servico", new Servico());
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
+            model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             return "servico";
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,13 +30,26 @@ public class ServicoController {
     }
 
     @PostMapping("/salvar-servico")
-    public String salvarServico(@ModelAttribute("servico") Servico servico) {
+    public String salvarServico(@ModelAttribute("servico") Servico servico,
+                                @RequestParam(required = false) String operadorDroneMatricula) {
         try {
-            if (servicoService.servicoExiste(servico.getId())) {
+            boolean existe = servicoService.servicoExiste(servico.getId());
+
+            if (existe) {
                 servicoService.atualizarServico(servico);
             } else {
                 servicoService.salvarServico(servico);
             }
+
+            if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
+                if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
+                    throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+                }
+                servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
+            } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
+                servicoService.salvarMapeamentoTradicional(servico.getId());
+            }
+
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,6 +66,7 @@ public class ServicoController {
             Servico servico = new Servico(dto.getId(), dto.getData(), dto.getTipo(), dto.getFkFuncionarioMatricula());
             model.addAttribute("servico", servico);
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
+            model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             return "servico";
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,7 +77,7 @@ public class ServicoController {
     @GetMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
-            servicoService.removerServico(id);
+            servicoService.removerServico(id); // remover também de tabelas filhas (idealmente)
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();

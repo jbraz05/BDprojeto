@@ -17,9 +17,7 @@
 
         .form-container {
             background-color: #3a4353;
-            padding: 2rem 3rem;
-            padding-right:3rem;
-            padding-bottom: 2.5rem;
+            padding: 2rem 3rem 2.5rem 3rem;
             margin-top: 3rem;
             border-radius: 16px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -51,9 +49,6 @@
             color: white;
             border-radius: 8px;
             font-size: 14px;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
         }
 
         input:focus, select:focus {
@@ -93,6 +88,10 @@
         .button-row button:hover {
             opacity: 0.9;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -107,17 +106,32 @@
         <input type="date" id="data" name="data" th:field="*{data}" required>
 
         <label for="tipo">Tipo:</label>
-        <input type="text" id="tipo" name="tipo" th:field="*{tipo}" required>
+        <select id="tipo" name="tipo" th:field="*{tipo}" onchange="toggleOperador()" required>
+            <option value="">Selecione</option>
+            <option value="voo panorâmico" th:selected="${servico.tipo == 'voo panorâmico'}">Voo Panorâmico</option>
+            <option value="mapeamento tradicional" th:selected="${servico.tipo == 'mapeamento tradicional'}">Mapeamento Tradicional</option>
+        </select>
 
         <label for="fkFuncionarioMatricula">Funcionário:</label>
         <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
             <option value="">Selecione</option>
-            <option th:each="f : ${funcionarios}" 
-                    th:value="${f.matricula}" 
+            <option th:each="f : ${funcionarios}"
+                    th:value="${f.matricula}"
                     th:text="${f.nome + ' (' + f.matricula + ')'}"
                     th:selected="${f.matricula == servico.fkFuncionarioMatricula}">
             </option>
         </select>
+
+        <div id="operadorDroneSection" class="hidden">
+            <label for="operadorDroneMatricula">Operador de Drone:</label>
+            <select id="operadorDroneMatricula" name="operadorDroneMatricula">
+                <option value="">Selecione</option>
+                <option th:each="op : ${operadoresDrone}"
+                        th:value="${op.matricula}"
+                        th:text="${op.nome + ' (' + op.matricula + ')'}">
+                </option>
+            </select>
+        </div>
 
         <div class="button-row">
             <a th:href="@{/}">
@@ -127,5 +141,16 @@
         </div>
     </form>
 </div>
+
+<script>
+    function toggleOperador() {
+        const tipo = document.getElementById('tipo').value;
+        const operadorSection = document.getElementById('operadorDroneSection');
+        operadorSection.classList.toggle('hidden', tipo !== 'voo panorâmico');
+    }
+
+    // Executa ao carregar a página
+    window.addEventListener('DOMContentLoaded', toggleOperador);
+</script>
 </body>
 </html>
