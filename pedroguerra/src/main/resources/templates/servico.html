@@ -38,7 +38,7 @@
             color: #e9ecf0;
         }
 
-        input, select {
+        input, select, textarea {
             display: block;
             width: 100%;
             box-sizing: border-box;
@@ -51,7 +51,7 @@
             font-size: 14px;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
@@ -132,6 +132,16 @@
                 </option>
             </select>
         </div>
+
+        <!-- CAMPOS DO RELATÓRIO -->
+        <label for="area">Área (m²):</label>
+        <input type="number" id="area" name="area" step="0.01" required>
+
+        <label for="dataRelatorio">Data do Relatório:</label>
+        <input type="date" id="dataRelatorio" name="dataRelatorio" required>
+
+        <label for="observacoes">Observações:</label>
+        <textarea id="observacoes" name="observacoes" rows="4" maxlength="500" placeholder="Digite observações do serviço..."></textarea>
 
         <div class="button-row">
             <a th:href="@{/}">

@@ -1,12 +1,14 @@
 package com.pedroguerra.controller;
 
 import com.pedroguerra.dto.ServicoDTO;
+import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
 import com.pedroguerra.service.FuncionarioService;
 import com.pedroguerra.service.ServicoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.sql.Date;
 
 import java.util.List;
 
@@ -29,40 +31,41 @@ public class ServicoController {
         }
     }
 
-    @PostMapping("/salvar-servico")
-    public String salvarServico(@ModelAttribute("servico") Servico servico,
-                                @RequestParam(required = false) String operadorDroneMatricula) {
-        try {
-            boolean existe = servicoService.servicoExiste(servico.getId());
+@PostMapping("/salvar-servico")
+public String salvarServico(@ModelAttribute("servico") Servico servico,
+                            @RequestParam(required = false) String operadorDroneMatricula,
+                            @RequestParam float area,
+                            @RequestParam("dataRelatorio") Date dataRelatorio,
+                            @RequestParam String observacoes) {
+    try {
+        boolean existe = servicoService.servicoExiste(servico.getId());
 
-            if (existe) {
-                // Atualiza o serviço principal
-                servicoService.atualizarServico(servico);
-
-                // Remove entradas antigas das tabelas filhas
-                servicoService.removerVooPanoramico(servico.getId());
-                servicoService.removerMapeamentoTradicional(servico.getId());
-            } else {
-                // Insere novo serviço
-                servicoService.salvarServico(servico);
-            }
-
-            // Insere na tabela filha correta
-            if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
-                if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
-                    throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
-                }
-                servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
-            } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
-                servicoService.salvarMapeamentoTradicional(servico.getId());
-            }
-
-            return "redirect:/servicos";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao salvar serviço", e);
+        if (existe) {
+            servicoService.atualizarServico(servico);
+            servicoService.removerVooPanoramico(servico.getId());
+            servicoService.removerMapeamentoTradicional(servico.getId());
+            servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+        } else {
+            servicoService.salvarServico(servico);
+            servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
         }
+
+        if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
+            if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
+                throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+            }
+            servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
+        } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
+            servicoService.salvarMapeamentoTradicional(servico.getId());
+        }
+
+        return "redirect:/servicos";
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Erro ao salvar serviço", e);
     }
+}
+
 
     @GetMapping("/editar-servico")
     public String editarServico(@RequestParam String id, Model model) {
