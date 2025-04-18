@@ -1,6 +1,6 @@
 package com.pedroguerra.model;
 
-public class Engenheiro {
+public class Engenheiro extends Funcionario {
     private String fkFuncionarioMatricula;
     public Engenheiro() {}
     public Engenheiro(String fkFuncionarioMatricula) {
