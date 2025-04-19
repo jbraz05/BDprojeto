@@ -99,15 +99,22 @@
     <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
     <form action="/salvar-servico" method="post" th:object="${servico}">
-        <!-- Campos do Serviço -->
-        <label for="id">ID:</label>
-        <input type="text"
-               id="id"
-               name="id"
-               th:field="*{id}"
-               th:readonly="${servico.id != null}"
-               required />
+        <!-- Campo ID condicional -->
+        <div th:if="${servico.id == null}">
+            <label for="id">ID:</label>
+            <input type="text"
+                   id="id"
+                   name="id"
+                   th:field="*{id}"
+                   required />
+        </div>
+        <div th:if="${servico.id != null}">
+            <label>ID:</label>
+            <span th:text="${servico.id}"></span>
+            <input type="hidden" th:field="*{id}" />
+        </div>
 
+        <!-- Campos do Serviço -->
         <label for="data">Data:</label>
         <input type="date"
                id="data"
