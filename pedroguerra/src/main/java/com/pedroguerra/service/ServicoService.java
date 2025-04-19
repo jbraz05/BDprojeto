@@ -16,6 +16,7 @@ public class ServicoService {
 
     private final ServicoDAO dao = new ServicoDAO();
     private final RelatorioServicoDAO relatorioDAO = new RelatorioServicoDAO();
+    
 
     public void salvarServico(Servico servico) throws SQLException {
         dao.inserir(servico);
@@ -125,5 +126,9 @@ public class ServicoService {
 
     public void removerRelatorio(String servicoId) throws SQLException {
         relatorioDAO.removerPorServicoId(servicoId);
+    }
+
+    public RelatorioServico buscarRelatorio(String servicoId) throws SQLException {
+        return relatorioDAO.buscarPorServicoId(servicoId);
     }
 }

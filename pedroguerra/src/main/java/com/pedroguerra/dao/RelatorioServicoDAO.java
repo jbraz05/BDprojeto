@@ -5,6 +5,7 @@ import com.pedroguerra.model.RelatorioServico;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RelatorioServicoDAO {
@@ -47,6 +48,27 @@ public class RelatorioServicoDAO {
 
             stmt.setString(1, servicoId);
             stmt.executeUpdate();
+        }
+    }
+
+     public RelatorioServico buscarPorServicoId(String servicoId) throws SQLException {
+        String sql = "SELECT fk_Servico_id, area, data_relatorio, observacoes " +
+                     "FROM RelatorioServico WHERE fk_Servico_id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, servicoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    RelatorioServico rel = new RelatorioServico();
+                    rel.setFkServicoId(rs.getString("fk_Servico_id"));
+                    rel.setArea(rs.getFloat("area"));
+                    rel.setDataRelatorio(rs.getDate("data_relatorio"));
+                    rel.setObservacoes(rs.getString("observacoes"));
+                    return rel;
+                }
+                return null;
+            }
         }
     }
 }

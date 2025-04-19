@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Serviço</title>
+    <title th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'">Cadastro de Serviço</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -99,32 +99,49 @@
     <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
     <form action="/salvar-servico" method="post" th:object="${servico}">
+        <!-- Campos do Serviço -->
         <label for="id">ID:</label>
-        <input type="text" id="id" name="id" th:field="*{id}" th:readonly="${servico.id != null}" required>
+        <input type="text"
+               id="id"
+               name="id"
+               th:field="*{id}"
+               th:readonly="${servico.id != null}"
+               required />
 
         <label for="data">Data:</label>
-        <input type="date" id="data" name="data" th:field="*{data}" required>
+        <input type="date"
+               id="data"
+               name="data"
+               th:field="*{data}"
+               required />
 
         <label for="tipo">Tipo:</label>
-        <select id="tipo" name="tipo" th:field="*{tipo}" onchange="toggleOperador()" required>
+        <select id="tipo"
+                name="tipo"
+                th:field="*{tipo}"
+                onchange="toggleOperador()"
+                required>
             <option value="">Selecione</option>
-            <option value="voo panorâmico" th:selected="${servico.tipo == 'voo panorâmico'}">Voo Panorâmico</option>
-            <option value="mapeamento tradicional" th:selected="${servico.tipo == 'mapeamento tradicional'}">Mapeamento Tradicional</option>
+            <option value="voo panorâmico">Voo Panorâmico</option>
+            <option value="mapeamento tradicional">Mapeamento Tradicional</option>
         </select>
 
         <label for="fkFuncionarioMatricula">Funcionário:</label>
-        <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
+        <select id="fkFuncionarioMatricula"
+                name="fkFuncionarioMatricula"
+                th:field="*{fkFuncionarioMatricula}"
+                required>
             <option value="">Selecione</option>
             <option th:each="f : ${funcionarios}"
                     th:value="${f.matricula}"
-                    th:text="${f.nome + ' (' + f.matricula + ')'}"
-                    th:selected="${f.matricula == servico.fkFuncionarioMatricula}">
+                    th:text="${f.nome + ' (' + f.matricula + ')'}">
             </option>
         </select>
 
         <div id="operadorDroneSection" class="hidden">
             <label for="operadorDroneMatricula">Operador de Drone:</label>
-            <select id="operadorDroneMatricula" name="operadorDroneMatricula">
+            <select id="operadorDroneMatricula"
+                    name="operadorDroneMatricula">
                 <option value="">Selecione</option>
                 <option th:each="op : ${operadoresDrone}"
                         th:value="${op.matricula}"
@@ -133,15 +150,30 @@
             </select>
         </div>
 
-        <!-- CAMPOS DO RELATÓRIO -->
+        <!-- Campos do Relatório -->
         <label for="area">Área (m²):</label>
-        <input type="number" id="area" name="area" step="0.01" required>
+        <input type="number"
+               id="area"
+               name="area"
+               step="0.01"
+               required
+               th:value="${relatorio.area}" />
 
         <label for="dataRelatorio">Data do Relatório:</label>
-        <input type="date" id="dataRelatorio" name="dataRelatorio" required>
+        <input type="date"
+               id="dataRelatorio"
+               name="dataRelatorio"
+               required
+               th:value="${relatorio.dataRelatorio != null ? #dates.format(relatorio.dataRelatorio,'yyyy-MM-dd') : ''}" />
 
         <label for="observacoes">Observações:</label>
-        <textarea id="observacoes" name="observacoes" rows="4" maxlength="500" placeholder="Digite observações do serviço..."></textarea>
+        <textarea id="observacoes"
+                  name="observacoes"
+                  rows="4"
+                  maxlength="500"
+                  placeholder="Digite observações do serviço..."
+                  th:text="${relatorio.observacoes}">
+        </textarea>
 
         <div class="button-row">
             <a th:href="@{/}">
@@ -158,9 +190,7 @@
         const operadorSection = document.getElementById('operadorDroneSection');
         operadorSection.classList.toggle('hidden', tipo !== 'voo panorâmico');
     }
-
-    // Executa ao carregar a página
-    window.addEventListener('DOMContentLoaded', toggleOperador);
+    document.addEventListener('DOMContentLoaded', toggleOperador);
 </script>
 </body>
 </html>

@@ -8,8 +8,9 @@ import com.pedroguerra.service.ServicoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.sql.Date;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -22,50 +23,50 @@ public class ServicoController {
     public String exibirFormularioCadastro(Model model) {
         try {
             model.addAttribute("servico", new Servico());
+            model.addAttribute("relatorio", new RelatorioServico());
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             return "servico";
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Erro ao carregar formulário de serviço", e);
         }
     }
 
-@PostMapping("/salvar-servico")
-public String salvarServico(@ModelAttribute("servico") Servico servico,
-                            @RequestParam(required = false) String operadorDroneMatricula,
-                            @RequestParam float area,
-                            @RequestParam("dataRelatorio") Date dataRelatorio,
-                            @RequestParam String observacoes) {
-    try {
-        boolean existe = servicoService.servicoExiste(servico.getId());
+    @PostMapping("/salvar-servico")
+    public String salvarServico(@ModelAttribute("servico") Servico servico,
+                                @RequestParam(required = false) String operadorDroneMatricula,
+                                @RequestParam float area,
+                                @RequestParam("dataRelatorio") Date dataRelatorio,
+                                @RequestParam String observacoes) {
+        try {
+            boolean existe = servicoService.servicoExiste(servico.getId());
 
-        if (existe) {
-            servicoService.atualizarServico(servico);
-            servicoService.removerVooPanoramico(servico.getId());
-            servicoService.removerMapeamentoTradicional(servico.getId());
-            servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
-        } else {
-            servicoService.salvarServico(servico);
-            servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
-        }
-
-        if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
-            if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
-                throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+            if (existe) {
+                servicoService.atualizarServico(servico);
+                servicoService.removerVooPanoramico(servico.getId());
+                servicoService.removerMapeamentoTradicional(servico.getId());
+                servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+            } else {
+                servicoService.salvarServico(servico);
+                servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
             }
-            servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
-        } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
-            servicoService.salvarMapeamentoTradicional(servico.getId());
+
+            if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
+                if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
+                    throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+                }
+                servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
+            } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
+                servicoService.salvarMapeamentoTradicional(servico.getId());
+            }
+
+            return "redirect:/servicos";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao salvar serviço", e);
         }
-
-        return "redirect:/servicos";
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Erro ao salvar serviço", e);
     }
-}
-
 
     @GetMapping("/editar-servico")
     public String editarServico(@RequestParam String id, Model model) {
@@ -75,6 +76,10 @@ public String salvarServico(@ModelAttribute("servico") Servico servico,
 
             Servico servico = new Servico(dto.getId(), dto.getData(), dto.getTipo(), dto.getFkFuncionarioMatricula());
             model.addAttribute("servico", servico);
+
+            RelatorioServico rel = servicoService.buscarRelatorio(id);
+            model.addAttribute("relatorio", rel != null ? rel : new RelatorioServico());
+
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             return "servico";
@@ -87,11 +92,9 @@ public String salvarServico(@ModelAttribute("servico") Servico servico,
     @GetMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
-            // Remove tabelas filhas antes do serviço principal
             servicoService.removerVooPanoramico(id);
             servicoService.removerMapeamentoTradicional(id);
             servicoService.removerServico(id);
-
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();
