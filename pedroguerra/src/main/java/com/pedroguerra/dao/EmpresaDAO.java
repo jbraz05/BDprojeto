@@ -121,4 +121,21 @@ public class EmpresaDAO {
         }
         return lista;
     }
+
+    public List<Empresa> listarTodas() throws SQLException {
+        List<Empresa> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Empresa";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Empresa e = new Empresa();
+                e.setCnpj(rs.getString("cnpj"));
+                e.setNome(rs.getString("nome"));
+                lista.add(e);
+            }
+        }
+        return lista;
+    }
+    
 }

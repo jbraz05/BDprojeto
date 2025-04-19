@@ -3,7 +3,9 @@ package com.pedroguerra.controller;
 import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
+import com.pedroguerra.service.EmpresaService;
 import com.pedroguerra.service.FuncionarioService;
+import com.pedroguerra.service.LocalizacaoService;
 import com.pedroguerra.service.ServicoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ public class ServicoController {
 
     private final ServicoService servicoService = new ServicoService();
     private final FuncionarioService funcionarioService = new FuncionarioService();
+    private final EmpresaService empresaService = new EmpresaService();
+    private final LocalizacaoService localizacaoService = new LocalizacaoService();
 
     @GetMapping("/servico")
     public String exibirFormularioCadastro(Model model) {
@@ -26,9 +30,10 @@ public class ServicoController {
             model.addAttribute("relatorio", new RelatorioServico());
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
+            model.addAttribute("empresas", empresaService.listarTodas());
+            model.addAttribute("localizacoes", localizacaoService.listarTodas());
             return "servico";
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Erro ao carregar formulário de serviço", e);
         }
     }
@@ -38,6 +43,8 @@ public class ServicoController {
                                 @RequestParam(required = false) String operadorDroneMatricula,
                                 @RequestParam float area,
                                 @RequestParam("dataRelatorio") Date dataRelatorio,
+                                @RequestParam String cnpjEmpresa,
+                                @RequestParam String codigoLocalizacao,
                                 @RequestParam String observacoes) {
         try {
             boolean existe = servicoService.servicoExiste(servico.getId());
@@ -61,6 +68,9 @@ public class ServicoController {
                 servicoService.salvarMapeamentoTradicional(servico.getId());
             }
 
+            // ✅ CHAMADA CORRETA ANTES DO return
+            servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
+
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,6 +92,9 @@ public class ServicoController {
 
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
+            model.addAttribute("empresas", empresaService.listarTodas());
+            model.addAttribute("localizacoes", localizacaoService.listarTodas());
+
             return "servico";
         } catch (Exception e) {
             e.printStackTrace();

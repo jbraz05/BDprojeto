@@ -14,7 +14,7 @@ CREATE TABLE Endereco (
 CREATE TABLE Empresa (
     cnpj VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    contato VARCHAR(100),
+    contato VARCHAR(100),a
     fk_endereco_cep VARCHAR(20),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep)
 );

@@ -157,6 +157,23 @@
             </select>
         </div>
 
+        <label for="cnpjEmpresa">Empresa:</label>
+<select id="cnpjEmpresa" name="cnpjEmpresa" required>
+    <option value="">Selecione</option>
+    <option th:each="empresa : ${empresas}"
+            th:value="${empresa.cnpj}"
+            th:text="${empresa.nome + ' (' + empresa.cnpj + ')'}"></option>
+</select>
+
+<label for="codigoLocalizacao">Localização de Atuação:</label>
+<select id="codigoLocalizacao" name="codigoLocalizacao" required>
+    <option value="">Selecione</option>
+    <option th:each="loc : ${localizacoes}"
+            th:value="${loc.codigo}"
+            th:text="${loc.nomeEstado + ', ' + loc.nomePais + ' (' + loc.regiao + ')'}"></option>
+</select>
+
+
         <!-- Campos do Relatório -->
         <label for="area">Área (m²):</label>
         <input type="number"

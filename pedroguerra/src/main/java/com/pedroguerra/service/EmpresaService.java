@@ -53,4 +53,9 @@ public class EmpresaService {
     public List<EmpresaDTO> listarEmpresasComEnderecoEAtuacao() throws SQLException {
         return empresaDAO.listarTodasComLocalizacao();
     }
+
+    // ✅ NOVO MÉTODO: listar todas as empresas (somente nome e cnpj)
+    public List<Empresa> listarTodas() throws SQLException {
+        return empresaDAO.listarTodas();
+    }
 }

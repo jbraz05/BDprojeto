@@ -131,4 +131,16 @@ public class ServicoService {
     public RelatorioServico buscarRelatorio(String servicoId) throws SQLException {
         return relatorioDAO.buscarPorServicoId(servicoId);
     }
+
+    public void vincularEmpresaLocalizacaoAoServico(String idServico, String cnpj, String codigoLocalizacao) throws SQLException {
+        String sql = "INSERT INTO Possui (fk_Servico_id, fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo) VALUES (?, ?, ?)";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, idServico);
+            stmt.setString(2, cnpj);
+            stmt.setString(3, codigoLocalizacao);
+            stmt.executeUpdate();
+        }
+    }
+    
 }
