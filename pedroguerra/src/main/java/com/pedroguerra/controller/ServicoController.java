@@ -3,6 +3,7 @@ package com.pedroguerra.controller;
 import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
+import com.pedroguerra.service.ClienteService;
 import com.pedroguerra.service.EmpresaService;
 import com.pedroguerra.service.FuncionarioService;
 import com.pedroguerra.service.LocalizacaoService;
@@ -22,6 +23,7 @@ public class ServicoController {
     private final FuncionarioService funcionarioService = new FuncionarioService();
     private final EmpresaService empresaService = new EmpresaService();
     private final LocalizacaoService localizacaoService = new LocalizacaoService();
+    private final ClienteService clienteService = new ClienteService();
 
     @GetMapping("/servico")
     public String exibirFormularioCadastro(Model model) {
@@ -32,8 +34,10 @@ public class ServicoController {
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             model.addAttribute("empresas", empresaService.listarTodas());
             model.addAttribute("localizacoes", localizacaoService.listarTodas());
+            model.addAttribute("clientes", clienteService.listarTodos());
             model.addAttribute("empresaSelecionada", "");
             model.addAttribute("localizacaoSelecionada", "");
+            model.addAttribute("clienteSelecionado", "");
             return "servico";
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao carregar formulário de serviço", e);
@@ -47,6 +51,7 @@ public class ServicoController {
                                 @RequestParam("dataRelatorio") Date dataRelatorio,
                                 @RequestParam String cnpjEmpresa,
                                 @RequestParam String codigoLocalizacao,
+                                @RequestParam String cnpjCpfCliente,
                                 @RequestParam String observacoes) {
         try {
             boolean existe = servicoService.servicoExiste(servico.getId());
@@ -57,9 +62,11 @@ public class ServicoController {
                 servicoService.removerMapeamentoTradicional(servico.getId());
                 servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
                 servicoService.removerVinculoPossui(servico.getId());
+                servicoService.atualizarClienteDoServico(servico.getId(), cnpjCpfCliente);
             } else {
                 servicoService.salvarServico(servico);
                 servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+                servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
             }
 
             if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
@@ -96,11 +103,14 @@ public class ServicoController {
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             model.addAttribute("empresas", empresaService.listarTodas());
             model.addAttribute("localizacoes", localizacaoService.listarTodas());
+            model.addAttribute("clientes", clienteService.listarTodos());
 
-            // ✅ Preenche a empresa e localização vinculadas
             String[] dadosPossui = servicoService.buscarEmpresaEAtuacaoDoServico(id);
             model.addAttribute("empresaSelecionada", dadosPossui != null ? dadosPossui[0] : "");
             model.addAttribute("localizacaoSelecionada", dadosPossui != null ? dadosPossui[1] : "");
+
+            String clienteSelecionado = servicoService.buscarClienteDoServico(id);
+            model.addAttribute("clienteSelecionado", clienteSelecionado);
 
             return "servico";
         } catch (Exception e) {
@@ -112,6 +122,7 @@ public class ServicoController {
     @GetMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
+            servicoService.removerClienteDoServico(id);
             servicoService.removerVinculoPossui(id);
             servicoService.removerVooPanoramico(id);
             servicoService.removerMapeamentoTradicional(id);

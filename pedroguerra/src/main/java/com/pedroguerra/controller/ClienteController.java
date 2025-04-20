@@ -72,7 +72,7 @@ public class ClienteController {
     @GetMapping("/clientes")
     public String listarClientes(Model model) {
         try {
-            List<ClienteDTO> clientes = service.listarClientes();
+            List<ClienteDTO> clientes = service.listarTodos(); 
             model.addAttribute("clientes", clientes);
             return "lista-clientes";
         } catch (Exception e) {

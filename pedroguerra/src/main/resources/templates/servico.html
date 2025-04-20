@@ -99,45 +99,30 @@
     <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
     <form action="/salvar-servico" method="post" th:object="${servico}">
-        <!-- Campo ID condicional -->
+        <!-- Campo ID -->
         <div th:if="${servico.id == null}">
             <label for="id">ID:</label>
-            <input type="text"
-                   id="id"
-                   name="id"
-                   th:field="*{id}"
-                   required />
+            <input type="text" id="id" name="id" th:field="*{id}" required />
         </div>
         <div th:if="${servico.id != null}">
-            <label>ID:</label>
+            <label for="id">ID:</label>
             <span th:text="${servico.id}"></span>
             <input type="hidden" th:field="*{id}" />
         </div>
 
         <!-- Campos do Serviço -->
         <label for="data">Data:</label>
-        <input type="date"
-               id="data"
-               name="data"
-               th:field="*{data}"
-               required />
+        <input type="date" id="data" name="data" th:field="*{data}" required />
 
         <label for="tipo">Tipo:</label>
-        <select id="tipo"
-                name="tipo"
-                th:field="*{tipo}"
-                onchange="toggleOperador()"
-                required>
+        <select id="tipo" name="tipo" th:field="*{tipo}" onchange="toggleOperador()" required>
             <option value="">Selecione</option>
             <option value="voo panorâmico">Voo Panorâmico</option>
             <option value="mapeamento tradicional">Mapeamento Tradicional</option>
         </select>
 
         <label for="fkFuncionarioMatricula">Funcionário:</label>
-        <select id="fkFuncionarioMatricula"
-                name="fkFuncionarioMatricula"
-                th:field="*{fkFuncionarioMatricula}"
-                required>
+        <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
             <option value="">Selecione</option>
             <option th:each="f : ${funcionarios}"
                     th:value="${f.matricula}"
@@ -145,10 +130,10 @@
             </option>
         </select>
 
-        <div id="operadorDroneSection" class="hidden">
+        <!-- Operador de Drone (mostrado apenas se tipo for "voo panorâmico") -->
+        <div id="operadorDroneSection" th:classappend="${servico.tipo == 'voo panorâmico'} ? '' : ' hidden'">
             <label for="operadorDroneMatricula">Operador de Drone:</label>
-            <select id="operadorDroneMatricula"
-                    name="operadorDroneMatricula">
+            <select id="operadorDroneMatricula" name="operadorDroneMatricula">
                 <option value="">Selecione</option>
                 <option th:each="op : ${operadoresDrone}"
                         th:value="${op.matricula}"
@@ -158,51 +143,46 @@
         </div>
 
         <label for="cnpjEmpresa">Empresa:</label>
-<select id="cnpjEmpresa" name="cnpjEmpresa" required>
-    <option value="">Selecione</option>
-    <option th:each="empresa : ${empresas}"
-        th:value="${empresa.cnpj}"
-        th:text="${empresa.nome + ' (' + empresa.cnpj + ')'}"
-        th:selected="${empresa.cnpj == empresaSelecionada}">
-</option>
+        <select id="cnpjEmpresa" name="cnpjEmpresa" required>
+            <option value="">Selecione</option>
+            <option th:each="empresa : ${empresas}"
+                    th:value="${empresa.cnpj}"
+                    th:text="${empresa.nome + ' (' + empresa.cnpj + ')'}"
+                    th:selected="${empresa.cnpj == empresaSelecionada}">
+            </option>
+        </select>
 
-</select>
+        <label for="codigoLocalizacao">Localização de Atuação:</label>
+        <select id="codigoLocalizacao" name="codigoLocalizacao" required>
+            <option value="">Selecione</option>
+            <option th:each="loc : ${localizacoes}"
+                    th:value="${loc.codigo}"
+                    th:text="${loc.nomeEstado + ', ' + loc.nomePais + ' (' + loc.regiao + ')'}"
+                    th:selected="${loc.codigo == localizacaoSelecionada}">
+            </option>
+        </select>
 
-<label for="codigoLocalizacao">Localização de Atuação:</label>
-<select id="codigoLocalizacao" name="codigoLocalizacao" required>
-    <option value="">Selecione</option>
-    <option th:each="loc : ${localizacoes}"
-        th:value="${loc.codigo}"
-        th:text="${loc.nomeEstado + ', ' + loc.nomePais + ' (' + loc.regiao + ')'}"
-        th:selected="${loc.codigo == localizacaoSelecionada}">
-</option>
-
-</select>
-
+        <label for="cnpjCpfCliente">Cliente:</label>
+        <select id="cnpjCpfCliente" name="cnpjCpfCliente" required>
+            <option value="">Selecione</option>
+            <option th:each="cliente : ${clientes}"
+                    th:value="${cliente.cnpjCpf}"
+                    th:text="${cliente.nome + ' (' + cliente.cnpjCpf + ')'}"
+                    th:selected="${cliente.cnpjCpf == clienteSelecionado}">
+            </option>
+        </select>
 
         <!-- Campos do Relatório -->
         <label for="area">Área (m²):</label>
-        <input type="number"
-               id="area"
-               name="area"
-               step="0.01"
-               required
-               th:value="${relatorio.area}" />
+        <input type="number" id="area" name="area" step="0.01" required th:value="${relatorio.area}" />
 
         <label for="dataRelatorio">Data do Relatório:</label>
-        <input type="date"
-               id="dataRelatorio"
-               name="dataRelatorio"
-               required
+        <input type="date" id="dataRelatorio" name="dataRelatorio" required
                th:value="${relatorio.dataRelatorio != null ? #dates.format(relatorio.dataRelatorio,'yyyy-MM-dd') : ''}" />
 
         <label for="observacoes">Observações:</label>
-        <textarea id="observacoes"
-                  name="observacoes"
-                  rows="4"
-                  maxlength="500"
-                  placeholder="Digite observações do serviço..."
-                  th:text="${relatorio.observacoes}">
+        <textarea id="observacoes" name="observacoes" rows="4" maxlength="500"
+                  placeholder="Digite observações do serviço..." th:text="${relatorio.observacoes}">
         </textarea>
 
         <div class="button-row">

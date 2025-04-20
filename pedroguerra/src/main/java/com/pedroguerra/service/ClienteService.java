@@ -23,7 +23,7 @@ public class ClienteService {
         clienteDAO.remover(cnpjCpf);
     }
 
-    public List<ClienteDTO> listarClientes() throws SQLException {
+    public List<ClienteDTO> listarTodos() throws SQLException {
         return clienteDAO.listarTodos();
     }
 

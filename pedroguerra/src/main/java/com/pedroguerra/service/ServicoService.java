@@ -166,5 +166,47 @@ public String[] buscarEmpresaEAtuacaoDoServico(String idServico) throws SQLExcep
     return null;
 }
 
+public void vincularClienteAoServico(String idServico, String cnpjCpf) throws SQLException {
+    String sql = "INSERT INTO Contrata (nota_fiscal, fk_Cliente_cnpj_cpf) VALUES (?, ?)";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico); // idServico = nota_fiscal
+        stmt.setString(2, cnpjCpf);
+        stmt.executeUpdate();
+    }
+}
+
+public void atualizarClienteDoServico(String idServico, String novoCnpjCpf) throws SQLException {
+    String sql = "UPDATE Contrata SET fk_Cliente_cnpj_cpf = ? WHERE nota_fiscal = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, novoCnpjCpf);
+        stmt.setString(2, idServico);
+        stmt.executeUpdate();
+    }
+}
+
+public void removerClienteDoServico(String idServico) throws SQLException {
+    String sql = "DELETE FROM Contrata WHERE nota_fiscal = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        stmt.executeUpdate();
+    }
+}
+
+public String buscarClienteDoServico(String idServico) throws SQLException {
+    String sql = "SELECT fk_Cliente_cnpj_cpf FROM Contrata WHERE nota_fiscal = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getString("fk_Cliente_cnpj_cpf");
+        }
+    }
+    return null;
+}
+
     
 }
