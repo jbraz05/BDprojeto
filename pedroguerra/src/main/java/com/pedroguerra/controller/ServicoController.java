@@ -32,6 +32,8 @@ public class ServicoController {
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             model.addAttribute("empresas", empresaService.listarTodas());
             model.addAttribute("localizacoes", localizacaoService.listarTodas());
+            model.addAttribute("empresaSelecionada", "");
+            model.addAttribute("localizacaoSelecionada", "");
             return "servico";
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao carregar formulário de serviço", e);
@@ -54,6 +56,7 @@ public class ServicoController {
                 servicoService.removerVooPanoramico(servico.getId());
                 servicoService.removerMapeamentoTradicional(servico.getId());
                 servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+                servicoService.removerVinculoPossui(servico.getId());
             } else {
                 servicoService.salvarServico(servico);
                 servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
@@ -68,7 +71,6 @@ public class ServicoController {
                 servicoService.salvarMapeamentoTradicional(servico.getId());
             }
 
-            // ✅ CHAMADA CORRETA ANTES DO return
             servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
 
             return "redirect:/servicos";
@@ -95,6 +97,11 @@ public class ServicoController {
             model.addAttribute("empresas", empresaService.listarTodas());
             model.addAttribute("localizacoes", localizacaoService.listarTodas());
 
+            // ✅ Preenche a empresa e localização vinculadas
+            String[] dadosPossui = servicoService.buscarEmpresaEAtuacaoDoServico(id);
+            model.addAttribute("empresaSelecionada", dadosPossui != null ? dadosPossui[0] : "");
+            model.addAttribute("localizacaoSelecionada", dadosPossui != null ? dadosPossui[1] : "");
+
             return "servico";
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,6 +112,7 @@ public class ServicoController {
     @GetMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
+            servicoService.removerVinculoPossui(id);
             servicoService.removerVooPanoramico(id);
             servicoService.removerMapeamentoTradicional(id);
             servicoService.removerServico(id);

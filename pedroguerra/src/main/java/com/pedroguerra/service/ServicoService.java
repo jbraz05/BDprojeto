@@ -9,6 +9,7 @@ import com.pedroguerra.model.Servico;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -142,5 +143,28 @@ public class ServicoService {
             stmt.executeUpdate();
         }
     }
+
+    public void removerVinculoPossui(String idServico) throws SQLException {
+    String sql = "DELETE FROM Possui WHERE fk_Servico_id = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        stmt.executeUpdate();
+    }
+}
+
+public String[] buscarEmpresaEAtuacaoDoServico(String idServico) throws SQLException {
+    String sql = "SELECT fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo FROM Possui WHERE fk_Servico_id = ?";
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, idServico);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return new String[]{ rs.getString("fk_Empresa_cnpj"), rs.getString("fk_Localizacao_Atuacao_codigo") };
+        }
+    }
+    return null;
+}
+
     
 }
