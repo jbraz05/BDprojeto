@@ -3,81 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Serviços</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #282b2e;
-            color: #f0f0f0;
-            margin: 0;
-            padding: 2rem;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 16px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #3a4353;
-            border-radius: 12px;
-            overflow: hidden;
-            font-size: 14px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #505865;
-        }
-
-        th {
-            background-color: #2e3440;
-        }
-
-        tr:hover {
-            background-color: #444b5a;
-        }
-
-        .action-link {
-            color: #66b0ff;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-
-        .action-link:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-        }
-    </style>
+    <link rel="stylesheet" href="/lista.css">
 </head>
 <body>
 
     <h1>Serviços Cadastrados</h1>
-
-    <a href="/servico" class="btn">Cadastrar Novo Serviço</a>
-
     <table>
         <thead>
             <tr>
@@ -95,16 +25,24 @@
                 <td th:text="${servico.tipo}"></td>
                 <td th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></td>
                 <td>
-                    <a class="action-link" th:href="@{'/editar-servico?id=' + ${servico.id}}">Editar</a>
-                    <a class="action-link" th:href="@{'/remover-servico?id=' + ${servico.id}}"
-                       onclick="return confirm('Tem certeza que deseja remover este serviço?')">Remover</a>
-                </td>
+                    <form th:action="@{/editar-servico}" method="get" class="action-form" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${servico.id}" />
+                        <button type="submit" class="action-button">Editar</button>
+                    </form>
+                    <form th:action="@{/remover-servico}" method="post" class="action-form"
+                          onsubmit="return confirm('Tem certeza que deseja remover este serviço?');"
+                          style="display:inline;">
+                        <input type="hidden" name="id" th:value="${servico.id}" />
+                        <button type="submit" class="action-button delete">Remover</button>
+                    </form>
+                </td>                
             </tr>
         </tbody>
     </table>
 
     <div class="footer">
-        <a href="/" class="btn">Voltar ao Início</a>
+        <a href="/" class="btn">Voltar para Home</a>
+        <a class="btn" href="/servico">Cadastrar Novo Serviço</a>
     </div>
 
 </body>
