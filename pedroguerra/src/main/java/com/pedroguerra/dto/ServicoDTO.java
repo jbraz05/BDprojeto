@@ -9,6 +9,28 @@ public class ServicoDTO {
     private String fkFuncionarioMatricula;
     private String nomeFuncionario;
 
+    private float area; //Atributos do relatorio
+    private Date dataRelatorio;
+    private String observacoes;
+
+    private String nomeOperadorDrone; //pode vir null
+
+    public String getNomeOperadorDrone() {
+        return nomeOperadorDrone;
+    }
+    
+    public void setNomeOperadorDrone(String nomeOperadorDrone) {
+        this.nomeOperadorDrone = nomeOperadorDrone;
+    }
+    
+    public float getArea() { return area; }
+    public void setArea(float area) { this.area = area; }
+
+    public Date getDataRelatorio() { return dataRelatorio; }
+    public void setDataRelatorio(Date dataRelatorio) { this.dataRelatorio = dataRelatorio; }
+
+    public String getObservacoes() { return observacoes; }
+    public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

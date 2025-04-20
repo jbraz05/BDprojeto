@@ -7,6 +7,7 @@ import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
 
+import java.sql.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,13 +19,21 @@ public class ServicoService {
     private final ServicoDAO dao = new ServicoDAO();
     private final RelatorioServicoDAO relatorioDAO = new RelatorioServicoDAO();
     
-
+    
+    public void atualizarServico(Servico servico) throws SQLException {
+        dao.atualizar(servico);
+    }
     public void salvarServico(Servico servico) throws SQLException {
         dao.inserir(servico);
     }
-
-    public void atualizarServico(Servico servico) throws SQLException {
-        dao.atualizar(servico);
+    public void atualizarRelatorio(String idServico, float area, Date data, String obs) throws SQLException {
+        RelatorioServico rel = new RelatorioServico(idServico, area, data, obs);
+        relatorioDAO.atualizar(rel);
+    }
+    
+    public void salvarRelatorio(String idServico, float area, Date data, String obs) throws SQLException {
+        RelatorioServico rel = new RelatorioServico(idServico, area, data, obs);
+        relatorioDAO.inserir(rel);
     }
 
     public ServicoDTO buscarServicoDTO(String id) throws SQLException {
@@ -115,14 +124,6 @@ public class ServicoService {
             stmt.setString(1, idServico);
             stmt.executeUpdate();
         }
-    }
-
-    public void salvarRelatorio(RelatorioServico relatorio) throws SQLException {
-        relatorioDAO.inserir(relatorio);
-    }
-
-    public void atualizarRelatorio(RelatorioServico relatorio) throws SQLException {
-        relatorioDAO.atualizar(relatorio);
     }
 
     public void removerRelatorio(String servicoId) throws SQLException {

@@ -37,13 +37,15 @@
                     th:text="${f.nome + ' (' + f.matricula + ')'}">
             </option>
         </select>
+        
         <div id="operadorDroneSection" th:classappend="${servico.tipo == 'voo panorâmico'} ? '' : ' hidden'">
             <label for="operadorDroneMatricula">Operador de Drone:</label>
             <select id="operadorDroneMatricula" name="operadorDroneMatricula">
                 <option value="">Selecione</option>
                 <option th:each="op : ${operadoresDrone}"
                         th:value="${op.matricula}"
-                        th:text="${op.nome + ' (' + op.matricula + ')'}">
+                        th:text="${op.nome + ' (' + op.matricula + ')'}"
+                        th:selected="${op.matricula == operadorDroneSelecionado}">
                 </option>
             </select>
         </div>
@@ -95,6 +97,10 @@
             </a>
             <button type="submit" class="submit-btn">Salvar</button>
         </div>
+
+        <p id="operadorAviso" style="color: red; font-size: 0.9rem; display: none;">
+            Por favor, selecione um operador de drone para o voo panorâmico.
+        </p>
     </form>
 </div>
 

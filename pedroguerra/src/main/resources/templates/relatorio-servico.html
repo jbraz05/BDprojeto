@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório do Serviço</title>
+    <link rel="stylesheet" href="/lista.css">
+</head>
+<body>
+
+<h1>Relatório do Serviço</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID do Serviço</th>
+            <th>Área (m²)</th>
+            <th>Data do Relatório</th>
+            <th>Observações</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td th:text="${servico.id}"></td>
+            <td th:text="${servico.area}"></td>
+            <td th:text="${#dates.format(servico.dataRelatorio, 'dd/MM/yyyy')}"></td>
+            <td th:text="${servico.observacoes}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="footer">
+    <a href="/servicos" class="btn">Voltar para Lista de Serviços</a>
+</div>
+
+</body>
+</html>

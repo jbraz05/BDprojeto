@@ -1,6 +1,7 @@
 package com.pedroguerra.dao;
 
 import com.pedroguerra.config.ConnectionFactory;
+import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
 import com.pedroguerra.dto.ServicoDTO;
 
@@ -49,12 +50,12 @@ public class ServicoDAO {
 
     public ServicoDTO buscarPorId(String id) throws SQLException {
         String sql = "SELECT s.*, f.nome AS nome_funcionario " +
-                     "FROM Servico s " +
-                     "JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula " +
-                     "WHERE s.id = ?";
+                    "FROM Servico s " +
+                    "JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula " +
+                    "WHERE s.id = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -66,6 +67,15 @@ public class ServicoDAO {
                 dto.setTipo(rs.getString("tipo"));
                 dto.setFkFuncionarioMatricula(rs.getString("fk_Funcionario_matricula"));
                 dto.setNomeFuncionario(rs.getString("nome_funcionario"));
+
+                RelatorioServicoDAO relDAO = new RelatorioServicoDAO();
+                RelatorioServico relatorio = relDAO.buscarPorServicoId(id);
+                if (relatorio != null) {
+                    dto.setArea(relatorio.getArea());
+                    dto.setDataRelatorio(relatorio.getDataRelatorio());
+                    dto.setObservacoes(relatorio.getObservacoes());
+                }
+
                 return dto;
             } else {
                 return null;
@@ -75,14 +85,17 @@ public class ServicoDAO {
 
     public List<ServicoDTO> listarTodosDTO() throws SQLException {
         List<ServicoDTO> lista = new ArrayList<>();
-        String sql = "SELECT s.*, f.nome AS nome_funcionario " +
-                     "FROM Servico s " +
-                     "JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula";
-
+    
+        String sql = "SELECT s.*, f.nome AS nome_funcionario, od.nome AS nome_operador " +
+        "FROM Servico s " +
+        "JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula " +
+        "LEFT JOIN VooPanoramico vp ON s.id = vp.fk_Servico_id " +
+        "LEFT JOIN Funcionario od ON vp.fk_OperadorDrone_matricula = od.matricula";
+    
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-
+    
             while (rs.next()) {
                 ServicoDTO dto = new ServicoDTO();
                 dto.setId(rs.getString("id"));
@@ -90,10 +103,12 @@ public class ServicoDAO {
                 dto.setTipo(rs.getString("tipo"));
                 dto.setFkFuncionarioMatricula(rs.getString("fk_Funcionario_matricula"));
                 dto.setNomeFuncionario(rs.getString("nome_funcionario"));
+                dto.setNomeOperadorDrone(rs.getString("nome_operador"));
+    
                 lista.add(dto);
             }
         }
-
+    
         return lista;
     }
 }

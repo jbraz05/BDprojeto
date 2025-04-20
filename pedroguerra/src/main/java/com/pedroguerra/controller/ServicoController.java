@@ -58,14 +58,14 @@ public class ServicoController {
 
             if (existe) {
                 servicoService.atualizarServico(servico);
-                servicoService.removerVooPanoramico(servico.getId());
+                servicoService.atualizarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
                 servicoService.removerMapeamentoTradicional(servico.getId());
-                servicoService.atualizarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+                servicoService.removerVooPanoramico(servico.getId());
                 servicoService.removerVinculoPossui(servico.getId());
                 servicoService.atualizarClienteDoServico(servico.getId(), cnpjCpfCliente);
             } else {
                 servicoService.salvarServico(servico);
-                servicoService.salvarRelatorio(new RelatorioServico(servico.getId(), area, dataRelatorio, observacoes));
+                servicoService.salvarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
                 servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
             }
 
@@ -92,13 +92,8 @@ public class ServicoController {
         try {
             ServicoDTO dto = servicoService.buscarServicoDTO(id);
             if (dto == null) throw new RuntimeException("Serviço não encontrado.");
-
-            Servico servico = new Servico(dto.getId(), dto.getData(), dto.getTipo(), dto.getFkFuncionarioMatricula());
-            model.addAttribute("servico", servico);
-
-            RelatorioServico rel = servicoService.buscarRelatorio(id);
-            model.addAttribute("relatorio", rel != null ? rel : new RelatorioServico());
-
+            model.addAttribute("servico", dto);
+            model.addAttribute("relatorio",dto );
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             model.addAttribute("empresas", empresaService.listarTodas());
@@ -119,13 +114,14 @@ public class ServicoController {
         }
     }
 
-    @GetMapping("/remover-servico")
+    @PostMapping("/remover-servico")
     public String removerServico(@RequestParam String id) {
         try {
             servicoService.removerClienteDoServico(id);
             servicoService.removerVinculoPossui(id);
             servicoService.removerVooPanoramico(id);
             servicoService.removerMapeamentoTradicional(id);
+            servicoService.removerRelatorio(id);
             servicoService.removerServico(id);
             return "redirect:/servicos";
         } catch (Exception e) {
@@ -143,6 +139,20 @@ public class ServicoController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Erro ao listar serviços", e);
+        }
+    }
+
+    @GetMapping("/servico/relatorio")
+    public String verRelatorio(@RequestParam String id, Model model) {
+        try {
+            ServicoDTO dto = servicoService.buscarServicoDTO(id);
+            if (dto == null) throw new RuntimeException("Serviço não encontrado.");
+            model.addAttribute("servico", dto);
+            return "relatorio-servico";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro ao carregar o relatório.");
+            return "redirect:/servicos";
         }
     }
 }
