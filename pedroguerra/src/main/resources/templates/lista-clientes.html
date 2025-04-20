@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
     <link rel="stylesheet" href="/lista.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <h1>Lista de Clientes</h1>
@@ -31,16 +32,16 @@
                 <td th:text="${cliente.bairroEndereco}"></td>
                 <td th:text="${cliente.cidadeEndereco}"></td>
                 <td>
-                    <a class="action-link" th:href="@{'/editar-cliente'(cpf=${cliente.cnpjCpf})}">Editar</a>
-                    <a class="action-link" th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
-                       onclick="return confirm('Tem certeza que deseja remover este cliente?');">Remover</a>
+                    <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                    <button class="action-button delete" th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
+                       onclick="return confirm('Tem certeza que deseja remover este cliente?');"><i class="fas fa-trash-alt"></i></button>
                 </td>
             </tr>
         </tbody>
     </table> 
     
     <div class="footer">
-        <a href="/" class="btn">Voltar para Home</a>
+        <a href="/" class="btn home-btn">Voltar para Home</a>
         <a class="btn" href="/cliente">Cadastrar Novo Cliente</a>
     </div>
 </body>

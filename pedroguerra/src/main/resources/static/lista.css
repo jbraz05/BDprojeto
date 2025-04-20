@@ -112,6 +112,14 @@ a.action-link:hover {
     background-color: #a71d2a;
 }
 
+.footer {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+
 .footer-link {
     display: block;
     margin-top: 2rem;
@@ -128,4 +136,35 @@ a.action-link:hover {
     color: #ff6b6b;
     text-align: center;
     margin-top: 1rem;
+}
+
+.home-btn {
+    background-color: #6c757d;
+}
+
+.home-btn:hover {
+    background-color: #495057;
+}
+
+/* Arredondar os cantos superiores da tabela */
+table thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+
+table thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Arredondar os cantos inferiores da tabela */
+table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* Remover a borda clara visível embaixo */
+table td, table th {
+    border-bottom: none;
 }
