@@ -1,24 +1,107 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Funcionários</title>
     <meta charset="UTF-8">
+    <title>Funcionários</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn, .filter-btn {
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover, .filter-btn:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 6px;
+            background-color: #373d44;
+            color: white;
+            border: 1px solid #444;
+            font-size: 14px;
+        }
+
+        form {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #3a4353;
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #505865;
+        }
+
+        th {
+            background-color: #2e3440;
+        }
+
+        tr:hover {
+            background-color: #444b5a;
+        }
+
+        .action-link {
+            color: #66b0ff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .home-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Lista de Funcionários</h1>
 
     <form method="get" action="/funcionarios">
         <label for="empresa">Filtrar por Empresa:</label>
         <select name="cnpj" id="empresa">
             <option value="">Todas</option>
-            <th:block th:each="empresa : ${empresas}">
-                <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
-            </th:block>
+            <option th:each="empresa : ${empresas}" th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
         </select>
-        <button type="submit">Filtrar</button>
+        <button type="submit" class="filter-btn">Filtrar</button>
     </form>
 
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Matrícula</th>
@@ -31,7 +114,7 @@
                 <th>Bairro</th>
                 <th>Cidade</th>
                 <th>CEP</th>
-                <th>Socio</th>
+                <th>Sócio</th>
                 <th>Engenheiro</th>
                 <th>Operador</th>
                 <th>Ações</th>
@@ -53,11 +136,17 @@
                 <td th:text="${func.engenheiro ? 'Sim' : 'Não'}"></td>
                 <td th:text="${func.operadorDrone ? 'Sim' : 'Não'}"></td>
                 <td>
-                    <a th:href="@{/editar-funcionario(matricula=${func.matricula})}">Editar</a> |
-                    <a th:href="@{/remover-funcionario(matricula=${func.matricula})}"
+                    <a class="action-link" th:href="@{/editar-funcionario(matricula=${func.matricula})}">Editar</a>
+                    <a class="action-link" th:href="@{/remover-funcionario(matricula=${func.matricula})}"
                        onclick="return confirm('Tem certeza que deseja remover este funcionário?');">Remover</a>
                 </td>
             </tr>
         </tbody>
-        
+    </table>
+
+    <div class="home-link">
+        <a href="/" class="btn">Voltar para Home</a>
+    </div>
+
+</body>
 </html>

@@ -1,58 +1,148 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Lista de Empresas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #3a4353;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #505865;
+        }
+
+        th {
+            background-color: #2e3440;
+            color: #ffffff;
+        }
+
+        tr:hover {
+            background-color: #444b5a;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .action-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #495057;
+        }
+
+        .action-button.delete {
+            background-color: #dc3545;
+        }
+
+        .action-button.delete:hover {
+            background-color: #a71d2a;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-<h1>Empresas Cadastradas</h1>
+    <h1>Empresas Cadastradas</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>CNPJ</th>
-        <th>Nome</th>
-        <th>Contato</th>
-        <th>CEP</th>
-        <th>Rua</th>
-        <th>Número</th>
-        <th>Bairro</th>
-        <th>Cidade</th>
-        <th>Estado</th>
-        <th>País</th>
-        <th>Região</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="empresa : ${empresas}">
-        <td th:text="${empresa.cnpj}"></td>
-        <td th:text="${empresa.nome}"></td>
-        <td th:text="${empresa.contato}"></td>
-        <td th:text="${empresa.cep}"></td>
-        <td th:text="${empresa.rua}"></td>
-        <td th:text="${empresa.numero}"></td>
-        <td th:text="${empresa.bairro}"></td>
-        <td th:text="${empresa.cidade}"></td>
-        <td th:text="${empresa.nomeEstado}"></td>
-        <td th:text="${empresa.nomePais}"></td>
-        <td th:text="${empresa.regiao}"></td>
-        <td>
-            <form th:action="@{/empresa/editar}" method="get" style="display:inline">
-                <input type="hidden" name="cnpj" th:value="${empresa.cnpj}"/>
-                <button type="submit">Editar</button>
-            </form>
+    <a class="btn" href="/empresa">Cadastrar Nova Empresa</a>
 
-            <form th:action="@{/empresa/remover}" method="post" style="display:inline">
-                <input type="hidden" name="cnpj" th:value="${empresa.cnpj}"/>
-                <button type="submit" onclick="return confirm('Deseja realmente remover esta empresa?')">Remover</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>CNPJ</th>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>CEP</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Região</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="empresa : ${empresas}">
+                <td th:text="${empresa.cnpj}"></td>
+                <td th:text="${empresa.nome}"></td>
+                <td th:text="${empresa.contato}"></td>
+                <td th:text="${empresa.cep}"></td>
+                <td th:text="${empresa.rua}"></td>
+                <td th:text="${empresa.numero}"></td>
+                <td th:text="${empresa.bairro}"></td>
+                <td th:text="${empresa.cidade}"></td>
+                <td th:text="${empresa.nomeEstado}"></td>
+                <td th:text="${empresa.nomePais}"></td>
+                <td th:text="${empresa.regiao}"></td>
+                <td>
+                    <form th:action="@{/empresa/editar}" method="get" class="action-form">
+                        <input type="hidden" name="cnpj" th:value="${empresa.cnpj}" />
+                        <button type="submit" class="action-button">Editar</button>
+                    </form>
+                    <form th:action="@{/empresa/remover}" method="post" class="action-form"
+                          onsubmit="return confirm('Deseja realmente remover esta empresa?')">
+                        <input type="hidden" name="cnpj" th:value="${empresa.cnpj}" />
+                        <button type="submit" class="action-button delete">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-<div th:if="${erro}" style="color:red">
-    <p th:text="${erro}"></p>
-</div>
+    <div th:if="${erro}" class="error-message">
+        <p th:text="${erro}"></p>
+    </div>
 </body>
 </html>

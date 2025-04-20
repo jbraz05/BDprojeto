@@ -3,14 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
-    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #3a4353;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #505865;
+        }
+
+        th {
+            background-color: #2e3440;
+            color: #ffffff;
+        }
+
+        tr:hover {
+            background-color: #444b5a;
+        }
+
+        a.action-link {
+            color: #66b0ff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        a.action-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer-link {
+            display: block;
+            margin-top: 2rem;
+            text-align: center;
+            color: #cccccc;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Lista de Clientes</h1>
 
     <a class="btn" href="/cliente">Cadastrar Novo Cliente</a>
 
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>CNPJ/CPF</th>
@@ -33,14 +107,14 @@
                 <td th:text="${cliente.bairroEndereco}"></td>
                 <td th:text="${cliente.cidadeEndereco}"></td>
                 <td>
-                    <a th:href="@{'/editar-cliente'(cpf=${cliente.cnpjCpf})}">Editar</a> |
-                    <a th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
+                    <a class="action-link" th:href="@{'/editar-cliente'(cpf=${cliente.cnpjCpf})}">Editar</a>
+                    <a class="action-link" th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
                        onclick="return confirm('Tem certeza que deseja remover este cliente?');">Remover</a>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <a href="/">Voltar para o Menu</a>
+    <a class="footer-link" href="/">Voltar para o Menu</a>
 </body>
 </html>

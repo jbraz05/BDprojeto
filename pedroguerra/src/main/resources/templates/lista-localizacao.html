@@ -1,29 +1,131 @@
-<h1>Localizações de Atuação</h1>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Localizações de Atuação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #282b2e;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 2rem;
+        }
 
-<table>
-    <tr>
-        <th>Código</th>
-        <th>País</th>
-        <th>Estado</th>
-        <th>Região</th>
-        <th>Ações</th>
-    </tr>
-    <tr th:each="l : ${localizacoes}">
-        <td th:text="${l.codigo}"></td>
-        <td th:text="${l.nomePais}"></td>
-        <td th:text="${l.nomeEstado}"></td>
-        <td th:text="${l.regiao}"></td>
-        <td>
-            <a th:href="@{'/localizacao/editar?codigo=' + ${l.codigo}}">Editar</a>
-            <form th:action="@{/localizacao/remover}" method="post" style="display:inline;">
-                <input type="hidden" name="codigo" th:value="${l.codigo}" />
-                <button type="submit">Remover</button>
-            </form>
-        </td>
-    </tr>
-</table>
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
+        .btn {
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0.5rem;
+        }
 
-<a th:href="@{/}"><button type="button">Voltar para Home</button></a>
+        .btn:hover {
+            background-color: #0056b3;
+        }
 
-<a href="/localizacao">Nova Localização</a>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #3a4353;
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #505865;
+        }
+
+        th {
+            background-color: #2e3440;
+        }
+
+        tr:hover {
+            background-color: #444b5a;
+        }
+
+        .action-link {
+            color: #66b0ff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .button-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        form {
+            display: inline;
+        }
+
+        .remove-button {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-button:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Localizações de Atuação</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>País</th>
+                <th>Estado</th>
+                <th>Região</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="l : ${localizacoes}">
+                <td th:text="${l.codigo}"></td>
+                <td th:text="${l.nomePais}"></td>
+                <td th:text="${l.nomeEstado}"></td>
+                <td th:text="${l.regiao}"></td>
+                <td>
+                    <a class="action-link" th:href="@{'/localizacao/editar?codigo=' + ${l.codigo}}">Editar</a>
+                    <form th:action="@{/localizacao/remover}" method="post" onsubmit="return confirm('Tem certeza que deseja remover esta localização?')">
+                        <input type="hidden" name="codigo" th:value="${l.codigo}" />
+                        <button type="submit" class="remove-button">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="button-group">
+        <a href="/" class="btn">Voltar para Home</a>
+        <a href="/localizacao" class="btn">Nova Localização</a>
+    </div>
+
+</body>
+</html>
