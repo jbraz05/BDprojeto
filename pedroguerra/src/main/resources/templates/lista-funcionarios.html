@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Funcionários</title>
     <link rel="stylesheet" href="/lista.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -55,12 +56,12 @@
                 <td>
                 <form th:action="@{/editar-funcionario}" method="get" class="action-form">
                     <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                    <button type="submit" class="action-button">Editar</button>
+                    <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
                 </form>
                 <form th:action="@{/remover-funcionario}" method="post" class="action-form"
                       onsubmit="return confirm('Tem certeza que deseja remover este funcionário?');">
                     <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                    <button type="submit" class="action-button delete">Remover</button>
+                    <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
                 </form>
             </td>
             </tr>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Lista de Serviços</title>
     <link rel="stylesheet" href="/lista.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -36,22 +37,21 @@
                 <td>
                     <form th:action="@{/editar-servico}" method="get" class="action-form" style="display:inline;">
                         <input type="hidden" name="id" th:value="${servico.id}" />
-                        <button type="submit" class="action-button">Editar</button>
+                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
                     </form>
                     <form th:action="@{/remover-servico}" method="post" class="action-form"
                           onsubmit="return confirm('Tem certeza que deseja remover este serviço?');"
                           style="display:inline;">
                         <input type="hidden" name="id" th:value="${servico.id}" />
-                        <button type="submit" class="action-button delete">Remover</button>
+                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
                     </form>
                 </td>
             </tr>
         </tbody>
-
+    </table>
     <div class="footer">
         <a href="/" class="btn home-btn">Voltar para Home</a>
         <a class="btn" href="/servico">Cadastrar Novo Serviço</a>
     </div>
-
 </body>
 </html>

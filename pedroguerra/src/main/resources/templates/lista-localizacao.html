@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Localizações de Atuação</title>
     <link rel="stylesheet" href="/lista.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
@@ -28,13 +29,13 @@
                 <td>
                     <form th:action="@{/localizacao/editar}" method="get" class="action-form" style="display:inline;">
                         <input type="hidden" name="codigo" th:value="${l.codigo}" />
-                        <button type="submit" class="action-button">Editar</button>
+                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
                     </form>
                     <form th:action="@{/localizacao/remover}" method="post" class="action-form"
                           onsubmit="return confirm('Tem certeza que deseja remover esta localização?');"
                           style="display:inline;">
                         <input type="hidden" name="codigo" th:value="${l.codigo}" />
-                        <button type="submit" class="action-button delete">Remover</button>
+                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
                     </form>
                 </td>
             </tr>
