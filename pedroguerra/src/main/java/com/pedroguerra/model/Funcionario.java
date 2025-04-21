@@ -4,7 +4,6 @@ public class Funcionario {
 
     private String matricula;
     private String nome;
-    private String contato;
     private String fk_endereco_cep;
     private String fkSupervisorMatricula;
 
@@ -14,7 +13,6 @@ public class Funcionario {
     public Funcionario(String matricula, String nome, String contato, String fk_endereco_cep, String fkSupervisorMatricula) {
         this.matricula = matricula;
         this.nome = nome;
-        this.contato = contato;
         this.fkSupervisorMatricula = fkSupervisorMatricula;
         this.fk_endereco_cep = fk_endereco_cep;
     }
@@ -33,14 +31,6 @@ public class Funcionario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getContato() {
-        return contato;
-    }
-
-    public void setContato(String contato) {
-        this.contato = contato;
     }
 
     public String getFkSupervisorMatricula() {

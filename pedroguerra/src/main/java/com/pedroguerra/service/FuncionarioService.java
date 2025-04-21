@@ -1,54 +1,53 @@
 package com.pedroguerra.service;
 
 import com.pedroguerra.dao.FuncionarioDAO;
-import com.pedroguerra.dto.FuncionarioDTO;
+import com.pedroguerra.dao.ContatoDAO;
+import com.pedroguerra.model.Contato;
 import com.pedroguerra.model.Funcionario;
+import com.pedroguerra.dto.FuncionarioDTO;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class FuncionarioService {
 
-    private final FuncionarioDAO dao = new FuncionarioDAO();
+    private final FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+    private final ContatoDAO contatoDAO = new ContatoDAO();
 
-    public void salvarFuncionario(FuncionarioDTO dto) throws SQLException {
-        dao.inserir(dto);
+    public boolean salvarFuncionario(FuncionarioDTO dto, Contato contato) throws SQLException {
+        boolean inserido = funcionarioDAO.inserir(dto);
+        if (inserido && contato != null) {
+            contatoDAO.inserir(contato);
+        }
+        return inserido;
+    }
+
+    public void atualizarFuncionario(FuncionarioDTO dto, Contato novoContato) throws SQLException {
+        funcionarioDAO.atualizar(dto);
+        if (novoContato != null) {
+            contatoDAO.remover(novoContato.getCodigo()); // remove anterior se quiser sobrescrever
+            contatoDAO.inserir(novoContato);
+        }
     }
 
     public void removerFuncionario(String matricula) throws SQLException {
-        dao.removerPorMatricula(matricula);
+        funcionarioDAO.removerPorMatricula(matricula); // contatos são removidos via ON DELETE CASCADE
     }
 
-    public List<Funcionario> listarFuncionariosPorEmpresa(String cnpj) throws SQLException {
-        return dao.listarPorEmpresa(cnpj);
+    public List<FuncionarioDTO> listarTodos() throws SQLException {
+        return funcionarioDAO.listarTodosDTO();
     }
 
-    public List<Funcionario> listarTodos() throws SQLException {
-        return dao.listarTodos();
+    public FuncionarioDTO buscarFuncionarioDTO(String matricula) throws SQLException {
+        return funcionarioDAO.buscarFuncionarioDTO(matricula);
     }
 
-    public FuncionarioDTO buscarFuncionarioParaEdicao(String matricula) throws SQLException {
-        return dao.buscarFuncionarioDTO(matricula);
-    }
-    public boolean funcionarioExiste(String matricula) throws SQLException {
-        return dao.buscarFuncionarioDTO(matricula) != null;
-    }
-    
-    public void atualizarFuncionario(FuncionarioDTO dto) throws SQLException {
-        dao.atualizar(dto);
-    }
-    public List<FuncionarioDTO> listarTodosDTO() throws SQLException {
-        return dao.listarTodosDTO();
-    }
-    
     public List<FuncionarioDTO> listarFuncionariosPorEmpresaDTO(String cnpj) throws SQLException {
-        return dao.listarPorEmpresaDTO(cnpj);
+        return funcionarioDAO.listarPorEmpresaDTO(cnpj);
     }
-
-    private final FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 
     public List<Funcionario> listarOperadoresDrone() throws SQLException {
         return funcionarioDAO.listarOperadoresDrone();
     }
-    
+
 }

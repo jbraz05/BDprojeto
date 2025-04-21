@@ -2,6 +2,7 @@ package com.pedroguerra.controller;
 
 import com.pedroguerra.dao.EmpresaDAO;
 import com.pedroguerra.dto.FuncionarioDTO;
+import com.pedroguerra.model.Contato;
 import com.pedroguerra.service.FuncionarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +30,15 @@ public class FuncionarioController {
     }
 
     @PostMapping("/salvar-funcionario")
-    public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto) {
+    public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto,
+                                    @RequestParam String telefone,
+                                    @RequestParam String email) {
         try {
-            if (service.funcionarioExiste(dto.getMatricula())) {
-                service.atualizarFuncionario(dto);
+            Contato contato = new Contato("CTF_" + dto.getMatricula(), telefone, email, dto.getMatricula(), null);
+            if (service.buscarFuncionarioDTO(dto.getMatricula()) != null) {
+                service.atualizarFuncionario(dto, contato);
             } else {
-                service.salvarFuncionario(dto);
+                service.salvarFuncionario(dto, contato);
             }
             return "redirect:/funcionarios";
         } catch (Exception e) {
@@ -43,10 +47,6 @@ public class FuncionarioController {
         }
     }
     
-
-    
-
-
     @GetMapping("/remover-funcionario")
     public String removerFuncionario(@RequestParam String matricula) {
         try {
@@ -58,33 +58,36 @@ public class FuncionarioController {
         }
     }
 
-@GetMapping("/editar-funcionario")
-public String editarFuncionario(@RequestParam String matricula, Model model) {
-    try {
-        FuncionarioDTO dto = service.buscarFuncionarioParaEdicao(matricula);
-        model.addAttribute("funcionario", dto);
-        model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
-        model.addAttribute("supervisores", service.listarTodos());
-        return "funcionario";
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Erro ao carregar dados para edição", e);
+    @GetMapping("/editar-funcionario")
+    public String editarFuncionario(@RequestParam String matricula, Model model) {
+        try {
+            FuncionarioDTO dto = service.buscarFuncionarioDTO(matricula);
+            model.addAttribute("funcionario", dto);
+            model.addAttribute("telefone", dto.getTelefone());
+            model.addAttribute("email", dto.getEmail());
+            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+            model.addAttribute("supervisores", service.listarTodos());
+            return "funcionario";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao carregar dados para edição", e);
+        }
     }
-}
-@GetMapping("/funcionarios")
-public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
-    try {
-        List<FuncionarioDTO> funcionarios = (cnpj != null && !cnpj.isEmpty())
-                ? service.listarFuncionariosPorEmpresaDTO(cnpj)
-                : service.listarTodosDTO();
 
-        model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
-        model.addAttribute("funcionarios", funcionarios);
-        return "lista-funcionarios";
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Erro ao listar funcionários", e);
+    @GetMapping("/funcionarios")
+    public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
+        try {
+            List<FuncionarioDTO> funcionarios = (cnpj != null && !cnpj.isEmpty())
+                    ? service.listarFuncionariosPorEmpresaDTO(cnpj)
+                    : service.listarTodos();
+    
+            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+            model.addAttribute("funcionarios", funcionarios);
+            return "lista-funcionarios";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar funcionários", e);
+        }
     }
-}
 
 }

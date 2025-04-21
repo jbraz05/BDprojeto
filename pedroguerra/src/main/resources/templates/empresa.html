@@ -15,8 +15,12 @@
         <label>Nome:</label>
         <input type="text" name="nome" th:value="${empresa.nome}" required>
 
-        <label>Contato:</label>
-        <input type="text" name="contato" th:value="${empresa.contato}" required>
+        <label for="email">Email:</label>
+        <input type="text" name="email" th:value="${contato.email}" required>
+
+        
+        <label for="telefone">Telefone:</label>
+        <input type="text" name="telefone" th:value="${contato.telefone}" required>
 
         <label>CEP:</label>
         <input type="text" name="cep" th:value="${endereco.cep}" required>

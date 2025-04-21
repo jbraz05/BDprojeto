@@ -15,7 +15,8 @@
                 <tr>
                     <th>CNPJ</th>
                     <th>Nome</th>
-                    <th>Contato</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
                     <th>CEP</th>
                     <th>Rua</th>
                     <th>Número</th>
@@ -31,7 +32,8 @@
                 <tr th:each="empresa : ${empresas}">
                     <td th:text="${empresa.cnpj}"></td>
                     <td th:text="${empresa.nome}"></td>
-                    <td th:text="${empresa.contato}"></td>
+                    <td th:text="${empresa.email}"></td>
+                    <td th:text="${empresa.telefone}"></td>
                     <td th:text="${empresa.cep}"></td>
                     <td th:text="${empresa.rua}"></td>
                     <td th:text="${empresa.numero}"></td>

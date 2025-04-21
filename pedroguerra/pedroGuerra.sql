@@ -19,6 +19,8 @@ CREATE TABLE Empresa (
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep)
 );
 
+ALTER TABLE Empresa DROP COLUMN contato;
+
 CREATE TABLE Funcionario (
     matricula VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -27,6 +29,18 @@ CREATE TABLE Funcionario (
     fk_endereco_cep VARCHAR(20),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep),
     FOREIGN KEY (fk_supervisor_matricula) REFERENCES Funcionario(matricula)
+);
+
+ALTER TABLE Funcionario DROP COLUMN contato;
+
+CREATE TABLE Contato (
+    codigo VARCHAR(20) PRIMARY KEY,
+    telefone VARCHAR(20),
+    email VARCHAR(100),
+    fk_funcionario_matricula VARCHAR(20),
+    fk_empresa_cnpj VARCHAR(20),
+    FOREIGN KEY (fk_funcionario_matricula) REFERENCES Funcionario(matricula),
+    FOREIGN KEY (fk_empresa_cnpj) REFERENCES Empresa(cnpj) ON DELETE CASCADE '-- ON DELETE CASCADE: Se a empresa for excluída, os contatos associados também serão excluídos'
 );
 
 CREATE TABLE Emprega (

@@ -3,7 +3,8 @@ package com.pedroguerra.dto;
 public class FuncionarioDTO {
     private String matricula;
     private String nome;
-    private String contato;
+    private String email;
+    private String telefone;
     private String fkEnderecoCep;
     private String numeroEndereco;
     private String cidadeEndereco;
@@ -21,8 +22,11 @@ public class FuncionarioDTO {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public String getContato() { return contato; }
-    public void setContato(String contato) { this.contato = contato; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 
     public String getFkEnderecoCep() { return fkEnderecoCep; }
     public void setFkEnderecoCep(String fkEnderecoCep) { this.fkEnderecoCep = fkEnderecoCep; }

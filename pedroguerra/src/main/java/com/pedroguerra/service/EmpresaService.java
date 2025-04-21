@@ -1,61 +1,55 @@
 package com.pedroguerra.service;
 
-import com.pedroguerra.dao.AtuaDAO;
 import com.pedroguerra.dao.EmpresaDAO;
-import com.pedroguerra.dao.EnderecoDAO;
 import com.pedroguerra.dto.EmpresaDTO;
+import com.pedroguerra.config.ConnectionFactory;
+import com.pedroguerra.dao.ContatoDAO;
 import com.pedroguerra.model.Empresa;
-import com.pedroguerra.model.Endereco;
-import org.springframework.stereotype.Service;
-
+import com.pedroguerra.model.Contato;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-@Service
 public class EmpresaService {
 
     private final EmpresaDAO empresaDAO = new EmpresaDAO();
-    private final EnderecoDAO enderecoDAO = new EnderecoDAO();
-    private final AtuaDAO atuaDAO = new AtuaDAO();
+    private final ContatoDAO contatoDAO = new ContatoDAO();
 
-    public void processarCadastro(Empresa empresa, String cep, String rua, String numero, String bairro, String cidade, String codigoLocalizacao) throws SQLException {
-        Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
-        enderecoDAO.inserir(endereco);
+    public void salvarEmpresa(Empresa empresa, Contato contato, String localizacaoCodigo) throws SQLException {
+        empresaDAO.inserir(empresa, contato);
 
-        empresa.setFkEnderecoCep(cep);
-        empresaDAO.inserir(empresa);
+        try (Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
+                "INSERT INTO Atua (fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo) VALUES (?, ?)")) {
+            stmt.setString(1, empresa.getCnpj());
+            stmt.setString(2, localizacaoCodigo);
+            stmt.executeUpdate();
+        }
+}
 
-        atuaDAO.inserir(empresa.getCnpj(), codigoLocalizacao);
+    public void atualizarEmpresa(Empresa empresa, Contato novoContato) throws SQLException {
+        empresaDAO.atualizar(empresa, novoContato);
     }
 
     public void removerEmpresa(String cnpj) throws SQLException {
         empresaDAO.removerPorCnpj(cnpj);
     }
 
-    public Empresa buscarEmpresaPorCnpj(String cnpj) throws SQLException {
+    
+    public EmpresaDTO buscarEmpresa(String cnpj) throws SQLException {
         return empresaDAO.buscarPorCnpj(cnpj);
     }
 
-    public void atualizarEmpresaComEndereco(Empresa empresa, String cep, String rua, String numero, String bairro, String cidade, String codigoLocalizacao) throws SQLException {
-        Endereco endereco = new Endereco(cep, numero, cidade, bairro, rua);
-
-        if (!enderecoDAO.cepExiste(cep)) {
-            enderecoDAO.inserir(endereco);
-        } else {
-            enderecoDAO.atualizar(endereco);
-        }
-
-        empresa.setFkEnderecoCep(cep);
-        empresaDAO.atualizar(empresa);
-        atuaDAO.atualizar(empresa.getCnpj(), codigoLocalizacao);
+    public List<Empresa> listarTodas() throws SQLException {
+        return empresaDAO.listarTodas();
     }
 
-    public List<EmpresaDTO> listarEmpresasComEnderecoEAtuacao() throws SQLException {
+    public List<EmpresaDTO> listarTodasComLocalizacao() throws SQLException {
         return empresaDAO.listarTodasComLocalizacao();
     }
 
-    // ✅ NOVO MÉTODO: listar todas as empresas (somente nome e cnpj)
-    public List<Empresa> listarTodas() throws SQLException {
-        return empresaDAO.listarTodas();
+    public List<Contato> listarContatos(String cnpj) throws SQLException {
+        return contatoDAO.listarPorEmpresa(cnpj);
     }
 }
