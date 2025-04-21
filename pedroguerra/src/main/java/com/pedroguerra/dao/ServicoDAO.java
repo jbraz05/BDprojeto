@@ -111,4 +111,35 @@ public class ServicoDAO {
     
         return lista;
     }
+
+    public void atualizarClienteDoServico(String servicoId, String novoClienteCnpjCpf) throws SQLException {
+        String verificarSQL = "SELECT 1 FROM Contrata WHERE fk_Servico_id = ?";
+        String atualizarSQL = "UPDATE Contrata SET fk_Cliente_cnpj_cpf = ? WHERE fk_Servico_id = ?";
+        String inserirSQL = "INSERT INTO Contrata (nota_fiscal, fk_Cliente_cnpj_cpf, fk_Servico_id) VALUES (?, ?, ?)";
+    
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            boolean existe;
+            try (PreparedStatement verificarStmt = conn.prepareStatement(verificarSQL)) {
+                verificarStmt.setString(1, servicoId);
+                ResultSet rs = verificarStmt.executeQuery();
+                existe = rs.next();
+            }
+    
+            if (existe) {
+                try (PreparedStatement atualizarStmt = conn.prepareStatement(atualizarSQL)) {
+                    atualizarStmt.setString(1, novoClienteCnpjCpf);
+                    atualizarStmt.setString(2, servicoId);
+                    atualizarStmt.executeUpdate();
+                }
+            } else {
+                String notaFiscalGerada = "NF_" + servicoId; 
+                try (PreparedStatement inserirStmt = conn.prepareStatement(inserirSQL)) {
+                    inserirStmt.setString(1, notaFiscalGerada);
+                    inserirStmt.setString(2, novoClienteCnpjCpf);
+                    inserirStmt.setString(3, servicoId);
+                    inserirStmt.executeUpdate();
+                }
+            }
+        }
+    }
 }
