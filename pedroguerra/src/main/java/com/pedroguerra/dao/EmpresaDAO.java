@@ -1,9 +1,7 @@
-
 package com.pedroguerra.dao;
 
 import com.pedroguerra.config.ConnectionFactory;
 import com.pedroguerra.model.Empresa;
-import com.pedroguerra.model.Funcionario;
 import com.pedroguerra.model.Contato;
 import com.pedroguerra.dto.EmpresaDTO;
 
@@ -22,13 +20,13 @@ public class EmpresaDAO {
             stmt.setString(2, empresa.getNome());
             stmt.setString(3, empresa.getFkEnderecoCep());
             stmt.executeUpdate();
-    
+
             if (contato != null) {
                 contatoDAO.inserir(contato, conn);
             }
         }
     }
-    
+
     public void atualizar(Empresa empresa, Contato novoContato) throws SQLException {
         String sql = "UPDATE Empresa SET nome = ?, fk_endereco_cep = ? WHERE cnpj = ?";
         try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -36,10 +34,10 @@ public class EmpresaDAO {
             stmt.setString(2, empresa.getFkEnderecoCep());
             stmt.setString(3, empresa.getCnpj());
             stmt.executeUpdate();
-    
+
             if (novoContato != null) {
-                contatoDAO.remover(novoContato.getCodigo(),conn); // remove anterior
-                contatoDAO.inserir(novoContato,conn);
+                contatoDAO.remover(novoContato.getCodigo(), conn);
+                contatoDAO.inserir(novoContato, conn);
             }
         }
     }
@@ -48,26 +46,32 @@ public class EmpresaDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-                List<Funcionario> funcionarios = funcionarioDAO.listarPorEmpresa(cnpj);
-                for (Funcionario f : funcionarios) {
-                    funcionarioDAO.removerPorMatricula(f.getMatricula());
+                // Remove vínculo com funcionários (Emprega)
+                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_Empresa_cnpj = ?")) {
+                    stmt.setString(1, cnpj);
+                    stmt.executeUpdate();
                 }
 
+                // Remove vínculo com Localização (Atua)
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
 
+                // Remove vínculo com Serviços (Possui)
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
 
+                // Remove empresa principal
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Empresa WHERE cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
+
+                // Remove contato (externamente controlado pela Service se necessário)
+                contatoDAO.remover("CTE_" + cnpj, conn);
 
                 conn.commit();
             } catch (SQLException e) {
@@ -116,11 +120,11 @@ public class EmpresaDAO {
             LEFT JOIN Atua a ON e.cnpj = a.fk_Empresa_cnpj
             LEFT JOIN LocalizacaoAtuacao l ON l.codigo = a.fk_Localizacao_Atuacao_codigo
         """;
-    
+
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-    
+
             while (rs.next()) {
                 EmpresaDTO dto = new EmpresaDTO();
                 dto.setCnpj(rs.getString("cnpj"));
@@ -133,18 +137,17 @@ public class EmpresaDAO {
                 dto.setNomeEstado(rs.getString("nome_estado"));
                 dto.setNomePais(rs.getString("nome_pais"));
                 dto.setRegiao(rs.getString("regiao"));
-    
-                // 🔥 Adicione isso aqui para garantir que email e telefone sejam preenchidos!
+
                 List<Contato> contatos = contatoDAO.listarPorEmpresa(dto.getCnpj());
                 for (Contato c : contatos) {
                     dto.setEmail(c.getEmail());
                     dto.setTelefone(c.getTelefone());
                 }
-    
+
                 lista.add(dto);
             }
         }
-    
+
         return lista;
     }
 
