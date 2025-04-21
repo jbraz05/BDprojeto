@@ -63,7 +63,7 @@ public class FuncionarioDAO {
                 }
 
                 if (dto.getEmail() != null || dto.getTelefone() != null) {
-                    contatoDAO.inserir(new Contato("CTF_" + dto.getMatricula(), dto.getTelefone(), dto.getEmail(), dto.getMatricula(), null));
+                    contatoDAO.inserir(new Contato("CTF_" + dto.getMatricula(), dto.getTelefone(), dto.getEmail(), dto.getMatricula(), null), conn);
                 }
 
                 conn.commit();
@@ -96,7 +96,11 @@ public class FuncionarioDAO {
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, dto.getNome());
                     stmt.setString(2, dto.getFkEnderecoCep());
-                    stmt.setString(3, dto.getFkSupervisorMatricula());
+                    if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isBlank()) {
+                        stmt.setNull(3, Types.VARCHAR);
+                    } else {
+                        stmt.setString(3, dto.getFkSupervisorMatricula());
+                    }
                     stmt.setString(4, dto.getMatricula());
                     stmt.executeUpdate();
                 }
@@ -139,9 +143,8 @@ public class FuncionarioDAO {
                     }
                 }
 
-                contatoDAO.remover("CTF_" + dto.getMatricula());
                 if (dto.getEmail() != null || dto.getTelefone() != null) {
-                    contatoDAO.inserir(new Contato("CTF_" + dto.getMatricula(), dto.getTelefone(), dto.getEmail(), dto.getMatricula(), null));
+                    contatoDAO.inserir(new Contato("CTF_" + dto.getMatricula(), dto.getTelefone(), dto.getEmail(), dto.getMatricula(), null), conn);
                 }
 
                 conn.commit();
@@ -155,10 +158,17 @@ public class FuncionarioDAO {
     }
 
     public FuncionarioDTO buscarFuncionarioDTO(String matricula) throws SQLException {
-        String sql = "SELECT f.*, e.rua, e.numero, e.cidade, e.bairro FROM Funcionario f JOIN Endereco e ON f.fk_endereco_cep = e.cep WHERE f.matricula = ?";
-        try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT f.*, e.rua, e.numero, e.cidade, e.bairro " +
+                     "FROM Funcionario f " +
+                     "JOIN Endereco e ON f.fk_endereco_cep = e.cep " +
+                     "WHERE f.matricula = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, matricula);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 FuncionarioDTO dto = new FuncionarioDTO();
                 dto.setMatricula(rs.getString("matricula"));
@@ -169,11 +179,30 @@ public class FuncionarioDAO {
                 dto.setNumeroEndereco(rs.getString("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
+
+                // Contato
                 List<Contato> contatos = contatoDAO.listarPorFuncionario(matricula);
                 for (Contato c : contatos) {
                     dto.setEmail(c.getEmail());
                     dto.setTelefone(c.getTelefone());
                 }
+
+                // Especializações
+                dto.setSocio(registroExiste(conn, "Socio", matricula));
+                dto.setEngenheiro(registroExiste(conn, "Engenheiro", matricula));
+                dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", matricula));
+
+                // Empresa vinculada
+                String sqlEmpresa = "SELECT fk_Empresa_cnpj FROM Emprega WHERE fk_funcionario_matricula = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sqlEmpresa)) {
+                    ps.setString(1, matricula);
+                    try (ResultSet rse = ps.executeQuery()) {
+                        if (rse.next()) {
+                            dto.setCnpjEmpresa(rse.getString("fk_Empresa_cnpj"));
+                        }
+                    }
+                }
+
                 return dto;
             }
         }
@@ -213,6 +242,11 @@ public class FuncionarioDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
+                try (PreparedStatement stmt = conn.prepareStatement("UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
+                    stmt.setString(1, matricula);
+                    stmt.executeUpdate();
+                }
+
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
@@ -225,15 +259,19 @@ public class FuncionarioDAO {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
+
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
+
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-                contatoDAO.remover("CTF_" + matricula);
+
+                contatoDAO.remover("CTF_" + matricula, conn);
+
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -271,13 +309,13 @@ public class FuncionarioDAO {
                      "JOIN Endereco e ON f.fk_endereco_cep = e.cep " +
                      "JOIN Emprega emp ON f.matricula = emp.fk_funcionario_matricula " +
                      "WHERE emp.fk_Empresa_cnpj = ?";
-    
+
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-    
+
             stmt.setString(1, cnpj);
             ResultSet rs = stmt.executeQuery();
-    
+
             while (rs.next()) {
                 FuncionarioDTO dto = new FuncionarioDTO();
                 dto.setMatricula(rs.getString("matricula"));
@@ -289,24 +327,24 @@ public class FuncionarioDAO {
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
                 dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
-    
+
                 dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
                 dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));
                 dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", dto.getMatricula()));
-    
+
                 List<Contato> contatos = contatoDAO.listarPorFuncionario(dto.getMatricula());
                 for (Contato c : contatos) {
                     dto.setEmail(c.getEmail());
                     dto.setTelefone(c.getTelefone());
                 }
-    
+
                 lista.add(dto);
             }
         }
-    
+
         return lista;
     }
-    
+
     private boolean registroExiste(Connection conn, String tabela, String matricula) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM " + tabela + " WHERE fk_funcionario_matricula = ? LIMIT 1")) {
             stmt.setString(1, matricula);
@@ -320,11 +358,11 @@ public class FuncionarioDAO {
         List<Funcionario> lista = new ArrayList<>();
         String sql = "SELECT f.* FROM Funcionario f " +
                      "JOIN OperadorDrone o ON f.matricula = o.fk_Funcionario_matricula";
-    
+
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-    
+
             while (rs.next()) {
                 Funcionario f = new Funcionario();
                 f.setMatricula(rs.getString("matricula"));
@@ -334,8 +372,24 @@ public class FuncionarioDAO {
                 lista.add(f);
             }
         }
-    
+
         return lista;
     }
-    
+
+    public Funcionario buscarFuncionarioSimples(String matricula) throws SQLException {
+        if (matricula == null || matricula.isBlank()) return null;
+        String sql = "SELECT * FROM Funcionario WHERE matricula = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Funcionario f = new Funcionario();
+                f.setMatricula(rs.getString("matricula"));
+                f.setNome(rs.getString("nome"));
+                return f;
+            }
+        }
+        return null;
+    }
 }

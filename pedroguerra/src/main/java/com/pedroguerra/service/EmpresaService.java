@@ -33,9 +33,14 @@ public class EmpresaService {
     }
 
     public void removerEmpresa(String cnpj) throws SQLException {
-        empresaDAO.removerPorCnpj(cnpj);
+        EmpresaDTO dto = buscarEmpresa(cnpj); 
+        empresaDAO.removerPorCnpj(cnpj); // <--- nome correto aqui
+        if (dto != null && dto.getCep() != null) {
+            EnderecoService enderecoService = new EnderecoService();
+            enderecoService.remover(dto.getCep());
+        }
     }
-
+ 
     
     public EmpresaDTO buscarEmpresa(String cnpj) throws SQLException {
         return empresaDAO.buscarPorCnpj(cnpj);

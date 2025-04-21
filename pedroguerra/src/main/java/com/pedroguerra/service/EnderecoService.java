@@ -15,6 +15,10 @@ public class EnderecoService {
         dao.inserir(endereco);
     }
 
+    public void remover(String cep) throws SQLException {
+        dao.remover(cep);
+    }
+    
     public Endereco buscar(String cep) throws SQLException {
         return dao.buscarPorCep(cep);
     }

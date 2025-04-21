@@ -7,7 +7,6 @@ import com.pedroguerra.service.FuncionarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller
@@ -30,24 +29,29 @@ public class FuncionarioController {
     }
 
     @PostMapping("/salvar-funcionario")
-    public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto,
-                                    @RequestParam String telefone,
-                                    @RequestParam String email) {
+    public String salvarFuncionario(@ModelAttribute("funcionario") FuncionarioDTO dto, Model model) {
         try {
-            Contato contato = new Contato("CTF_" + dto.getMatricula(), telefone, email, dto.getMatricula(), null);
-            if (service.buscarFuncionarioDTO(dto.getMatricula()) != null) {
-                service.atualizarFuncionario(dto, contato);
+            Contato contato = new Contato("CTF_" + dto.getMatricula(), dto.getTelefone(), dto.getEmail(), dto.getMatricula(), null);
+    
+            boolean existe = service.buscarFuncionarioDTO(dto.getMatricula()) != null;
+    
+            if (existe) {
+                service.atualizarFuncionario(dto, contato); // ⚠️ NÃO precisa de `conn` aqui!
             } else {
                 service.salvarFuncionario(dto, contato);
             }
+    
             return "redirect:/funcionarios";
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao salvar funcionário", e);
+            model.addAttribute("erro", "Erro ao salvar funcionário: " + e.getMessage());
+            return "funcionario";
         }
     }
     
-    @GetMapping("/remover-funcionario")
+
+    
+    @PostMapping("/remover-funcionario")
     public String removerFuncionario(@RequestParam String matricula) {
         try {
             service.removerFuncionario(matricula);

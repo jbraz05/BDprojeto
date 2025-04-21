@@ -42,7 +42,10 @@
             <tr th:each="func : ${funcionarios}">
                 <td th:text="${func.matricula}"></td>
                 <td th:text="${func.nome}"></td>
-                <td th:text="${func.contato}"></td>
+                <td>
+                    <span th:text="'Email: ' + ${func.email}"></span><br/>
+                    <span th:text="'Telefone: ' + ${func.telefone}"></span>
+                </td>
                 <td th:text="${func.fkSupervisorMatricula}"></td>
                 <td th:text="${func.cnpjEmpresa}"></td>
                 <td th:text="${func.ruaEndereco}"></td>

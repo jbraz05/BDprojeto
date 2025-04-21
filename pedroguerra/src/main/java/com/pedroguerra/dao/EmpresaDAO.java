@@ -24,7 +24,7 @@ public class EmpresaDAO {
             stmt.executeUpdate();
     
             if (contato != null) {
-                contatoDAO.inserir(contato);
+                contatoDAO.inserir(contato, conn);
             }
         }
     }
@@ -38,8 +38,8 @@ public class EmpresaDAO {
             stmt.executeUpdate();
     
             if (novoContato != null) {
-                contatoDAO.remover(novoContato.getCodigo()); // remove anterior
-                contatoDAO.inserir(novoContato);
+                contatoDAO.remover(novoContato.getCodigo(),conn); // remove anterior
+                contatoDAO.inserir(novoContato,conn);
             }
         }
     }

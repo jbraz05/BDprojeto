@@ -67,4 +67,13 @@ public class EnderecoDAO {
         }
         return false;
     }
+
+    public void remover(String cep) throws SQLException {
+        String sql = "DELETE FROM Endereco WHERE cep = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cep);
+            stmt.executeUpdate();
+        }
+    }
 } 

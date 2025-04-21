@@ -9,10 +9,12 @@ import java.util.List;
 
 public class ContatoDAO {
 
-    public void inserir(Contato contato) throws SQLException {
-        String sql = "INSERT INTO Contato (codigo, telefone, email, fk_funcionario_matricula, fk_empresa_cnpj) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    // Versão com conexão explícita (para uso em transações)
+    public void inserir(Contato contato, Connection conn) throws SQLException {
+        String sql = "INSERT INTO Contato (codigo, telefone, email, fk_funcionario_matricula, fk_empresa_cnpj) " +
+                     "VALUES (?, ?, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE telefone = VALUES(telefone), email = VALUES(email)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, contato.getCodigo());
             stmt.setString(2, contato.getTelefone());
             stmt.setString(3, contato.getEmail());
@@ -22,12 +24,26 @@ public class ContatoDAO {
         }
     }
 
-    public void remover(String codigo) throws SQLException {
+    // Versão autônoma (abre/fecha conexão)
+    public void inserir(Contato contato) throws SQLException {
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            inserir(contato, conn);
+        }
+    }
+
+    // Versão com conexão explícita
+    public void remover(String codigo, Connection conn) throws SQLException {
         String sql = "DELETE FROM Contato WHERE codigo = ?";
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, codigo);
             stmt.executeUpdate();
+        }
+    }
+
+    // Versão autônoma
+    public void remover(String codigo) throws SQLException {
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            remover(codigo, conn);
         }
     }
 

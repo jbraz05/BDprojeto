@@ -1,4 +1,3 @@
--- SQLBook: Code
 create database pedroguerra;
 
 use pedroguerra;
@@ -14,24 +13,18 @@ CREATE TABLE Endereco (
 CREATE TABLE Empresa (
     cnpj VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    contato VARCHAR(100),a
     fk_endereco_cep VARCHAR(20),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep)
 );
 
-ALTER TABLE Empresa DROP COLUMN contato;
-
 CREATE TABLE Funcionario (
     matricula VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    contato VARCHAR(100),
     fk_supervisor_matricula VARCHAR(20),
     fk_endereco_cep VARCHAR(20),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep),
     FOREIGN KEY (fk_supervisor_matricula) REFERENCES Funcionario(matricula)
 );
-
-ALTER TABLE Funcionario DROP COLUMN contato;
 
 CREATE TABLE Contato (
     codigo VARCHAR(20) PRIMARY KEY,
@@ -40,7 +33,7 @@ CREATE TABLE Contato (
     fk_funcionario_matricula VARCHAR(20),
     fk_empresa_cnpj VARCHAR(20),
     FOREIGN KEY (fk_funcionario_matricula) REFERENCES Funcionario(matricula),
-    FOREIGN KEY (fk_empresa_cnpj) REFERENCES Empresa(cnpj) ON DELETE CASCADE '-- ON DELETE CASCADE: Se a empresa for excluída, os contatos associados também serão excluídos'
+    FOREIGN KEY (fk_empresa_cnpj) REFERENCES Empresa(cnpj) ON DELETE CASCADE
 );
 
 CREATE TABLE Emprega (

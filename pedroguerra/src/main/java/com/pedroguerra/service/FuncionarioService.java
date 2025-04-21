@@ -15,23 +15,20 @@ public class FuncionarioService {
     private final ContatoDAO contatoDAO = new ContatoDAO();
 
     public boolean salvarFuncionario(FuncionarioDTO dto, Contato contato) throws SQLException {
-        boolean inserido = funcionarioDAO.inserir(dto);
-        if (inserido && contato != null) {
-            contatoDAO.inserir(contato);
-        }
-        return inserido;
+        // O método inserir do FuncionarioDAO já insere o contato!
+        return funcionarioDAO.inserir(dto);
     }
 
     public void atualizarFuncionario(FuncionarioDTO dto, Contato novoContato) throws SQLException {
         funcionarioDAO.atualizar(dto);
         if (novoContato != null) {
-            contatoDAO.remover(novoContato.getCodigo()); // remove anterior se quiser sobrescrever
+            contatoDAO.remover(novoContato.getCodigo());
             contatoDAO.inserir(novoContato);
         }
     }
 
     public void removerFuncionario(String matricula) throws SQLException {
-        funcionarioDAO.removerPorMatricula(matricula); // contatos são removidos via ON DELETE CASCADE
+        funcionarioDAO.removerPorMatricula(matricula); // remove contatos também
     }
 
     public List<FuncionarioDTO> listarTodos() throws SQLException {
@@ -49,5 +46,4 @@ public class FuncionarioService {
     public List<Funcionario> listarOperadoresDrone() throws SQLException {
         return funcionarioDAO.listarOperadoresDrone();
     }
-
 }

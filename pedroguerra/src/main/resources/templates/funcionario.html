@@ -11,13 +11,17 @@
 
         <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
             <label>Matrícula:</label>
-            <input type="text" th:field="*{matricula}" required />
+            <input type="text" th:field="*{matricula}" th:readonly="${funcionario.matricula != null}" required />
 
             <label>Nome:</label>
             <input type="text" th:field="*{nome}" required />
 
-            <label>Contato:</label>
-            <input type="text" th:field="*{contato}" />
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" required />
+
+            <label>Telefone:</label>
+            <input type="text" th:field="*{telefone}" required />
+        
 
             <label>CEP:</label>
             <input type="text" th:field="*{fkEnderecoCep}" required />
