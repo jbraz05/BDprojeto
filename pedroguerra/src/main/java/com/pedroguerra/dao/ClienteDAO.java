@@ -84,14 +84,17 @@ public class ClienteDAO {
 
     public boolean remover(String cnpjCpf) throws SQLException {
         String getCepSQL = "SELECT fk_Endereco_cep FROM Cliente WHERE cnpj_cpf = ?";
+        String deleteContrataSQL = "DELETE FROM Contrata WHERE fk_Cliente_cnpj_cpf = ?";
         String deleteClienteSQL = "DELETE FROM Cliente WHERE cnpj_cpf = ?";
         String checkCepUsoSQL = "SELECT COUNT(*) FROM Cliente WHERE fk_Endereco_cep = ?";
         String deleteEnderecoSQL = "DELETE FROM Endereco WHERE cep = ?";
-
+    
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
                 String cep = null;
+    
+                //Busca o CEP antes de remover o cliente
                 try (PreparedStatement stmt = conn.prepareStatement(getCepSQL)) {
                     stmt.setString(1, cnpjCpf);
                     ResultSet rs = stmt.executeQuery();
@@ -99,12 +102,20 @@ public class ClienteDAO {
                         cep = rs.getString("fk_Endereco_cep");
                     }
                 }
-
+    
+                //Remove registros da tabela Contrata
+                try (PreparedStatement stmt = conn.prepareStatement(deleteContrataSQL)) {
+                    stmt.setString(1, cnpjCpf);
+                    stmt.executeUpdate();
+                }
+    
+                //Remove o cliente
                 try (PreparedStatement stmt = conn.prepareStatement(deleteClienteSQL)) {
                     stmt.setString(1, cnpjCpf);
                     stmt.executeUpdate();
                 }
-
+    
+                //Verifica se o CEP está em uso por outro cliente antes de remover o endereço
                 if (cep != null) {
                     try (PreparedStatement stmt = conn.prepareStatement(checkCepUsoSQL)) {
                         stmt.setString(1, cep);
@@ -117,7 +128,7 @@ public class ClienteDAO {
                         }
                     }
                 }
-
+    
                 conn.commit();
                 return true;
             } catch (SQLException e) {
@@ -128,7 +139,7 @@ public class ClienteDAO {
             }
         }
     }
-
+    
     public Cliente buscarPorCnpjCpf(String cnpjCpf) throws SQLException {
         String sql = "SELECT * FROM Cliente WHERE cnpj_cpf = ?";
 
