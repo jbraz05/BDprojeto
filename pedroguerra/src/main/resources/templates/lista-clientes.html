@@ -32,9 +32,16 @@
                 <td th:text="${cliente.bairroEndereco}"></td>
                 <td th:text="${cliente.cidadeEndereco}"></td>
                 <td>
-                    <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                    <button class="action-button delete" th:href="@{'/remover-cliente'(cpf=${cliente.cnpjCpf})}"
-                       onclick="return confirm('Tem certeza que deseja remover este cliente?');"><i class="fas fa-trash-alt"></i></button>
+                    <form th:action="@{/editar-cliente}" method="get" style="display:inline;">
+                        <input type="hidden" name="cpf" th:value="${cliente.cnpjCpf}" />
+                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                    </form>
+                
+                    <form th:action="@{/remover-cliente}" method="get" style="display:inline;"
+                          onsubmit="return confirm('Tem certeza que deseja remover este cliente?');">
+                        <input type="hidden" name="cpf" th:value="${cliente.cnpjCpf}" />
+                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                    </form>
                 </td>
             </tr>
         </tbody>
