@@ -74,10 +74,12 @@ source ~/.zshrc
  ### ✅Verificação para ver se funcionou:
 
  ### 🪟 No Windows:
-
+Powershell:
 ```powershell
 echo $env:DB_PASSWORD
 ```
+
+CMD:
 ```cmd
 echo %DB_PASSWORD%
 ````
@@ -88,6 +90,7 @@ suaSenhaAqui
 ```
 
 ### 🪟 No Mac:
+Bash:
 ```bash
 echo $DB_PASSWORD
 ```
