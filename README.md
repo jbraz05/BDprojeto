@@ -41,7 +41,7 @@ A senha do banco deve ser definida como **variável de ambiente `DB_PASSWORD`** 
 ### ✅ Opção 1 – Rodando com Spring Boot Dashboard (VS Code):
 
 
-Se você está usando a extensão **Spring Boot Dashboard** (sem Maven instalado):
+Se você está usando a extensão **Spring Boot Dashboard**:
 
 
 #### 🪟 No Windows:
