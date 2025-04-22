@@ -29,9 +29,9 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <details>
 <summary>💾 Como conectar ao banco de dados (duas opções)</summary>
-
+<br>
 Após vc criar um banco de dados(No dbeaver por exemplo), com o Scrpit que fornecemos na entrega e criar as tabelas:
-
+<br>
 Este projeto utiliza acesso direto ao banco via JDBC com `ConnectionFactory`, sem ORM.  
 A senha do banco deve ser definida como **variável de ambiente `DB_PASSWORD`** para manter segurança e portabilidade.
 
