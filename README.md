@@ -29,7 +29,7 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <details>
 <summary>💾 Como conectar ao banco de dados (duas opções)</summary>
-
+<br></br>
 
   
 Após vc criar um banco de dados(No dbeaver por exemplo), com o Scrpit que fornecemos na entrega e criar as tabelas:
