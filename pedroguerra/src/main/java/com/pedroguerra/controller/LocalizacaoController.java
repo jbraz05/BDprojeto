@@ -52,17 +52,34 @@ public class LocalizacaoController {
     }
 
     @PostMapping("/localizacao/remover")
-    public String remover(@RequestParam String codigo, Model model) {
+public String remover(@RequestParam String codigo, Model model) {
+    try {
+        LocalizacaoAtuacaoDAO dao = new LocalizacaoAtuacaoDAO();
+        dao.removerPorCodigo(codigo);
+        return "redirect:/localizacao/listar";
+    } catch (SQLException e) {
+        e.printStackTrace();
+        String mensagemErro;
+
+        if (e.getMessage().contains("foreign key") || e.getMessage().toLowerCase().contains("constraint")) {
+            mensagemErro = "Não é possível remover esta localização, pois ela está vinculada a uma empresa.";
+        } else {
+            mensagemErro = "Erro ao remover: " + e.getMessage();
+        }
+
         try {
             LocalizacaoAtuacaoDAO dao = new LocalizacaoAtuacaoDAO();
-            dao.removerPorCodigo(codigo);
-            return "redirect:/localizacao/listar";
-        } catch (SQLException e) {
-            e.printStackTrace();
-            model.addAttribute("erro", "Erro ao remover: " + e.getMessage());
-            return "erro";
+            List<LocalizacaoAtuacao> lista = dao.listarTodas();
+            model.addAttribute("localizacoes", lista);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+
+        model.addAttribute("erro", mensagemErro);
+        return "lista-localizacao";
     }
+}
+
 
     @GetMapping("/localizacao/editar")
     public String editar(@RequestParam String codigo, Model model) {
