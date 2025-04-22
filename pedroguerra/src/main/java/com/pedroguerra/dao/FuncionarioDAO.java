@@ -307,14 +307,14 @@ public class FuncionarioDAO {
                     stmt.executeUpdate();
                 }
     
-                // 6. Apaga funcionário
+                // 6. Apaga contato ANTES de remover o funcionário
+                contatoDAO.remover("CTF_" + matricula, conn);
+    
+                // 7. Apaga funcionário
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-    
-                // 7. Apaga contato
-                contatoDAO.remover("CTF_" + matricula, conn);
     
                 conn.commit();
             } catch (SQLException e) {
@@ -325,6 +325,7 @@ public class FuncionarioDAO {
             }
         }
     }
+    
 
     public List<Funcionario> listarPorEmpresa(String cnpj) throws SQLException {
         List<Funcionario> lista = new ArrayList<>();
