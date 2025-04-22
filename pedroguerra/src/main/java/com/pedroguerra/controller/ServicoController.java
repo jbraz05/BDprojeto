@@ -1,5 +1,6 @@
 package com.pedroguerra.controller;
 
+import com.pedroguerra.dto.FuncionarioDTO;
 import com.pedroguerra.dto.ServicoDTO;
 import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
@@ -155,4 +156,11 @@ public class ServicoController {
             return "redirect:/servicos";
         }
     }
+
+@GetMapping("/funcionarios-por-empresa")
+@ResponseBody
+public List<FuncionarioDTO> buscarFuncionariosPorEmpresa(@RequestParam String cnpj) throws SQLException {
+    return funcionarioService.listarFuncionariosPorEmpresaDTO(cnpj);
+}
+
 }

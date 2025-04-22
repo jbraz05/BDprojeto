@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'">Cadastro de Serviço</title>
-    <link rel="stylesheet" href="/cadastro.css">  
+    <link rel="stylesheet" href="/cadastro.css">
 </head>
 <body>
 <div class="form-container">
     <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
     <form action="/salvar-servico" method="post" th:object="${servico}">
+        <!-- ID -->
         <div th:if="${servico.id == null}">
             <label for="id">ID:</label>
             <input type="text" id="id" name="id" th:field="*{id}" required />
@@ -19,9 +20,12 @@
             <span th:text="${servico.id}"></span>
             <input type="hidden" th:field="*{id}" />
         </div>
+
+        <!-- Data -->
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" th:field="*{data}" required />
 
+        <!-- Tipo -->
         <label for="tipo">Tipo:</label>
         <select id="tipo" name="tipo" th:field="*{tipo}" onchange="toggleOperador()" required>
             <option value="">Selecione</option>
@@ -29,15 +33,24 @@
             <option value="mapeamento tradicional">Mapeamento Tradicional</option>
         </select>
 
-        <label for="fkFuncionarioMatricula">Funcionário:</label>
-        <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
+        <!-- Empresa -->
+        <label for="cnpjEmpresa">Empresa:</label>
+        <select id="cnpjEmpresa" name="cnpjEmpresa" required>
             <option value="">Selecione</option>
-            <option th:each="f : ${funcionarios}"
-                    th:value="${f.matricula}"
-                    th:text="${f.nome + ' (' + f.matricula + ')'}">
+            <option th:each="empresa : ${empresas}"
+                    th:value="${empresa.cnpj}"
+                    th:text="${empresa.nome + ' (' + empresa.cnpj + ')'}"
+                    th:selected="${empresa.cnpj == empresaSelecionada}">
             </option>
         </select>
-        
+
+        <!-- Funcionário (dinâmico via JS) -->
+        <label for="fkFuncionarioMatricula">Funcionário:</label>
+        <select id="fkFuncionarioMatricula" name="fkFuncionarioMatricula" th:field="*{fkFuncionarioMatricula}" required>
+            <option value="">Selecione uma empresa primeiro</option>
+        </select>
+
+        <!-- Operador de Drone -->
         <div id="operadorDroneSection" th:classappend="${servico.tipo == 'voo panorâmico'} ? '' : ' hidden'">
             <label for="operadorDroneMatricula">Operador de Drone:</label>
             <select id="operadorDroneMatricula" name="operadorDroneMatricula">
@@ -50,16 +63,7 @@
             </select>
         </div>
 
-        <label for="cnpjEmpresa">Empresa:</label>
-        <select id="cnpjEmpresa" name="cnpjEmpresa" required>
-            <option value="">Selecione</option>
-            <option th:each="empresa : ${empresas}"
-                    th:value="${empresa.cnpj}"
-                    th:text="${empresa.nome + ' (' + empresa.cnpj + ')'}"
-                    th:selected="${empresa.cnpj == empresaSelecionada}">
-            </option>
-        </select>
-
+        <!-- Localização -->
         <label for="codigoLocalizacao">Localização de Atuação:</label>
         <select id="codigoLocalizacao" name="codigoLocalizacao" required>
             <option value="">Selecione</option>
@@ -70,6 +74,7 @@
             </option>
         </select>
 
+        <!-- Cliente -->
         <label for="cnpjCpfCliente">Cliente:</label>
         <select id="cnpjCpfCliente" name="cnpjCpfCliente" required>
             <option value="">Selecione</option>
@@ -79,18 +84,23 @@
                     th:selected="${cliente.cnpjCpf == clienteSelecionado}">
             </option>
         </select>
+
+        <!-- Área -->
         <label for="area">Área (m²):</label>
         <input type="number" id="area" name="area" step="0.01" required th:value="${relatorio.area}" />
 
+        <!-- Data do Relatório -->
         <label for="dataRelatorio">Data do Relatório:</label>
         <input type="date" id="dataRelatorio" name="dataRelatorio" required
                th:value="${relatorio.dataRelatorio != null ? #dates.format(relatorio.dataRelatorio,'yyyy-MM-dd') : ''}" />
 
+        <!-- Observações -->
         <label for="observacoes">Observações:</label>
         <textarea id="observacoes" name="observacoes" rows="4" maxlength="500"
                   placeholder="Digite observações do serviço..." th:text="${relatorio.observacoes}">
         </textarea>
 
+        <!-- Botões -->
         <div class="buttons">
             <a th:href="@{/}">
                 <button type="button" class="back-btn">Voltar para Home</button>
@@ -100,13 +110,51 @@
     </form>
 </div>
 
+<!-- Scripts -->
 <script>
     function toggleOperador() {
         const tipo = document.getElementById('tipo').value;
         const operadorSection = document.getElementById('operadorDroneSection');
         operadorSection.classList.toggle('hidden', tipo !== 'voo panorâmico');
     }
-    document.addEventListener('DOMContentLoaded', toggleOperador);
+
+    function carregarFuncionarios(cnpjEmpresa) {
+        const select = document.getElementById('fkFuncionarioMatricula');
+        select.innerHTML = '<option value="">Carregando...</option>';
+
+        fetch(`/funcionarios-por-empresa?cnpj=${cnpjEmpresa}`)
+            .then(response => response.json())
+            .then(data => {
+                select.innerHTML = '<option value="">Selecione</option>';
+                data.forEach(f => {
+                    const option = document.createElement('option');
+                    option.value = f.matricula;
+                    option.text = `${f.nome} (${f.matricula})`;
+                    select.appendChild(option);
+                });
+            })
+            .catch(() => {
+                select.innerHTML = '<option value="">Erro ao carregar</option>';
+            });
+    }
+
+    document.getElementById('cnpjEmpresa').addEventListener('change', function () {
+        const cnpj = this.value;
+        if (cnpj) {
+            carregarFuncionarios(cnpj);
+        } else {
+            document.getElementById('fkFuncionarioMatricula').innerHTML =
+                '<option value="">Selecione uma empresa primeiro</option>';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleOperador();
+        const empresaSelecionada = document.getElementById('cnpjEmpresa').value;
+        if (empresaSelecionada) {
+            carregarFuncionarios(empresaSelecionada);
+        }
+    });
 </script>
 </body>
 </html>
