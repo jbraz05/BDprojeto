@@ -51,6 +51,52 @@ Se você está usando a extensão **Spring Boot Dashboard** (sem Maven instalado
    ```powershell
    [System.Environment]::SetEnvironmentVariable("DB_PASSWORD", "suaSenhaAqui", "User")
 
+### 🪟 No Mac:
+```bash
+nano ~/.zshrc
+```
+
+Adicione esta linha no final do arquivo:
+   
+```bash
+export DB_PASSWORD="suaSenhaAqui"
+
+```
+3. Salve e saia (Ctrl + O, depois Enter, depois Ctrl + X)
+
+
+4. Aplique as alterações:
+
+```bash
+source ~/.zshrc
+```
+
+ ### ✅Verificação para ver se funcionou:
+
+ ### 🪟 No Windows:
+
+```powershell
+echo $env:DB_PASSWORD
+```
+```cmd
+echo %DB_PASSWORD%
+````
+Se estiver correta, o terminal retorna:
+
+```bash
+suaSenhaAqui
+```
+
+### 🪟 No Mac:
+```bash
+echo $DB_PASSWORD
+```
+
+👉 Ele deve exibir:
+```bash
+suaSenhaAqui
+```
+
 
 2.Feche e reabra o VS Code.
 
