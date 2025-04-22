@@ -30,6 +30,8 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 <details>
 <summary>💾 Como conectar ao banco de dados (duas opções)</summary>
 
+Após vc criar um banco de dados(No dbeaver por exemplo), com o Scrpit que fornecemos na entrega e criar as tabelas:
+
 Este projeto utiliza acesso direto ao banco via JDBC com `ConnectionFactory`, sem ORM.  
 A senha do banco deve ser definida como **variável de ambiente `DB_PASSWORD`** para manter segurança e portabilidade.
 
@@ -41,7 +43,36 @@ Se você está usando a extensão **Spring Boot Dashboard** (sem Maven instalado
 
 #### 🪟 No Windows:
 
-1. **Abra o PowerShell** e execute:
+1. **Abra o PowerShell** como adminstrador e execute:
 
    ```powershell
    [System.Environment]::SetEnvironmentVariable("DB_PASSWORD", "suaSenhaAqui", "User")
+
+2.Feche e reabra o VS Code.
+
+3.No Spring Boot Dashboard(Extensão do VSCODE), clique em ▶️ Run na aplicação.
+
+
+### ✅ Opção 2 – Rodando com Maven no terminal
+Se você prefere rodar o projeto manualmente via terminal (e tem Maven instalado):
+
+📁 Passo 1 – Acesse a pasta raiz do projeto:
+
+```poweshell
+cd pedroguerra
+```
+### 💻 Passo 2 – Defina a variável DB_PASSWORD com sua senha:
+▶️ No Windows (CMD):
+```cmd
+set DB_PASSWORD=suaSenhaAqui
+mvn spring-boot:run
+```
+```powershell
+$env:DB_PASSWORD = "suaSenhaAqui"
+mvn spring-boot:run
+```
+```MacOS/Linux
+export DB_PASSWORD="suaSenhaAqui"
+mvn spring-boot:run
+```
+</details>
