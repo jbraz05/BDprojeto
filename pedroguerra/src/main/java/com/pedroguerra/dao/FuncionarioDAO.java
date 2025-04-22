@@ -242,11 +242,52 @@ public class FuncionarioDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                try (PreparedStatement stmt = conn.prepareStatement("UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
+                // 1. Buscar todos os serviços do funcionário
+                List<String> idsServicos = new ArrayList<>();
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM Servico WHERE fk_Funcionario_matricula = ?")) {
+                    stmt.setString(1, matricula);
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        idsServicos.add(rs.getString("id"));
+                    }
+                }
+    
+                // 2. Apagar registros dependentes de cada serviço
+                for (String idServico : idsServicos) {
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM VooPanoramico WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM RelatorioServico WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Contrata WHERE nota_fiscal = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Servico WHERE id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                }
+    
+                // 3. Desvincula subordinados
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-
+    
+                // 4. Apaga especializações
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
@@ -259,19 +300,22 @@ public class FuncionarioDAO {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-
+    
+                // 5. Apaga vínculo com empresa
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-
+    
+                // 6. Apaga funcionário
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-
+    
+                // 7. Apaga contato
                 contatoDAO.remover("CTF_" + matricula, conn);
-
+    
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
