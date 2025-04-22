@@ -44,7 +44,7 @@ A senha do banco deve ser definida como **variável de ambiente `DB_PASSWORD`** 
 Se você está usando a extensão **Spring Boot Dashboard**:
 
 
-#### 🪟 No Windows:
+### 🪟 No Windows:
 
 1. **Abra o PowerShell** como adminstrador e execute:
 
