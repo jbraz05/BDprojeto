@@ -67,10 +67,13 @@ cd pedroguerra
 set DB_PASSWORD=suaSenhaAqui
 mvn spring-boot:run
 ```
+▶️ No Windows (POWERSHELL):
 ```powershell
 $env:DB_PASSWORD = "suaSenhaAqui"
 mvn spring-boot:run
 ```
+
+▶️ No macOS / Linux:
 ```MacOS/Linux
 export DB_PASSWORD="suaSenhaAqui"
 mvn spring-boot:run
