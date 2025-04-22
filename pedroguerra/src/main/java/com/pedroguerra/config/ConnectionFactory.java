@@ -3,33 +3,24 @@ package com.pedroguerra.config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
-import java.io.InputStream;
 
 public class ConnectionFactory {
 
-    private static final String CONFIG_FILE = "/config.properties";
+    private static final String URL = "jdbc:mysql://localhost:3306/pedroguerra";
+    private static final String USER = "root";
 
     public static Connection getConnection() throws SQLException {
-        try (InputStream input = ConnectionFactory.class.getResourceAsStream(CONFIG_FILE)) {
-            if (input == null) {
-                throw new SQLException("Arquivo config.properties não encontrado.");
-            }
+        String password = System.getenv("DB_PASSWORD");
 
-            Properties props = new Properties();
-            props.load(input);
+        if (password == null) {
+            throw new SQLException("Variável de ambiente DB_PASSWORD não foi definida.");
+        }
 
-            String url = props.getProperty("db.url");
-            String user = props.getProperty("db.user");
-            String password = props.getProperty("db.password");
-
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(url, user, password);
-
+            return DriverManager.getConnection(URL, USER, password);
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver JDBC não encontrado!", e);
-        } catch (Exception e) {
-            throw new SQLException("Erro ao carregar config.properties.", e);
         }
     }
 }
