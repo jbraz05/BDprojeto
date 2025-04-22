@@ -74,7 +74,7 @@ mvn spring-boot:run
 ```
 
 ▶️ No macOS / Linux:
-``bash
+```bash
 export DB_PASSWORD="suaSenhaAqui"
 mvn spring-boot:run
 ```
