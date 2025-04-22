@@ -46,19 +46,52 @@ public class EmpresaDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                // Remove vínculo com funcionários (Emprega)
+                // Buscar todos os serviços vinculados à empresa
+                List<String> idsServicos = new ArrayList<>();
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT fk_Servico_id FROM Possui WHERE fk_Empresa_cnpj = ?")) {
+                    stmt.setString(1, cnpj);
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        idsServicos.add(rs.getString("fk_Servico_id"));
+                    }
+                }
+
+                for (String idServico : idsServicos) {
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM VooPanoramico WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM RelatorioServico WHERE fk_Servico_id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Contrata WHERE nota_fiscal = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Servico WHERE id = ?")) {
+                        stmt.setString(1, idServico);
+                        stmt.executeUpdate();
+                    }
+                }
+
+                // Remove vínculos com funcionários
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
 
-                // Remove vínculo com Localização (Atua)
+                // Remove vínculos com Localização (Atua)
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
 
-                // Remove vínculo com Serviços (Possui)
+                // Remove vínculo com Possui (já feito acima para obter idsServicos, mas repetido por segurança)
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
@@ -70,7 +103,7 @@ public class EmpresaDAO {
                     stmt.executeUpdate();
                 }
 
-                // Remove contato (externamente controlado pela Service se necessário)
+                // Remove contato
                 contatoDAO.remover("CTE_" + cnpj, conn);
 
                 conn.commit();

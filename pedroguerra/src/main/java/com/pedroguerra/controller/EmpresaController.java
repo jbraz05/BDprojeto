@@ -8,11 +8,9 @@ import com.pedroguerra.dto.EmpresaDTO;
 import com.pedroguerra.service.EmpresaService;
 import com.pedroguerra.service.EnderecoService;
 import com.pedroguerra.service.LocalizacaoService;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class EmpresaController {
     }
 
     @PostMapping("/empresa/cadastrar")
-public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
+    public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
                                @RequestParam String localizacaoCodigo,
                                @RequestParam String cep,
                                @RequestParam String rua,
@@ -87,11 +85,10 @@ public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
     public String removerEmpresa(@RequestParam String cnpj, Model model) {
         try {
             empresaService.removerEmpresa(cnpj);
-            return "redirect:/empresa/listar";
         } catch (SQLException e) {
-            model.addAttribute("erro", "Erro ao remover empresa: " + e.getMessage());
-            return "empresa";
+            e.printStackTrace(); // ou log
         }
+        return "redirect:/empresa/listar";
     }
 
     @GetMapping("/empresa/editar")
