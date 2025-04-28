@@ -9,6 +9,11 @@
 <div class="form-container">
     <h1 th:text="${servico.id == null} ? 'Novo Serviço' : 'Editar Serviço'"></h1>
 
+    <!-- Bloco para mostrar mensagem de erro -->
+    <div th:if="${erroMensagem}" class="alerta-erro">
+        <p th:text="${erroMensagem}"></p>
+    </div>
+
     <form action="/salvar-servico" method="post" th:object="${servico}">
         <!-- ID -->
         <div th:if="${servico.id == null}">
@@ -85,16 +90,14 @@
             </option>
         </select>
 
-        
-       <!-- Área -->
-        <label for="area">Área (ha):</label> <!-- Corrigido o texto -->
+        <!-- Área -->
+        <label for="area">Área (ha):</label>
         <input type="number" id="area" name="area" step="0.01" required th:value="${relatorio.area}" />
-
 
         <!-- Data do Relatório -->
         <label for="dataRelatorio">Data do Relatório:</label>
         <input type="date" id="dataRelatorio" name="dataRelatorio" required
-               th:value="${relatorio.dataRelatorio != null ? #dates.format(relatorio.dataRelatorio,'yyyy-MM-dd') : ''}" />
+               th:value="${relatorio.dataRelatorio != null ? #dates.format(relatorio.dataRelatorio, 'yyyy-MM-dd') : ''}" />
 
         <!-- Observações -->
         <label for="observacoes">Observações:</label>

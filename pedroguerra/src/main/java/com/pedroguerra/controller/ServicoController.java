@@ -45,31 +45,28 @@ public class ServicoController {
         }
     }
 
+   
     @PostMapping("/salvar-servico")
     public String salvarServico(@ModelAttribute("servico") Servico servico,
-                                @RequestParam(required = false) String operadorDroneMatricula,
-                                @RequestParam float area,
-                                @RequestParam("dataRelatorio") Date dataRelatorio,
-                                @RequestParam String cnpjEmpresa,
-                                @RequestParam String codigoLocalizacao,
-                                @RequestParam String cnpjCpfCliente,
-                                @RequestParam String observacoes) {
+                                 @RequestParam(required = false) String operadorDroneMatricula,
+                                 @RequestParam float area,
+                                 @RequestParam("dataRelatorio") Date dataRelatorio,
+                                 @RequestParam String cnpjEmpresa,
+                                 @RequestParam String codigoLocalizacao,
+                                 @RequestParam String cnpjCpfCliente,
+                                 @RequestParam String observacoes,
+                                 Model model) {
         try {
             boolean existe = servicoService.servicoExiste(servico.getId());
-
+    
             if (existe) {
-                servicoService.atualizarServico(servico);
-                servicoService.atualizarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
-                servicoService.removerMapeamentoTradicional(servico.getId());
-                servicoService.removerVooPanoramico(servico.getId());
-                servicoService.removerVinculoPossui(servico.getId());
-                servicoService.atualizarClienteDoServico(servico.getId(), cnpjCpfCliente);
-            } else {
-                servicoService.salvarServico(servico);
-                servicoService.salvarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
-                servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
+                throw new RuntimeException("Já existe um serviço com esse ID. Por favor, escolha outro.");
             }
-
+    
+            servicoService.salvarServico(servico);
+            servicoService.salvarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
+            servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
+    
             if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
                 if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
                     throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
@@ -78,15 +75,39 @@ public class ServicoController {
             } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
                 servicoService.salvarMapeamentoTradicional(servico.getId());
             }
-
+    
             servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
-
+    
             return "redirect:/servicos";
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao salvar serviço", e);
+            model.addAttribute("erroMensagem", "Erro ao salvar o serviço: " + e.getMessage());
+    
+            // Limpa o ID para permitir o usuário corrigir
+            servico.setId(null);
+    
+            try {
+                model.addAttribute("funcionarios", funcionarioService.listarTodos());
+                model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
+                model.addAttribute("empresas", empresaService.listarTodas());
+                model.addAttribute("localizacoes", localizacaoService.listarTodas());
+                model.addAttribute("clientes", clienteService.listarTodos());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                model.addAttribute("erroMensagem", "Erro ao salvar serviço e ao carregar dados: " + ex.getMessage());
+            }
+    
+            model.addAttribute("empresaSelecionada", cnpjEmpresa);
+            model.addAttribute("localizacaoSelecionada", codigoLocalizacao);
+            model.addAttribute("clienteSelecionado", cnpjCpfCliente);
+            model.addAttribute("relatorio", new RelatorioServico());
+    
+            return "servico";
         }
     }
+    
+    
+
 
     @GetMapping("/editar-servico")
     public String editarServico(@RequestParam String id, Model model) {
