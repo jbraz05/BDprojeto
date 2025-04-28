@@ -26,7 +26,8 @@
                 <td th:text="${servico.id}"></td>
                 <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
                 <td th:text="${servico.tipo}"></td>
-                <td th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></td>
+                <td th:text="${servico.nomeFuncionario != null} ? ${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'} : 'Sem Funcionário'"></td>
+
                 <td th:text="${servico.nomeOperadorDrone != null} ? ${servico.nomeOperadorDrone} : 'Mapeamento Tradicional'"></td>
                 <td>
                     <form th:action="@{/servico/relatorio}" method="get" class="action-form">

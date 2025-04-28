@@ -244,7 +244,8 @@ public class FuncionarioDAO {
             try {
                 // 1. Buscar todos os serviços do funcionário
                 List<String> idsServicos = new ArrayList<>();
-                try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM Servico WHERE fk_Funcionario_matricula = ?")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT id FROM Servico WHERE fk_Funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
@@ -252,29 +253,10 @@ public class FuncionarioDAO {
                     }
                 }
     
-                // 2. Apagar registros dependentes de cada serviço
+                // 2. Atualizar serviços para desvincular o funcionário
                 for (String idServico : idsServicos) {
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM VooPanoramico WHERE fk_Servico_id = ?")) {
-                        stmt.setString(1, idServico);
-                        stmt.executeUpdate();
-                    }
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?")) {
-                        stmt.setString(1, idServico);
-                        stmt.executeUpdate();
-                    }
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM RelatorioServico WHERE fk_Servico_id = ?")) {
-                        stmt.setString(1, idServico);
-                        stmt.executeUpdate();
-                    }
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Contrata WHERE nota_fiscal = ?")) {
-                        stmt.setString(1, idServico);
-                        stmt.executeUpdate();
-                    }
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Servico_id = ?")) {
-                        stmt.setString(1, idServico);
-                        stmt.executeUpdate();
-                    }
-                    try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Servico WHERE id = ?")) {
+                    try (PreparedStatement stmt = conn.prepareStatement(
+                            "UPDATE Servico SET fk_Funcionario_matricula = NULL WHERE id = ?")) {
                         stmt.setString(1, idServico);
                         stmt.executeUpdate();
                     }
@@ -288,21 +270,25 @@ public class FuncionarioDAO {
                 }
     
                 // 4. Apaga especializações
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Engenheiro WHERE fk_funcionario_matricula = ?")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM Engenheiro WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM OperadorDrone WHERE fk_funcionario_matricula = ?")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM OperadorDrone WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
     
                 // 5. Apaga vínculo com empresa
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
@@ -310,8 +296,9 @@ public class FuncionarioDAO {
                 // 6. Apaga contato ANTES de remover o funcionário
                 contatoDAO.remover("CTF_" + matricula, conn);
     
-                // 7. Apaga funcionário
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
+                // 7. Apaga o funcionário
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM Funcionario WHERE matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
                 }
@@ -325,6 +312,7 @@ public class FuncionarioDAO {
             }
         }
     }
+    
     
 
     public List<Funcionario> listarPorEmpresa(String cnpj) throws SQLException {

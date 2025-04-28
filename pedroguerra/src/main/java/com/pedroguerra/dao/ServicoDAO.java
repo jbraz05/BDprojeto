@@ -87,10 +87,10 @@ public class ServicoDAO {
         List<ServicoDTO> lista = new ArrayList<>();
     
         String sql = "SELECT s.*, f.nome AS nome_funcionario, od.nome AS nome_operador " +
-        "FROM Servico s " +
-        "JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula " +
-        "LEFT JOIN VooPanoramico vp ON s.id = vp.fk_Servico_id " +
-        "LEFT JOIN Funcionario od ON vp.fk_OperadorDrone_matricula = od.matricula";
+                     "FROM Servico s " +
+                     "LEFT JOIN Funcionario f ON s.fk_Funcionario_matricula = f.matricula " +
+                     "LEFT JOIN VooPanoramico vp ON s.id = vp.fk_Servico_id " +
+                     "LEFT JOIN Funcionario od ON vp.fk_OperadorDrone_matricula = od.matricula";
     
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -111,6 +111,7 @@ public class ServicoDAO {
     
         return lista;
     }
+    
 
     public void atualizarClienteDoServico(String servicoId, String novoClienteCnpjCpf) throws SQLException {
         String verificarSQL = "SELECT 1 FROM Contrata WHERE fk_Servico_id = ?";
