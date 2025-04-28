@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>ID do Serviço</th>
-            <th>Área (m²)</th>
+            <th>Área (ha)</th>
             <th>Data do Relatório</th>
             <th>Observações</th>
         </tr>
@@ -21,7 +21,7 @@
     <tbody>
         <tr>
             <td th:text="${servico.id}"></td>
-            <td th:text="${servico.area}"></td>
+            <td th:text="${#numbers.formatDecimal(servico.area, 1, 2)}"></td> 
             <td th:text="${#dates.format(servico.dataRelatorio, 'dd/MM/yyyy')}"></td>
             <td th:text="${servico.observacoes}"></td>
         </tr>
