@@ -190,4 +190,41 @@ public class ClienteDAO {
 
         return lista;
     }
+    public List<String> buscarIdsServicosDoCliente(String cnpjCpf) throws SQLException {
+        List<String> ids = new ArrayList<>();
+        String sql = "SELECT nota_fiscal FROM Contrata WHERE fk_Cliente_cnpj_cpf = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cnpjCpf);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getString("nota_fiscal"));
+            }
+        }
+        return ids;
+    }
+    
+    public String buscarTipoServico(String idServico) throws SQLException {
+        String tipo = null;
+        String sql = "SELECT tipo FROM Servico WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, idServico);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                tipo = rs.getString("tipo");
+            }
+        }
+        return tipo;
+    }
+    
+    // Versão que usa uma conexão existente (não fecha conexão!)
+    public void removerPorConexao(String cnpjCpf, Connection conn) throws SQLException {
+        String sql = "DELETE FROM Cliente WHERE cnpj_cpf = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cnpjCpf);
+            stmt.executeUpdate();
+        }
+    }
+    
 }
