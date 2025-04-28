@@ -26,7 +26,16 @@
                 <td th:text="${servico.id}"></td>
                 <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
                 <td th:text="${servico.tipo}"></td>
-                <td th:text="${servico.nomeFuncionario != null} ? ${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'} : 'Sem Funcionário'"></td>
+
+                <td>
+                    <span th:if="${servico.nomeFuncionario != null}"
+                          th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}">
+                    </span>
+                    <span th:if="${servico.nomeFuncionario == null}"
+                          style="color: red; font-weight: bold;">
+                        <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
+                    </span>
+                </td>
 
                 <td th:text="${servico.nomeOperadorDrone != null} ? ${servico.nomeOperadorDrone} : 'Mapeamento Tradicional'"></td>
                 <td>
@@ -50,9 +59,11 @@
             </tr>
         </tbody>
     </table>
+
     <div class="footer">
         <a href="/" class="btn home-btn">Voltar para Home</a>
         <a class="btn" href="/servico">Cadastrar Novo Serviço</a>
     </div>
+
 </body>
 </html>
