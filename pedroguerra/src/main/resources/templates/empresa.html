@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="form-container">
-    <h1>Cadastrar Empresa</h1>
+    <h1 th:text="${empresa.cnpj} != null ? 'Editar Empresa' : 'Cadastrar Empresa'"></h1>
+    
     <form th:action="${empresa.cnpj} != null ? @{/empresa/atualizar} : @{/empresa/cadastrar}" method="post">
         <label>CNPJ:</label>
         <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required>
@@ -15,10 +16,12 @@
         <label>Nome:</label>
         <input type="text" name="nome" th:value="${empresa.nome}" required>
 
+        <label>Capital Social:</label>
+        <input type="number" step="0.01" name="capitalSocial" th:value="${empresa.capitalSocial}" required>
+
         <label for="email">Email:</label>
         <input type="text" name="email" th:value="${contato.email}" required>
 
-        
         <label for="telefone">Telefone:</label>
         <input type="text" name="telefone" th:value="${contato.telefone}" required>
 
@@ -48,7 +51,8 @@
         </div>
 
         <label>Localização de Atuação:</label>
-        <select name="localizacaoCodigo">
+        <select name="localizacaoCodigo" required>
+            <option value="" disabled selected>Selecione uma localização</option>
             <option th:each="localizacao : ${localizacoes}" 
                     th:value="${localizacao.codigo}" 
                     th:text="${localizacao.nomeEstado + ' - ' + localizacao.nomePais}">

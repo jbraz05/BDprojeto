@@ -11,6 +11,7 @@ import com.pedroguerra.service.LocalizacaoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class EmpresaController {
     private final EmpresaService empresaService = new EmpresaService();
     private final LocalizacaoService localizacaoService = new LocalizacaoService();
     private final EnderecoService enderecoService = new EnderecoService();
-//l
+
     private void carregarLocalizacoes(Model model) {
         try {
             List<LocalizacaoAtuacao> localizacoes = localizacaoService.listar();
@@ -41,33 +42,36 @@ public class EmpresaController {
 
     @PostMapping("/empresa/cadastrar")
     public String cadastrarEmpresa(@ModelAttribute Empresa empresa,
-                               @RequestParam String localizacaoCodigo,
-                               @RequestParam String cep,
-                               @RequestParam String rua,
-                               @RequestParam String numero,
-                               @RequestParam String bairro,
-                               @RequestParam String cidade,
-                               @RequestParam String telefone,
-                               @RequestParam String email,
-                               Model model) {
-    try {
-        Endereco endereco = enderecoService.buscar(cep);
-        if (endereco == null) {
-            endereco = new Endereco(cep, numero, cidade, bairro, rua);
-            enderecoService.cadastrar(endereco);
+                                   @RequestParam String localizacaoCodigo,
+                                   @RequestParam String cep,
+                                   @RequestParam String rua,
+                                   @RequestParam String numero,
+                                   @RequestParam String bairro,
+                                   @RequestParam String cidade,
+                                   @RequestParam String telefone,
+                                   @RequestParam String email,
+                                   @RequestParam float capitalSocial,
+                                   Model model) {
+        try {
+            Endereco endereco = enderecoService.buscar(cep);
+            if (endereco == null) {
+                endereco = new Endereco(cep, numero, cidade, bairro, rua);
+                enderecoService.cadastrar(endereco);
+            }
+
+            empresa.setFkEnderecoCep(cep);
+            empresa.setCapitalSocial(capitalSocial); // ✅ ESSENCIAL
+
+            Contato contato = new Contato("CTE_" + empresa.getCnpj(), telefone, email, null, empresa.getCnpj());
+            empresaService.salvarEmpresa(empresa, contato, localizacaoCodigo);
+
+            return "redirect:/empresa/listar";
+        } catch (SQLException e) {
+            model.addAttribute("erro", "Erro ao cadastrar empresa: " + e.getMessage());
+            model.addAttribute("empresa", new Empresa());
+            return "empresa";
         }
-
-        empresa.setFkEnderecoCep(cep);
-        Contato contato = new Contato("CTE_" + empresa.getCnpj(), telefone, email, null, empresa.getCnpj());
-
-        empresaService.salvarEmpresa(empresa, contato, localizacaoCodigo);
-        return "redirect:/empresa/listar";
-    } catch (SQLException e) {
-        model.addAttribute("erro", "Erro ao cadastrar empresa: " + e.getMessage());
-        model.addAttribute("empresa", new Empresa());
-        return "empresa";
     }
-}
 
     @GetMapping("/empresa/listar")
     public String listarEmpresas(Model model) {
@@ -98,24 +102,24 @@ public class EmpresaController {
             Empresa empresa = new Empresa();
             empresa.setCnpj(dto.getCnpj());
             empresa.setNome(dto.getNome());
+            empresa.setCapitalSocial(dto.getCapitalSocial()); // ✅ ESSENCIAL
             empresa.setFkEnderecoCep(dto.getCep());
-    
+
             Endereco endereco = enderecoService.buscar(dto.getCep());
             List<Contato> contatos = empresaService.listarContatos(dto.getCnpj());
-            Contato contato = contatos.isEmpty() ? new Contato() : contatos.get(0); // <-- garante que nunca será null
-    
+            Contato contato = contatos.isEmpty() ? new Contato() : contatos.get(0);
+
             model.addAttribute("empresa", empresa);
             model.addAttribute("endereco", endereco);
-            model.addAttribute("contato", contato); // <-- ESSENCIAL PRA FUNCIONAR
+            model.addAttribute("contato", contato);
             carregarLocalizacoes(model);
-    
+
             return "empresa";
         } catch (SQLException e) {
             model.addAttribute("erro", "Erro ao buscar empresa: " + e.getMessage());
             return "empresa";
         }
     }
-    
 
     @PostMapping("/empresa/atualizar")
     public String atualizarEmpresa(@ModelAttribute Empresa empresa,
@@ -127,18 +131,21 @@ public class EmpresaController {
                                    @RequestParam String cidade,
                                    @RequestParam String telefone,
                                    @RequestParam String email,
+                                   @RequestParam float capitalSocial,
                                    Model model) {
         try {
             Endereco endereco = enderecoService.buscar(cep);
             if (endereco == null) {
                 endereco = new Endereco(cep, numero, cidade, bairro, rua);
-                enderecoService.cadastrar(endereco); // <- método correto aqui
+                enderecoService.cadastrar(endereco);
             }
-    
+
             empresa.setFkEnderecoCep(cep);
+            empresa.setCapitalSocial(capitalSocial); // ✅ ESSENCIAL
+
             Contato contato = new Contato("CTE_" + empresa.getCnpj(), telefone, email, null, empresa.getCnpj());
-    
             empresaService.atualizarEmpresa(empresa, contato);
+
             return "redirect:/empresa/listar";
         } catch (SQLException e) {
             model.addAttribute("erro", "Erro ao atualizar empresa: " + e.getMessage());

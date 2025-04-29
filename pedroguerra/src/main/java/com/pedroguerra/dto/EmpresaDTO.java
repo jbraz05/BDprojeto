@@ -3,6 +3,7 @@ package com.pedroguerra.dto;
 public class EmpresaDTO {
     private String cnpj;
     private String nome;
+    private float capitalSocial;
     private String email;
     private String telefone;
     private String cep;
@@ -19,6 +20,9 @@ public class EmpresaDTO {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
+
+    public float getCapitalSocial() { return capitalSocial; }
+    public void setCapitalSocial(float capitalSocial) { this.capitalSocial = capitalSocial; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
