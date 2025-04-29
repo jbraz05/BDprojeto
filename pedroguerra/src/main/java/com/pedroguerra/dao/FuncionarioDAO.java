@@ -13,7 +13,7 @@ public class FuncionarioDAO {
     private final ContatoDAO contatoDAO = new ContatoDAO();
 
     public boolean inserir(FuncionarioDTO dto) throws SQLException {
-        String sql = "INSERT INTO Funcionario (matricula, nome, fk_endereco_cep, fk_supervisor_matricula) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Funcionario (matricula, nome, salario, fk_endereco_cep, fk_supervisor_matricula) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -32,11 +32,12 @@ public class FuncionarioDAO {
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, dto.getMatricula());
                     stmt.setString(2, dto.getNome());
-                    stmt.setString(3, dto.getFkEnderecoCep());
+                    stmt.setFloat(3, dto.getSalario()); // ADICIONADO
+                    stmt.setString(4, dto.getFkEnderecoCep());
                     if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isEmpty()) {
-                        stmt.setNull(4, Types.VARCHAR);
+                        stmt.setNull(5, Types.VARCHAR);
                     } else {
-                        stmt.setString(4, dto.getFkSupervisorMatricula());
+                        stmt.setString(5, dto.getFkSupervisorMatricula());
                     }
                     stmt.executeUpdate();
                 }
@@ -78,7 +79,7 @@ public class FuncionarioDAO {
     }
 
     public void atualizar(FuncionarioDTO dto) throws SQLException {
-        String sql = "UPDATE Funcionario SET nome = ?, fk_endereco_cep = ?, fk_supervisor_matricula = ? WHERE matricula = ?";
+        String sql = "UPDATE Funcionario SET nome = ?, salario = ?, fk_endereco_cep = ?, fk_supervisor_matricula = ? WHERE matricula = ?";
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -95,13 +96,15 @@ public class FuncionarioDAO {
 
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, dto.getNome());
-                    stmt.setString(2, dto.getFkEnderecoCep());
+                    stmt.setFloat(2, dto.getSalario()); // ADICIONADO
+                    stmt.setString(3, dto.getFkEnderecoCep());
+                    
                     if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isBlank()) {
-                        stmt.setNull(3, Types.VARCHAR);
+                        stmt.setNull(4, Types.VARCHAR);
                     } else {
-                        stmt.setString(3, dto.getFkSupervisorMatricula());
+                        stmt.setString(4, dto.getFkSupervisorMatricula());
                     }
-                    stmt.setString(4, dto.getMatricula());
+                    stmt.setString(5, dto.getMatricula());
                     stmt.executeUpdate();
                 }
 
@@ -179,6 +182,8 @@ public class FuncionarioDAO {
                 dto.setNumeroEndereco(rs.getString("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
+                dto.setSalario(rs.getFloat("salario"));
+
 
                 // Contato
                 List<Contato> contatos = contatoDAO.listarPorFuncionario(matricula);
@@ -227,6 +232,8 @@ public class FuncionarioDAO {
                 dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
                 dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));
                 dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", dto.getMatricula()));
+                dto.setSalario(rs.getFloat("salario"));
+
                 List<Contato> contatos = contatoDAO.listarPorFuncionario(dto.getMatricula());
                 for (Contato c : contatos) {
                     dto.setEmail(c.getEmail());
@@ -360,6 +367,8 @@ public class FuncionarioDAO {
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
                 dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
+                dto.setSalario(rs.getFloat("salario"));
+
 
                 dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
                 dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));

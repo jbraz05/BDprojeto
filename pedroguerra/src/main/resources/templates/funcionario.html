@@ -16,13 +16,15 @@
             <label>Nome:</label>
             <input type="text" th:field="*{nome}" required />
 
+            <label>Salário:</label>
+            <input type="number" step="0.01" th:field="*{salario}" required />
+
             <label>Email:</label>
             <input type="email" th:field="*{email}" required />
 
             <label>Telefone:</label>
             <input type="text" th:field="*{telefone}" required />
         
-
             <label>CEP:</label>
             <input type="text" th:field="*{fkEnderecoCep}" required />
 

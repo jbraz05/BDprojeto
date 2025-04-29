@@ -6,6 +6,7 @@ public class Funcionario {
     private String nome;
     private String fk_endereco_cep;
     private String fkSupervisorMatricula;
+    private float salario;
 
     public Funcionario() {
     }
@@ -46,5 +47,8 @@ public class Funcionario {
     public void setFkEnderecoCep(String fk_endereco_cep) {
         this.fk_endereco_cep = fk_endereco_cep;
     }
+
+    public float getSalario() { return salario; }
+    public void setSalario(float salario) { this.salario = salario; }
 }
 

@@ -15,6 +15,7 @@ public class FuncionarioDTO {
     private boolean engenheiro;
     private boolean operadorDrone;
     private String cnpjEmpresa;
+    private float salario;
 
     public String getMatricula() { return matricula; }
     public void setMatricula(String matricula) { this.matricula = matricula; }
@@ -57,4 +58,7 @@ public class FuncionarioDTO {
 
     public String getCnpjEmpresa() { return cnpjEmpresa; }
     public void setCnpjEmpresa(String cnpjEmpresa) { this.cnpjEmpresa = cnpjEmpresa; }
+    
+    public float getSalario() { return salario; }
+    public void setSalario(float salario) { this.salario = salario; }
 }
