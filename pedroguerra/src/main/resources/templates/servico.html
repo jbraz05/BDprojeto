@@ -90,6 +90,38 @@
             </option>
         </select>
 
+        <!-- Período Preparatório -->
+        <label for="periodoPreparatorio">Período Preparatório (dias):</label>
+        <input type="number" id="periodoPreparatorio" th:field="*{periodoPreparatorio}" min="0" required />
+
+        <!-- Período Trabalho de Campo -->
+        <label for="periodoTrabalhoCampo">Período Trabalho de Campo (dias):</label>
+        <input type="number" id="periodoTrabalhoCampo" th:field="*{periodoTrabalhoCampo}" min="0" required />
+
+        <!-- Período Trabalho de Escritório -->
+        <label for="periodoTrabalhoEscritorio">Período Trabalho de Escritório (dias):</label>
+        <input type="number" id="periodoTrabalhoEscritorio" th:field="*{periodoTrabalhoEscritorio}" min="0" required />
+
+        <!-- Prazo do Trabalho -->
+        <label for="prazoTrabalho">Prazo para Conclusão:</label>
+        <input type="date" id="prazoTrabalho" th:field="*{prazoTrabalho}" required />
+
+        <!-- Valor da Medição -->
+        <label for="valorMedicao">Valor da Medição (R$):</label>
+        <input type="number" id="valorMedicao" step="0.01" min="0" th:field="*{valorMedicao}" required />
+
+        <!-- Data de Emissão da Medição -->
+        <label for="dataEmissaoMedicao">Data de Emissão da Medição:</label>
+        <input type="date" id="dataEmissaoMedicao" th:field="*{dataEmissaoMedicao}" required />
+
+        <!-- Feito (booleano) -->
+        <label for="feito">Serviço Concluído?</label>
+        <select id="feito" th:field="*{feito}" required>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+        </select>
+
+
         <!-- Área -->
         <label for="area">Área (ha):</label>
         <input type="number" id="area" name="area" step="0.01" required th:value="${relatorio.area}" />

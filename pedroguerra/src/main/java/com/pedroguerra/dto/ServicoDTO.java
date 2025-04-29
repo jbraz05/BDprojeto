@@ -8,6 +8,14 @@ public class ServicoDTO {
     private String tipo;
     private String fkFuncionarioMatricula;
     private String nomeFuncionario;
+    private int periodoPreparatorio;
+    private int periodoTrabalhoCampo;
+    private int periodoTrabalhoEscritorio;
+    private Date prazoTrabalho;
+    private float valorMedicao;
+    private Date dataEmissaoMedicao;
+    private boolean feito;
+
 
     private float area; //Atributos do relatorio
     private Date dataRelatorio;
@@ -49,4 +57,25 @@ public class ServicoDTO {
     public void setNomeFuncionario(String nomeFuncionario) {
         this.nomeFuncionario = nomeFuncionario;
     }
+    public int getPeriodoPreparatorio() { return periodoPreparatorio; }
+    public void setPeriodoPreparatorio(int periodoPreparatorio) { this.periodoPreparatorio = periodoPreparatorio; }
+
+    public int getPeriodoTrabalhoCampo() { return periodoTrabalhoCampo; }
+    public void setPeriodoTrabalhoCampo(int periodoTrabalhoCampo) { this.periodoTrabalhoCampo = periodoTrabalhoCampo; }
+
+    public int getPeriodoTrabalhoEscritorio() { return periodoTrabalhoEscritorio; }
+    public void setPeriodoTrabalhoEscritorio(int periodoTrabalhoEscritorio) { this.periodoTrabalhoEscritorio = periodoTrabalhoEscritorio; }
+
+    public Date getPrazoTrabalho() { return prazoTrabalho; }
+    public void setPrazoTrabalho(Date prazoTrabalho) { this.prazoTrabalho = prazoTrabalho; }
+
+    public float getValorMedicao() { return valorMedicao; }
+    public void setValorMedicao(float valorMedicao) { this.valorMedicao = valorMedicao; }
+
+    public Date getDataEmissaoMedicao() { return dataEmissaoMedicao; }
+    public void setDataEmissaoMedicao(Date dataEmissaoMedicao) { this.dataEmissaoMedicao = dataEmissaoMedicao; }
+
+    public boolean isFeito() { return feito; }
+    public void setFeito(boolean feito) { this.feito = feito; }
+
 }

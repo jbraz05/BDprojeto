@@ -169,3 +169,50 @@ table tbody tr:last-child td:last-child {
 table td, table th {
     border-bottom: none;
 }
+
+.filtro-botoes {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.filtro-botoes form {
+    display: inline-block;
+}
+
+.filtro-botoes button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 6px;
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filtro-botoes button:hover {
+    background-color: #495057;
+}
+
+.filtro-botoes .active {
+    background-color: #007bff;
+}
+
+.status-col {
+    font-weight: bold;
+    text-align: center;
+}
+
+.status-col.done {
+    color: #00e676;
+}
+
+.status-col.pending {
+    color: #ff5252;
+}
+
+.sem-funcionario {
+    color: red;
+    font-weight: bold;
+}

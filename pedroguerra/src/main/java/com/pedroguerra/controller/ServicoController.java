@@ -45,46 +45,75 @@ public class ServicoController {
         }
     }
 
-   
     @PostMapping("/salvar-servico")
     public String salvarServico(@ModelAttribute("servico") Servico servico,
-                                 @RequestParam(required = false) String operadorDroneMatricula,
-                                 @RequestParam float area,
-                                 @RequestParam("dataRelatorio") Date dataRelatorio,
-                                 @RequestParam String cnpjEmpresa,
-                                 @RequestParam String codigoLocalizacao,
-                                 @RequestParam String cnpjCpfCliente,
-                                 @RequestParam String observacoes,
-                                 Model model) {
+                                @RequestParam(required = false) String operadorDroneMatricula,
+                                @RequestParam float area,
+                                @RequestParam("dataRelatorio") Date dataRelatorio,
+                                @RequestParam String cnpjEmpresa,
+                                @RequestParam String codigoLocalizacao,
+                                @RequestParam String cnpjCpfCliente,
+                                @RequestParam String observacoes,
+                                Model model) {
         try {
-            boolean existe = servicoService.servicoExiste(servico.getId());
+            boolean jaExiste = servicoService.servicoExiste(servico.getId());
     
-            if (existe) {
-                throw new RuntimeException("Já existe um serviço com esse ID. Por favor, escolha outro.");
-            }
+            if (jaExiste) {
+                // Atualização
+                servicoService.atualizarServico(servico);
+                servicoService.atualizarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
+                servicoService.atualizarClienteDoServico(servico.getId(), cnpjCpfCliente);
     
-            servicoService.salvarServico(servico);
-            servicoService.salvarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
-            servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
+                // Atualizar vínculo empresa/localização (remoção e inserção simples)
+                servicoService.removerVinculoPossui(servico.getId());
+                servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
     
-            if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
-                if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
-                    throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+                // Atualizar voo ou mapeamento
+                servicoService.removerVooPanoramico(servico.getId());
+                servicoService.removerMapeamentoTradicional(servico.getId());
+    
+                if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
+                    if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
+                        throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+                    }
+                    servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
+                } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
+                    servicoService.salvarMapeamentoTradicional(servico.getId());
                 }
-                servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
-            } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
-                servicoService.salvarMapeamentoTradicional(servico.getId());
-            }
     
-            servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
+            } else {
+                // Inserção
+                servicoService.salvarServico(servico);
+                servicoService.salvarRelatorio(servico.getId(), area, dataRelatorio, observacoes);
+                servicoService.vincularClienteAoServico(servico.getId(), cnpjCpfCliente);
+                servicoService.vincularEmpresaLocalizacaoAoServico(servico.getId(), cnpjEmpresa, codigoLocalizacao);
+    
+                if ("voo panorâmico".equalsIgnoreCase(servico.getTipo())) {
+                    if (operadorDroneMatricula == null || operadorDroneMatricula.isEmpty()) {
+                        throw new RuntimeException("Operador de drone é obrigatório para voo panorâmico.");
+                    }
+                    servicoService.salvarVooPanoramico(servico.getId(), operadorDroneMatricula);
+                } else if ("mapeamento tradicional".equalsIgnoreCase(servico.getTipo())) {
+                    servicoService.salvarMapeamentoTradicional(servico.getId());
+                }
+            }
     
             return "redirect:/servicos";
+    
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("erroMensagem", "Erro ao salvar o serviço: " + e.getMessage());
     
-            // Limpa o ID para permitir o usuário corrigir
-            servico.setId(null);
+            try {
+                if (!servicoService.servicoExiste(servico.getId())) {
+                    servico.setId(null);
+                }
+            } catch (SQLException ex2) {
+                ex2.printStackTrace();
+                // Em caso de erro, não altera o ID
+            }
+            
+            
     
             try {
                 model.addAttribute("funcionarios", funcionarioService.listarTodos());
@@ -94,7 +123,7 @@ public class ServicoController {
                 model.addAttribute("clientes", clienteService.listarTodos());
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                model.addAttribute("erroMensagem", "Erro ao salvar serviço e ao carregar dados: " + ex.getMessage());
+                model.addAttribute("erroMensagem", "Erro ao salvar serviço e carregar dados: " + ex.getMessage());
             }
     
             model.addAttribute("empresaSelecionada", cnpjEmpresa);
@@ -106,8 +135,6 @@ public class ServicoController {
         }
     }
     
-    
-
 
     @GetMapping("/editar-servico")
     public String editarServico(@RequestParam String id, Model model) {
@@ -115,7 +142,7 @@ public class ServicoController {
             ServicoDTO dto = servicoService.buscarServicoDTO(id);
             if (dto == null) throw new RuntimeException("Serviço não encontrado.");
             model.addAttribute("servico", dto);
-            model.addAttribute("relatorio",dto );
+            model.addAttribute("relatorio", dto);
             model.addAttribute("funcionarios", funcionarioService.listarTodos());
             model.addAttribute("operadoresDrone", funcionarioService.listarOperadoresDrone());
             model.addAttribute("empresas", empresaService.listarTodas());
@@ -153,16 +180,24 @@ public class ServicoController {
     }
 
     @GetMapping("/servicos")
-    public String listarServicos(Model model) {
-        try {
-            List<ServicoDTO> servicos = servicoService.listarTodosDTO();
-            model.addAttribute("servicos", servicos);
-            return "lista-servicos";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao listar serviços", e);
-        }
+public String listarServicos(@RequestParam(required = false, defaultValue = "todos") String filtro, Model model) {
+    try {
+        List<ServicoDTO> todos = servicoService.listarTodosDTO();
+
+        List<ServicoDTO> filtrados = switch (filtro.toLowerCase()) {
+            case "concluidos" -> todos.stream().filter(ServicoDTO::isFeito).toList();
+            case "pendentes" -> todos.stream().filter(s -> !s.isFeito()).toList();
+            default -> todos;
+        };
+
+        model.addAttribute("servicos", filtrados);
+        model.addAttribute("filtroSelecionado", filtro.toLowerCase());
+        return "lista-servicos";
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Erro ao listar serviços", e);
     }
+}
 
     @GetMapping("/servico/relatorio")
     public String verRelatorio(@RequestParam String id, Model model) {
@@ -178,10 +213,9 @@ public class ServicoController {
         }
     }
 
-@GetMapping("/funcionarios-por-empresa")
-@ResponseBody
-public List<FuncionarioDTO> buscarFuncionariosPorEmpresa(@RequestParam String cnpj) throws SQLException {
-    return funcionarioService.listarFuncionariosPorEmpresaDTO(cnpj);
-}
-
+    @GetMapping("/funcionarios-por-empresa")
+    @ResponseBody
+    public List<FuncionarioDTO> buscarFuncionariosPorEmpresa(@RequestParam String cnpj) throws SQLException {
+        return funcionarioService.listarFuncionariosPorEmpresaDTO(cnpj);
+    }
 }

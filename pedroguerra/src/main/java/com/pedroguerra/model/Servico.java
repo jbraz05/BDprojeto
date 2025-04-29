@@ -7,17 +7,16 @@ public class Servico {
     private Date data;
     private String tipo;
     private String fkFuncionarioMatricula;
+    private boolean feito;
 
-    public Servico() {
-    }
+    private int periodoPreparatorio;
+    private int periodoTrabalhoCampo;
+    private int periodoTrabalhoEscritorio;
+    private Date prazoTrabalho;
+    private float valorMedicao;
+    private Date dataEmissaoMedicao;
 
-    public Servico(String id, Date data, String tipo, String fkFuncionarioMatricula) {
-        this.id = id;
-        this.data = data;
-        this.tipo = tipo;
-        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
-    }
-
+    // Getters e Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -28,7 +27,26 @@ public class Servico {
     public void setTipo(String tipo) { this.tipo = tipo; }
 
     public String getFkFuncionarioMatricula() { return fkFuncionarioMatricula; }
-    public void setFkFuncionarioMatricula(String fkFuncionarioMatricula) {
-        this.fkFuncionarioMatricula = fkFuncionarioMatricula;
-    }
+    public void setFkFuncionarioMatricula(String fkFuncionarioMatricula) { this.fkFuncionarioMatricula = fkFuncionarioMatricula; }
+
+    public boolean isFeito() { return feito; }
+    public void setFeito(boolean feito) { this.feito = feito; }
+
+    public int getPeriodoPreparatorio() { return periodoPreparatorio; }
+    public void setPeriodoPreparatorio(int periodoPreparatorio) { this.periodoPreparatorio = periodoPreparatorio; }
+
+    public int getPeriodoTrabalhoCampo() { return periodoTrabalhoCampo; }
+    public void setPeriodoTrabalhoCampo(int periodoTrabalhoCampo) { this.periodoTrabalhoCampo = periodoTrabalhoCampo; }
+
+    public int getPeriodoTrabalhoEscritorio() { return periodoTrabalhoEscritorio; }
+    public void setPeriodoTrabalhoEscritorio(int periodoTrabalhoEscritorio) { this.periodoTrabalhoEscritorio = periodoTrabalhoEscritorio; }
+
+    public Date getPrazoTrabalho() { return prazoTrabalho; }
+    public void setPrazoTrabalho(Date prazoTrabalho) { this.prazoTrabalho = prazoTrabalho; }
+
+    public float getValorMedicao() { return valorMedicao; }
+    public void setValorMedicao(float valorMedicao) { this.valorMedicao = valorMedicao; }
+
+    public Date getDataEmissaoMedicao() { return dataEmissaoMedicao; }
+    public void setDataEmissaoMedicao(Date dataEmissaoMedicao) { this.dataEmissaoMedicao = dataEmissaoMedicao; }
 }

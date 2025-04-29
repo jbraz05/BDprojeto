@@ -9,56 +9,77 @@
 <body>
 
     <h1>Serviços Cadastrados</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Funcionário</th>
-                <th>Operador/Voo</th>
-                <th>Relatório Serviço</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="servico : ${servicos}">
-                <td th:text="${servico.id}"></td>
-                <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
-                <td th:text="${servico.tipo}"></td>
 
-                <td>
-                    <span th:if="${servico.nomeFuncionario != null}"
-                          th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}">
-                    </span>
-                    <span th:if="${servico.nomeFuncionario == null}"
-                          style="color: red; font-weight: bold;">
-                        <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
-                    </span>
-                </td>
+    <div class="filtro-botoes">
+        <form action="/servicos" method="get">
+            <input type="hidden" name="filtro" value="todos">
+            <button type="submit" th:classappend="${filtroSelecionado == 'todos'} ? 'active'">Todos</button>
+        </form>
+        <form action="/servicos" method="get">
+            <input type="hidden" name="filtro" value="concluidos">
+            <button type="submit" th:classappend="${filtroSelecionado == 'concluidos'} ? 'active'">Concluídos</button>
+        </form>
+        <form action="/servicos" method="get">
+            <input type="hidden" name="filtro" value="pendentes">
+            <button type="submit" th:classappend="${filtroSelecionado == 'pendentes'} ? 'active'">Pendentes</button>
+        </form>
+    </div>
 
-                <td th:text="${servico.nomeOperadorDrone != null} ? ${servico.nomeOperadorDrone} : 'Mapeamento Tradicional'"></td>
-                <td>
-                    <form th:action="@{/servico/relatorio}" method="get" class="action-form">
-                        <input type="hidden" name="id" th:value="${servico.id}" />
-                        <button type="submit" class="action-button">Ver Relatório</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/editar-servico}" method="get" class="action-form" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${servico.id}" />
-                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form th:action="@{/remover-servico}" method="post" class="action-form"
-                          onsubmit="return confirm('Tem certeza que deseja remover este serviço?');"
-                          style="display:inline;">
-                        <input type="hidden" name="id" th:value="${servico.id}" />
-                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Funcionário</th>
+                    <th>Operador/Voo</th>
+                    <th>Status</th>
+                    <th>Relatório</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="servico : ${servicos}">
+                    <td th:text="${servico.id}"></td>
+                    <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${servico.tipo}"></td>
+
+                    <td>
+                        <span th:if="${servico.nomeFuncionario != null}"
+                            th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></span>
+                        <span th:if="${servico.nomeFuncionario == null}" class="sem-funcionario">
+                            <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
+                        </span>
+                    </td>
+
+                    <td th:text="${servico.nomeOperadorDrone != null} ? ${servico.nomeOperadorDrone} : 'Mapeamento Tradicional'"></td>
+
+                    <td class="status-col" th:classappend="${servico.feito} ? ' done' : ' pending'"
+                        th:text="${servico.feito} ? 'Concluído' : 'Pendente'"></td>
+
+                    <td>
+                        <form th:action="@{/servico/relatorio}" method="get" class="action-form">
+                            <input type="hidden" name="id" th:value="${servico.id}" />
+                            <button type="submit" class="action-button">Ver Relatório</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <form th:action="@{/editar-servico}" method="get" class="action-form">
+                            <input type="hidden" name="id" th:value="${servico.id}" />
+                            <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                        </form>
+                        <form th:action="@{/remover-servico}" method="post" class="action-form"
+                              onsubmit="return confirm('Tem certeza que deseja remover este serviço?');">
+                            <input type="hidden" name="id" th:value="${servico.id}" />
+                            <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="footer">
         <a href="/" class="btn home-btn">Voltar para Home</a>
