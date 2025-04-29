@@ -89,8 +89,11 @@ CREATE TABLE Servico (
     prazo_trabalho DATE,
     valor_medicao FLOAT,
     data_emissao_medicao DATE,
+    feito BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (fk_funcionario_matricula) REFERENCES Funcionario(matricula)
 );
+
+
 
 CREATE TABLE VooPanoramico (
     fk_servico_id VARCHAR(20) PRIMARY KEY,
@@ -143,3 +146,10 @@ CREATE TABLE RelatorioServico (
     PRIMARY KEY (fk_servico_id),
     FOREIGN KEY (fk_servico_id) REFERENCES Servico(id)
 );
+
+INSERT INTO LocalizacaoAtuacao (codigo, nome_pais, nome_estado, regiao) VALUES
+('PE', 'Brasil', 'Pernambuco', 'Nordeste'),
+('RN', 'Brasil', 'Rio Grande do Norte', 'Nordeste'),
+('SP', 'Brasil', 'São Paulo', 'Sudeste'),
+('RJ', 'Brasil', 'Rio de Janeiro', 'Sudeste'),
+('MG', 'Brasil', 'Minas Gerais', 'Sudeste');
