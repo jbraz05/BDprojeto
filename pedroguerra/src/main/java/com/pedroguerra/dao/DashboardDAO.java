@@ -169,4 +169,35 @@ public class DashboardDAO {
         }
         return distrib;
     }
+
+    public Map<String, BigDecimal> getMediaSalarioPorFuncao() throws SQLException {
+        String sqlSocio = """
+            SELECT AVG(f.salario) AS media
+              FROM Funcionario f
+              JOIN Socio s
+                ON f.matricula = s.fk_Funcionario_matricula
+        """;
+        String sqlEng  = sqlSocio.replace("Socio s", "Engenheiro s");
+        String sqlOp   = sqlSocio.replace("Socio s", "OperadorDrone s");
+
+        Map<String, BigDecimal> medias = new LinkedHashMap<>();
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            // Sócio
+            try (PreparedStatement ps = conn.prepareStatement(sqlSocio);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) medias.put("Sócio", rs.getBigDecimal("media"));
+            }
+            // Engenheiro
+            try (PreparedStatement ps = conn.prepareStatement(sqlEng);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) medias.put("Engenheiro", rs.getBigDecimal("media"));
+            }
+            // Operador de Drone
+            try (PreparedStatement ps = conn.prepareStatement(sqlOp);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) medias.put("Operador de Drone", rs.getBigDecimal("media"));
+            }
+        }
+        return medias;
+    }
 }

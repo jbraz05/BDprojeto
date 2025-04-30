@@ -65,4 +65,11 @@ public class DashboardController {
         model.addAttribute("distribuicao", distrib);
         return "grafico-tipos";
     }
+
+    @GetMapping("/dashboards/salario-funcao")
+    public String salarioPorFuncao(Model model) throws SQLException {
+        Map<String, BigDecimal> mediaSalario = dashboardService.buscarMediaSalarioPorFuncao();
+        model.addAttribute("mediaSalario", mediaSalario);
+        return "grafico-salario-funcao";
+    }
 }
