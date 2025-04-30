@@ -2,6 +2,8 @@ package com.pedroguerra.service;
 
 import com.pedroguerra.dao.DashboardDAO;
 
+import java.math.BigDecimal;
+import java.time.Year;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -19,5 +21,9 @@ public class DashboardService {
 
     public Map<String, Integer> buscarStatusServicos() throws SQLException {
         return dao.getStatusServicos();
+    }
+
+    public Map<String, BigDecimal> buscarReceitaMensal(int ano) throws SQLException {
+        return dao.getReceitaMensal(ano);
     }
 }

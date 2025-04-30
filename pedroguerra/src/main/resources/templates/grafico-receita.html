@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Receita Mensal</title>
+  <link rel="stylesheet" href="/graficos.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Receita Mensal de <span th:text="${ano}"></span></h1>
+  <canvas id="receitaChart" width="600" height="300"></canvas>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    const labels = /*[[${receita.keySet()}]]*/ [];
+    const dados  = /*[[${receita.values()}]]*/ [];
+
+    const ctx = document.getElementById('receitaChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Receita (R$)',
+          data: dados,
+          fill: false,
+          tension: 0.1,
+          borderColor: '#4caf50'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#f2f5f7' }
+          },
+          tooltip: {
+            bodyColor: '#ffffff',
+            titleColor: '#ffffff',
+            callbacks: {
+              label: ctx => `R$ ${ctx.formattedValue}`
+            }
+          },
+          title: {
+            display: true,
+            text: 'Receita Mensal Acumulada',
+            color: '#f2f5f7'
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#f2f5f7' },
+            grid: { color: '#555555' }
+          },
+          y: {
+            ticks: { color: '#f2f5f7',
+                     callback: v => 'R$ ' + v },
+            grid: { color: '#555555' }
+          }
+        }
+      }
+    });
+    /*]]>*/
+  </script>
+</body>
+</html>
