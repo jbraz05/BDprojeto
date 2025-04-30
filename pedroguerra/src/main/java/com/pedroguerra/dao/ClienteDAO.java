@@ -180,7 +180,7 @@ public class ClienteDAO {
                 dto.setCnpjCpf(rs.getString("cnpj_cpf"));
                 dto.setNome(rs.getString("nome"));
                 dto.setFkEnderecoCep(rs.getString("cep"));
-                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setNumeroEndereco(rs.getInt("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
                 dto.setRuaEndereco(rs.getString("rua"));

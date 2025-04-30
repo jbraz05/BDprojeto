@@ -36,7 +36,7 @@ public class FuncionarioController {
             boolean existe = service.buscarFuncionarioDTO(dto.getMatricula()) != null;
     
             if (existe) {
-                service.atualizarFuncionario(dto, contato); // ⚠️ NÃO precisa de `conn` aqui!
+                service.atualizarFuncionario(dto, contato); 
             } else {
                 service.salvarFuncionario(dto, contato);
             }

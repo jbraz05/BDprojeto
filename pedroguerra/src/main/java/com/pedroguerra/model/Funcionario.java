@@ -1,21 +1,24 @@
 package com.pedroguerra.model;
 
+import java.math.BigDecimal;
+
 public class Funcionario {
 
     private String matricula;
     private String nome;
     private String fk_endereco_cep;
     private String fkSupervisorMatricula;
-    private float salario;
+    private BigDecimal salario;
 
     public Funcionario() {
     }
 
-    public Funcionario(String matricula, String nome, String contato, String fk_endereco_cep, String fkSupervisorMatricula) {
+    public Funcionario(String matricula, String nome, String contato, String fk_endereco_cep, String fkSupervisorMatricula, BigDecimal salario) {
         this.matricula = matricula;
         this.nome = nome;
         this.fkSupervisorMatricula = fkSupervisorMatricula;
         this.fk_endereco_cep = fk_endereco_cep;
+        this.salario = salario;
     }
 
     public String getMatricula() {
@@ -48,7 +51,7 @@ public class Funcionario {
         this.fk_endereco_cep = fk_endereco_cep;
     }
 
-    public float getSalario() { return salario; }
-    public void setSalario(float salario) { this.salario = salario; }
+    public BigDecimal getSalario() { return salario; }
+    public void setSalario(BigDecimal salario) { this.salario = salario; }
 }
 

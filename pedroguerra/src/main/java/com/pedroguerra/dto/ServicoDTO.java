@@ -1,5 +1,6 @@
 package com.pedroguerra.dto;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class ServicoDTO {
@@ -12,12 +13,12 @@ public class ServicoDTO {
     private int periodoTrabalhoCampo;
     private int periodoTrabalhoEscritorio;
     private Date prazoTrabalho;
-    private float valorMedicao;
+    private BigDecimal valorMedicao;
     private Date dataEmissaoMedicao;
     private boolean feito;
 
 
-    private float area; //Atributos do relatorio
+    private BigDecimal area; //Atributos do relatorio
     private Date dataRelatorio;
     private String observacoes;
 
@@ -31,8 +32,8 @@ public class ServicoDTO {
         this.nomeOperadorDrone = nomeOperadorDrone;
     }
     
-    public float getArea() { return area; }
-    public void setArea(float area) { this.area = area; }
+    public BigDecimal getArea() { return area; }
+    public void setArea(BigDecimal area) { this.area = area; }
 
     public Date getDataRelatorio() { return dataRelatorio; }
     public void setDataRelatorio(Date dataRelatorio) { this.dataRelatorio = dataRelatorio; }
@@ -69,8 +70,8 @@ public class ServicoDTO {
     public Date getPrazoTrabalho() { return prazoTrabalho; }
     public void setPrazoTrabalho(Date prazoTrabalho) { this.prazoTrabalho = prazoTrabalho; }
 
-    public float getValorMedicao() { return valorMedicao; }
-    public void setValorMedicao(float valorMedicao) { this.valorMedicao = valorMedicao; }
+    public BigDecimal getValorMedicao() { return valorMedicao; }
+    public void setValorMedicao(BigDecimal valorMedicao) { this.valorMedicao = valorMedicao; }
 
     public Date getDataEmissaoMedicao() { return dataEmissaoMedicao; }
     public void setDataEmissaoMedicao(Date dataEmissaoMedicao) { this.dataEmissaoMedicao = dataEmissaoMedicao; }

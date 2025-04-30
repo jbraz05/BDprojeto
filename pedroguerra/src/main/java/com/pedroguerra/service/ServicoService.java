@@ -8,6 +8,7 @@ import com.pedroguerra.model.RelatorioServico;
 import com.pedroguerra.model.Servico;
 
 import java.sql.Date;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,12 +27,12 @@ public class ServicoService {
     public void salvarServico(Servico servico) throws SQLException {
         dao.inserir(servico);
     }
-    public void atualizarRelatorio(String idServico, float area, Date data, String obs) throws SQLException {
+    public void atualizarRelatorio(String idServico, BigDecimal area, Date data, String obs) throws SQLException {
         RelatorioServico rel = new RelatorioServico(idServico, area, data, obs);
         relatorioDAO.atualizar(rel);
     }
     
-    public void salvarRelatorio(String idServico, float area, Date data, String obs) throws SQLException {
+    public void salvarRelatorio(String idServico, BigDecimal area, Date data, String obs) throws SQLException {
         RelatorioServico rel = new RelatorioServico(idServico, area, data, obs);
         relatorioDAO.inserir(rel);
     }

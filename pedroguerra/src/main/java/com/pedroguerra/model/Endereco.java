@@ -2,7 +2,7 @@ package com.pedroguerra.model;
 
 public class Endereco {
     private String cep;
-    private String numero;
+    private int numero;
     private String cidade;
     private String bairro;
     private String rua;
@@ -10,7 +10,7 @@ public class Endereco {
     public Endereco() {
     }
 
-    public Endereco(String cep, String numero, String cidade, String bairro, String rua) {
+    public Endereco(String cep, int numero, String cidade, String bairro, String rua) {
         this.cep = cep;
         this.numero = numero;
         this.cidade = cidade;
@@ -23,10 +23,10 @@ public class Endereco {
     public void setCep(String cep) {
         this.cep = cep;
     }
-    public String getNumero() {
+    public int getNumero() {
         return numero;
     }
-    public void setNumero(String numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
     public String getCidade() {

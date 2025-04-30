@@ -32,7 +32,7 @@ public class FuncionarioDAO {
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, dto.getMatricula());
                     stmt.setString(2, dto.getNome());
-                    stmt.setFloat(3, dto.getSalario()); // ADICIONADO
+                    stmt.setBigDecimal(3, dto.getSalario()); 
                     stmt.setString(4, dto.getFkEnderecoCep());
                     if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isEmpty()) {
                         stmt.setNull(5, Types.VARCHAR);
@@ -96,7 +96,7 @@ public class FuncionarioDAO {
 
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setString(1, dto.getNome());
-                    stmt.setFloat(2, dto.getSalario()); // ADICIONADO
+                    stmt.setBigDecimal(2, dto.getSalario()); 
                     stmt.setString(3, dto.getFkEnderecoCep());
                     
                     if (dto.getFkSupervisorMatricula() == null || dto.getFkSupervisorMatricula().isBlank()) {
@@ -179,10 +179,10 @@ public class FuncionarioDAO {
                 dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                 dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
                 dto.setRuaEndereco(rs.getString("rua"));
-                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setNumeroEndereco(rs.getInt("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
-                dto.setSalario(rs.getFloat("salario"));
+                dto.setSalario(rs.getBigDecimal("salario"));
 
 
                 // Contato
@@ -225,14 +225,14 @@ public class FuncionarioDAO {
                 dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                 dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
                 dto.setRuaEndereco(rs.getString("rua"));
-                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setNumeroEndereco(rs.getInt("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
                 dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
                 dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));
                 dto.setEngenheiro(registroExiste(conn, "Engenheiro", dto.getMatricula()));
                 dto.setOperadorDrone(registroExiste(conn, "OperadorDrone", dto.getMatricula()));
-                dto.setSalario(rs.getFloat("salario"));
+                dto.setSalario(rs.getBigDecimal("salario"));
 
                 List<Contato> contatos = contatoDAO.listarPorFuncionario(dto.getMatricula());
                 for (Contato c : contatos) {
@@ -363,11 +363,11 @@ public class FuncionarioDAO {
                 dto.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                 dto.setFkSupervisorMatricula(rs.getString("fk_supervisor_matricula"));
                 dto.setRuaEndereco(rs.getString("rua"));
-                dto.setNumeroEndereco(rs.getString("numero"));
+                dto.setNumeroEndereco(rs.getInt("numero"));
                 dto.setCidadeEndereco(rs.getString("cidade"));
                 dto.setBairroEndereco(rs.getString("bairro"));
                 dto.setCnpjEmpresa(rs.getString("fk_Empresa_cnpj"));
-                dto.setSalario(rs.getFloat("salario"));
+                dto.setSalario(rs.getBigDecimal("salario"));
 
 
                 dto.setSocio(registroExiste(conn, "Socio", dto.getMatricula()));

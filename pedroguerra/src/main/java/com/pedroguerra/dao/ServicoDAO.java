@@ -24,7 +24,7 @@ public class ServicoDAO {
             stmt.setInt(6, servico.getPeriodoTrabalhoCampo());
             stmt.setInt(7, servico.getPeriodoTrabalhoEscritorio());
             stmt.setDate(8, servico.getPrazoTrabalho());
-            stmt.setFloat(9, servico.getValorMedicao());
+            stmt.setBigDecimal(9, servico.getValorMedicao());
             stmt.setDate(10, servico.getDataEmissaoMedicao());
             stmt.setBoolean(11, servico.isFeito());
             stmt.executeUpdate();
@@ -44,7 +44,7 @@ public class ServicoDAO {
             stmt.setInt(5, servico.getPeriodoTrabalhoCampo());
             stmt.setInt(6, servico.getPeriodoTrabalhoEscritorio());
             stmt.setDate(7, servico.getPrazoTrabalho());
-            stmt.setFloat(8, servico.getValorMedicao());
+            stmt.setBigDecimal(8, servico.getValorMedicao());
             stmt.setDate(9, servico.getDataEmissaoMedicao());
             stmt.setBoolean(10, servico.isFeito());
             stmt.setString(11, servico.getId());
@@ -84,7 +84,7 @@ public class ServicoDAO {
                 dto.setPeriodoTrabalhoCampo(rs.getInt("periodo_trabalho_campo"));
                 dto.setPeriodoTrabalhoEscritorio(rs.getInt("periodo_trabalho_escritorio"));
                 dto.setPrazoTrabalho(rs.getDate("prazo_trabalho"));
-                dto.setValorMedicao(rs.getFloat("valor_medicao"));
+                dto.setValorMedicao(rs.getBigDecimal("valor_medicao"));
                 dto.setDataEmissaoMedicao(rs.getDate("data_emissao_medicao"));
                 dto.setFeito(rs.getBoolean("feito"));
                 dto.setNomeFuncionario(rs.getString("nome_funcionario"));
@@ -127,7 +127,7 @@ public class ServicoDAO {
                 dto.setPeriodoTrabalhoCampo(rs.getInt("periodo_trabalho_campo"));
                 dto.setPeriodoTrabalhoEscritorio(rs.getInt("periodo_trabalho_escritorio"));
                 dto.setPrazoTrabalho(rs.getDate("prazo_trabalho"));
-                dto.setValorMedicao(rs.getFloat("valor_medicao"));
+                dto.setValorMedicao(rs.getBigDecimal("valor_medicao"));
                 dto.setDataEmissaoMedicao(rs.getDate("data_emissao_medicao"));
                 dto.setFeito(rs.getBoolean("feito"));
                 dto.setNomeFuncionario(rs.getString("nome_funcionario"));

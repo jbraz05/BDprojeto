@@ -13,7 +13,7 @@ public class EnderecoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, e.getCep());
-            stmt.setString(2, e.getNumero());
+            stmt.setInt(2, e.getNumero());
             stmt.setString(3, e.getCidade());
             stmt.setString(4, e.getBairro());
             stmt.setString(5, e.getRua());
@@ -31,7 +31,7 @@ public class EnderecoDAO {
             if (rs.next()) {
                 return new Endereco(
                         rs.getString("cep"),
-                        rs.getString("numero"),
+                        rs.getInt("numero"),
                         rs.getString("cidade"),
                         rs.getString("bairro"),
                         rs.getString("rua")
@@ -46,7 +46,7 @@ public class EnderecoDAO {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, endereco.getRua());
-            stmt.setString(2, endereco.getNumero());
+            stmt.setInt(2, endereco.getNumero());
             stmt.setString(3, endereco.getBairro());
             stmt.setString(4, endereco.getCidade());
             stmt.setString(5, endereco.getCep());

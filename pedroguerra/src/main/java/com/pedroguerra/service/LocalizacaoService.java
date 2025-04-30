@@ -31,8 +31,7 @@ public class LocalizacaoService {
     public LocalizacaoAtuacao buscarPorCodigo(String codigo) throws SQLException {
         return dao.buscarPorCodigo(codigo);
     }
-
-    // ✅ NOVO MÉTODO: usado para o formulário de serviço (dropdown de localização)
+    
     public List<LocalizacaoAtuacao> listarTodas() throws SQLException {
         return dao.listarTodas();
     }

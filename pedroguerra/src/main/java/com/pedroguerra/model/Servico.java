@@ -1,5 +1,6 @@
 package com.pedroguerra.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class Servico {
@@ -13,7 +14,7 @@ public class Servico {
     private int periodoTrabalhoCampo;
     private int periodoTrabalhoEscritorio;
     private Date prazoTrabalho;
-    private float valorMedicao;
+    private BigDecimal valorMedicao;
     private Date dataEmissaoMedicao;
 
     // Getters e Setters
@@ -44,8 +45,8 @@ public class Servico {
     public Date getPrazoTrabalho() { return prazoTrabalho; }
     public void setPrazoTrabalho(Date prazoTrabalho) { this.prazoTrabalho = prazoTrabalho; }
 
-    public float getValorMedicao() { return valorMedicao; }
-    public void setValorMedicao(float valorMedicao) { this.valorMedicao = valorMedicao; }
+    public BigDecimal getValorMedicao() { return valorMedicao; }
+    public void setValorMedicao(BigDecimal valorMedicao) { this.valorMedicao = valorMedicao; }
 
     public Date getDataEmissaoMedicao() { return dataEmissaoMedicao; }
     public void setDataEmissaoMedicao(Date dataEmissaoMedicao) { this.dataEmissaoMedicao = dataEmissaoMedicao; }

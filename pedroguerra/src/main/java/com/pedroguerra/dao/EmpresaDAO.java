@@ -18,7 +18,7 @@ public class EmpresaDAO {
         try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, empresa.getCnpj());
             stmt.setString(2, empresa.getNome());
-            stmt.setFloat(3, empresa.getCapitalSocial());
+            stmt.setBigDecimal(3, empresa.getCapitalSocial());
             stmt.setString(4, empresa.getFkEnderecoCep());
             stmt.executeUpdate();
 
@@ -32,7 +32,7 @@ public class EmpresaDAO {
         String sql = "UPDATE Empresa SET nome = ?, capital_social = ?, fk_endereco_cep = ? WHERE cnpj = ?";
         try (Connection conn = ConnectionFactory.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, empresa.getNome());
-            stmt.setFloat(2, empresa.getCapitalSocial());
+            stmt.setBigDecimal(2, empresa.getCapitalSocial());
             stmt.setString(3, empresa.getFkEnderecoCep());
             stmt.setString(4, empresa.getCnpj());
             stmt.executeUpdate();
@@ -121,10 +121,10 @@ public class EmpresaDAO {
                 EmpresaDTO dto = new EmpresaDTO();
                 dto.setCnpj(rs.getString("cnpj"));
                 dto.setNome(rs.getString("nome"));
-                dto.setCapitalSocial(rs.getFloat("capital_social"));
+                dto.setCapitalSocial(rs.getBigDecimal("capital_social"));
                 dto.setCep(rs.getString("fk_endereco_cep"));
                 dto.setRua(rs.getString("rua"));
-                dto.setNumero(rs.getString("numero"));
+                dto.setNumero(rs.getInt("numero"));
                 dto.setBairro(rs.getString("bairro"));
                 dto.setCidade(rs.getString("cidade"));
 
@@ -159,10 +159,10 @@ public class EmpresaDAO {
                 EmpresaDTO dto = new EmpresaDTO();
                 dto.setCnpj(rs.getString("cnpj"));
                 dto.setNome(rs.getString("nome"));
-                dto.setCapitalSocial(rs.getFloat("capital_social"));
+                dto.setCapitalSocial(rs.getBigDecimal("capital_social"));
                 dto.setCep(rs.getString("cep"));
                 dto.setRua(rs.getString("rua"));
-                dto.setNumero(rs.getString("numero"));
+                dto.setNumero(rs.getInt("numero"));
                 dto.setBairro(rs.getString("bairro"));
                 dto.setCidade(rs.getString("cidade"));
                 dto.setNomeEstado(rs.getString("nome_estado"));
@@ -193,7 +193,7 @@ public class EmpresaDAO {
                 Empresa e = new Empresa();
                 e.setCnpj(rs.getString("cnpj"));
                 e.setNome(rs.getString("nome"));
-                e.setCapitalSocial(rs.getFloat("capital_social"));
+                e.setCapitalSocial(rs.getBigDecimal("capital_social"));
                 e.setFkEnderecoCep(rs.getString("fk_endereco_cep"));
                 lista.add(e);
             }

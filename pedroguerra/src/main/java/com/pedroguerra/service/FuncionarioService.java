@@ -15,7 +15,6 @@ public class FuncionarioService {
     private final ContatoDAO contatoDAO = new ContatoDAO();
 
     public boolean salvarFuncionario(FuncionarioDTO dto, Contato contato) throws SQLException {
-        // O método inserir do FuncionarioDAO já insere o contato!
         return funcionarioDAO.inserir(dto);
     }
 
@@ -28,7 +27,7 @@ public class FuncionarioService {
     }
 
     public void removerFuncionario(String matricula) throws SQLException {
-        funcionarioDAO.removerPorMatricula(matricula); // remove contatos também
+        funcionarioDAO.removerPorMatricula(matricula); 
     }
 
     public List<FuncionarioDTO> listarTodos() throws SQLException {

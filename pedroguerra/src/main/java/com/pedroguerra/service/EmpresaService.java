@@ -119,9 +119,6 @@ public class EmpresaService {
     }
 }
 
-    
- 
-    
     public EmpresaDTO buscarEmpresa(String cnpj) throws SQLException {
         return empresaDAO.buscarPorCnpj(cnpj);
     }

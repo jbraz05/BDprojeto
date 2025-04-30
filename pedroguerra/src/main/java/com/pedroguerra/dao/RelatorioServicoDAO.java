@@ -17,7 +17,7 @@ public class RelatorioServicoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, relatorio.getFkServicoId());
-            stmt.setFloat(2, relatorio.getArea());
+            stmt.setBigDecimal(2, relatorio.getArea());
             stmt.setDate(3, relatorio.getDataRelatorio());
             stmt.setString(4, relatorio.getObservacoes());
 
@@ -31,7 +31,7 @@ public class RelatorioServicoDAO {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setFloat(1, relatorio.getArea());
+            stmt.setBigDecimal(1, relatorio.getArea());
             stmt.setDate(2, relatorio.getDataRelatorio());
             stmt.setString(3, relatorio.getObservacoes());
             stmt.setString(4, relatorio.getFkServicoId());
@@ -62,7 +62,7 @@ public class RelatorioServicoDAO {
                 if (rs.next()) {
                     RelatorioServico rel = new RelatorioServico();
                     rel.setFkServicoId(rs.getString("fk_Servico_id"));
-                    rel.setArea(rs.getFloat("area"));
+                    rel.setArea(rs.getBigDecimal("area"));
                     rel.setDataRelatorio(rs.getDate("data_relatorio"));
                     rel.setObservacoes(rs.getString("observacoes"));
                     return rel;

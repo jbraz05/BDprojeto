@@ -6,7 +6,7 @@ public class ClienteDTO {
     private String nome;
 
     private String fkEnderecoCep;
-    private String numeroEndereco;
+    private int numeroEndereco;
     private String cidadeEndereco;
     private String bairroEndereco;
     private String ruaEndereco;
@@ -35,11 +35,11 @@ public class ClienteDTO {
         this.fkEnderecoCep = fkEnderecoCep;
     }
 
-    public String getNumeroEndereco() {
+    public int getNumeroEndereco() {
         return numeroEndereco;
     }
 
-    public void setNumeroEndereco(String numeroEndereco) {
+    public void setNumeroEndereco(int numeroEndereco) {
         this.numeroEndereco = numeroEndereco;
     }
 

@@ -13,7 +13,7 @@ CREATE TABLE Endereco (
 CREATE TABLE Empresa (
     cnpj VARCHAR(14) PRIMARY KEY,
     nome VARCHAR(25) NOT NULL,
-    capital_social FLOAT NOT NULL,
+    capital_social DECIMAL(10,2) NOT NULL,
     fk_endereco_cep VARCHAR(8),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep)
 );
@@ -21,7 +21,7 @@ CREATE TABLE Empresa (
 CREATE TABLE Funcionario (
     matricula VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(25) NOT NULL,
-    salario FLOAT NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
     fk_supervisor_matricula VARCHAR(20),
     fk_endereco_cep VARCHAR(8),
     FOREIGN KEY (fk_endereco_cep) REFERENCES Endereco(cep),
@@ -87,7 +87,7 @@ CREATE TABLE Servico (
     periodo_trabalho_campo INT,
     periodo_trabalho_escritorio INT,
     prazo_trabalho DATE,
-    valor_medicao FLOAT,
+    valor_medicao DECIMAL(10,2),
     data_emissao_medicao DATE,
     feito BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (fk_funcionario_matricula) REFERENCES Funcionario(matricula)
@@ -99,7 +99,7 @@ CREATE TABLE VooPanoramico (
     fk_servico_id VARCHAR(20) PRIMARY KEY,
     fk_operadorDrone_matricula VARCHAR(20),
     FOREIGN KEY (fk_servico_id) REFERENCES Servico(id),
-    FOREIGN KEY (fk_operadorDrone_matricula) REFERENCES OperadorDrone(fk_funcionario_matricula)
+    FOREIGN KEY (fk_operadorDrone_matricula) REFERENCES OperadorDrone(fk_funcionario_matricula) ON DELETE SET NULL
 );
 
 CREATE TABLE MapeamentoTradicional (
@@ -146,10 +146,3 @@ CREATE TABLE RelatorioServico (
     PRIMARY KEY (fk_servico_id),
     FOREIGN KEY (fk_servico_id) REFERENCES Servico(id)
 );
-
-INSERT INTO LocalizacaoAtuacao (codigo, nome_pais, nome_estado, regiao) VALUES
-('PE', 'Brasil', 'Pernambuco', 'Nordeste'),
-('RN', 'Brasil', 'Rio Grande do Norte', 'Nordeste'),
-('SP', 'Brasil', 'São Paulo', 'Sudeste'),
-('RJ', 'Brasil', 'Rio de Janeiro', 'Sudeste'),
-('MG', 'Brasil', 'Minas Gerais', 'Sudeste');

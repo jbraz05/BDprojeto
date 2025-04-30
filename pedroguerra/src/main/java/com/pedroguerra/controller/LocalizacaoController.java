@@ -31,7 +31,7 @@ public class LocalizacaoController {
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao cadastrar: " + e.getMessage());
-            model.addAttribute("localizacao", l); // ← ESSENCIAL
+            model.addAttribute("localizacao", l);
 
             return "localizacao";
         }
@@ -87,7 +87,7 @@ public String remover(@RequestParam String codigo, Model model) {
             LocalizacaoAtuacaoDAO dao = new LocalizacaoAtuacaoDAO();
             LocalizacaoAtuacao localizacao = dao.buscarPorCodigo(codigo);
             model.addAttribute("localizacao", localizacao);
-            return "localizacao"; // mesma página do form, reutilizada
+            return "localizacao"; 
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("erro", "Erro ao buscar: " + e.getMessage());

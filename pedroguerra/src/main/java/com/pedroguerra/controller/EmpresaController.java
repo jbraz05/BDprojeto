@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
+import java.math.BigDecimal;
+
 @Controller
 public class EmpresaController {
 
@@ -45,12 +47,12 @@ public class EmpresaController {
                                    @RequestParam String localizacaoCodigo,
                                    @RequestParam String cep,
                                    @RequestParam String rua,
-                                   @RequestParam String numero,
+                                   @RequestParam int numero,
                                    @RequestParam String bairro,
                                    @RequestParam String cidade,
                                    @RequestParam String telefone,
                                    @RequestParam String email,
-                                   @RequestParam float capitalSocial,
+                                   @RequestParam BigDecimal capitalSocial,
                                    Model model) {
         try {
             Endereco endereco = enderecoService.buscar(cep);
@@ -60,7 +62,7 @@ public class EmpresaController {
             }
 
             empresa.setFkEnderecoCep(cep);
-            empresa.setCapitalSocial(capitalSocial); // ✅ ESSENCIAL
+            empresa.setCapitalSocial(capitalSocial);
 
             Contato contato = new Contato("CTE_" + empresa.getCnpj(), telefone, email, null, empresa.getCnpj());
             empresaService.salvarEmpresa(empresa, contato, localizacaoCodigo);
@@ -90,7 +92,7 @@ public class EmpresaController {
         try {
             empresaService.removerEmpresa(cnpj);
         } catch (SQLException e) {
-            e.printStackTrace(); // ou log
+            e.printStackTrace(); 
         }
         return "redirect:/empresa/listar";
     }
@@ -102,7 +104,7 @@ public class EmpresaController {
             Empresa empresa = new Empresa();
             empresa.setCnpj(dto.getCnpj());
             empresa.setNome(dto.getNome());
-            empresa.setCapitalSocial(dto.getCapitalSocial()); // ✅ ESSENCIAL
+            empresa.setCapitalSocial(dto.getCapitalSocial());
             empresa.setFkEnderecoCep(dto.getCep());
 
             Endereco endereco = enderecoService.buscar(dto.getCep());
@@ -126,12 +128,12 @@ public class EmpresaController {
                                    @RequestParam String localizacaoCodigo,
                                    @RequestParam String cep,
                                    @RequestParam String rua,
-                                   @RequestParam String numero,
+                                   @RequestParam int numero,
                                    @RequestParam String bairro,
                                    @RequestParam String cidade,
                                    @RequestParam String telefone,
                                    @RequestParam String email,
-                                   @RequestParam float capitalSocial,
+                                   @RequestParam BigDecimal capitalSocial,
                                    Model model) {
         try {
             Endereco endereco = enderecoService.buscar(cep);

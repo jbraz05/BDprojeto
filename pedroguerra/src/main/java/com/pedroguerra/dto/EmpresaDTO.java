@@ -1,14 +1,16 @@
 package com.pedroguerra.dto;
 
+import java.math.BigDecimal;
+
 public class EmpresaDTO {
     private String cnpj;
     private String nome;
-    private float capitalSocial;
+    private BigDecimal capitalSocial;
     private String email;
     private String telefone;
     private String cep;
     private String rua;
-    private String numero;
+    private int numero;
     private String bairro;
     private String cidade;
     private String nomeEstado;
@@ -21,8 +23,8 @@ public class EmpresaDTO {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public float getCapitalSocial() { return capitalSocial; }
-    public void setCapitalSocial(float capitalSocial) { this.capitalSocial = capitalSocial; }
+    public BigDecimal getCapitalSocial() { return capitalSocial; }
+    public void setCapitalSocial(BigDecimal capitalSocial) { this.capitalSocial = capitalSocial; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -36,8 +38,8 @@ public class EmpresaDTO {
     public String getRua() { return rua; }
     public void setRua(String rua) { this.rua = rua; }
 
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
+    public int getNumero() { return numero; }
+    public void setNumero(int numero) { this.numero = numero; }
 
     public String getBairro() { return bairro; }
     public void setBairro(String bairro) { this.bairro = bairro; }

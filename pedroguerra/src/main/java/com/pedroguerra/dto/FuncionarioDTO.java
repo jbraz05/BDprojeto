@@ -1,12 +1,14 @@
 package com.pedroguerra.dto;
 
+import java.math.BigDecimal;
+
 public class FuncionarioDTO {
     private String matricula;
     private String nome;
     private String email;
     private String telefone;
     private String fkEnderecoCep;
-    private String numeroEndereco;
+    private int numeroEndereco;
     private String cidadeEndereco;
     private String bairroEndereco;
     private String ruaEndereco;
@@ -15,7 +17,7 @@ public class FuncionarioDTO {
     private boolean engenheiro;
     private boolean operadorDrone;
     private String cnpjEmpresa;
-    private float salario;
+    private BigDecimal salario;
 
     public String getMatricula() { return matricula; }
     public void setMatricula(String matricula) { this.matricula = matricula; }
@@ -32,8 +34,8 @@ public class FuncionarioDTO {
     public String getFkEnderecoCep() { return fkEnderecoCep; }
     public void setFkEnderecoCep(String fkEnderecoCep) { this.fkEnderecoCep = fkEnderecoCep; }
 
-    public String getNumeroEndereco() { return numeroEndereco; }
-    public void setNumeroEndereco(String numeroEndereco) { this.numeroEndereco = numeroEndereco; }
+    public int getNumeroEndereco() { return numeroEndereco; }
+    public void setNumeroEndereco(int numeroEndereco) { this.numeroEndereco = numeroEndereco; }
 
     public String getCidadeEndereco() { return cidadeEndereco; }
     public void setCidadeEndereco(String cidadeEndereco) { this.cidadeEndereco = cidadeEndereco; }
@@ -59,6 +61,6 @@ public class FuncionarioDTO {
     public String getCnpjEmpresa() { return cnpjEmpresa; }
     public void setCnpjEmpresa(String cnpjEmpresa) { this.cnpjEmpresa = cnpjEmpresa; }
     
-    public float getSalario() { return salario; }
-    public void setSalario(float salario) { this.salario = salario; }
+    public BigDecimal getSalario() { return salario; }
+    public void setSalario(BigDecimal salario) { this.salario = salario; }
 }

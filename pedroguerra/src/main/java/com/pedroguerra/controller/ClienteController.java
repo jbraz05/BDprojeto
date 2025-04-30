@@ -31,7 +31,7 @@ public class ClienteController {
     public String salvarCliente(@ModelAttribute("cliente") ClienteDTO dto) {
         try {
             if (service.clienteExiste(dto.getCnpjCpf())) {
-                service.atualizarCliente(dto); // Agora passa DTO diretamente
+                service.atualizarCliente(dto); 
             } else {
                 service.salvarCliente(dto);
             }
