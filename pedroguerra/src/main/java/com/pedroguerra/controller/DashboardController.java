@@ -49,4 +49,13 @@ public class DashboardController {
         model.addAttribute("ano", anoAtual);
         return "grafico-receita";
     }
+
+    @GetMapping("/dashboards/clientes-receita")
+    public String topClientesReceita(Model model) throws SQLException {
+        int anoAtual = Year.now().getValue();
+        Map<String, BigDecimal> topClientes = dashboardService.buscarTopClientesPorReceita(anoAtual);
+        model.addAttribute("topClientes", topClientes);
+        model.addAttribute("ano", anoAtual);
+        return "grafico-clientes-receita";
+    }
 }

@@ -26,4 +26,8 @@ public class DashboardService {
     public Map<String, BigDecimal> buscarReceitaMensal(int ano) throws SQLException {
         return dao.getReceitaMensal(ano);
     }
+
+    public Map<String, BigDecimal> buscarTopClientesPorReceita(int ano) throws SQLException {
+        return dao.getTopClientesPorReceita(ano);
+    }
 }
