@@ -31,4 +31,11 @@ public class DashboardController {
         model.addAttribute("valores", dados);
         return "grafico-valores";
     }
+
+    @GetMapping("/dashboards/servicos-status")
+    public String servicosStatus(Model model) throws SQLException {
+        Map<String, Integer> status = dashboardService.buscarStatusServicos();
+        model.addAttribute("status", status);
+        return "grafico-status";
+    }
 }

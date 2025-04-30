@@ -16,4 +16,8 @@ public class DashboardService {
     public Map<String, Double> buscarServicosMaisLucrativos() throws SQLException {
         return dao.getTopServicosPorValor();
     }
+
+    public Map<String, Integer> buscarStatusServicos() throws SQLException {
+        return dao.getStatusServicos();
+    }
 }

@@ -49,4 +49,32 @@ public class DashboardDAO {
         }
         return resultado;
     }
+
+    public Map<String, Integer> getStatusServicos() throws SQLException {
+        String sql = """
+            SELECT feito, COUNT(*) AS total
+              FROM Servico
+             GROUP BY feito
+        """;
+
+        Map<String, Integer> status = new LinkedHashMap<>();
+        status.put("Concluídos", 0);
+        status.put("Pendentes",  0);
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                boolean feito = rs.getBoolean("feito");
+                int total = rs.getInt("total");
+                if (feito) {
+                    status.put("Concluídos", total);
+                } else {
+                    status.put("Pendentes", total);
+                }
+            }
+        }
+        return status;
+    }
 }
