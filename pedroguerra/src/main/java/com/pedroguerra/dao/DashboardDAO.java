@@ -147,4 +147,26 @@ public class DashboardDAO {
         }
         return top;
     }
+
+    public Map<String, Integer> getDistribuicaoServicosPorTipo() throws SQLException {
+        String sql = """
+            SELECT tipo, COUNT(*) AS total
+              FROM Servico
+             GROUP BY tipo
+             ORDER BY total DESC
+        """;
+
+        Map<String, Integer> distrib = new LinkedHashMap<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String tipo  = rs.getString("tipo");
+                int total     = rs.getInt("total");
+                distrib.put(tipo, total);
+            }
+        }
+        return distrib;
+    }
 }

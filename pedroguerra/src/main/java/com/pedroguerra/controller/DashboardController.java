@@ -58,4 +58,11 @@ public class DashboardController {
         model.addAttribute("ano", anoAtual);
         return "grafico-clientes-receita";
     }
+
+    @GetMapping("/dashboards/servicos-tipo")
+    public String servicosPorTipo(Model model) throws SQLException {
+        Map<String, Integer> distrib = dashboardService.buscarDistribuicaoServicosPorTipo();
+        model.addAttribute("distribuicao", distrib);
+        return "grafico-tipos";
+    }
 }
