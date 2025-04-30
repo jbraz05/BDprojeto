@@ -1,3 +1,4 @@
+USE pedroguerra;
 INSERT INTO LocalizacaoAtuacao (codigo, nome_pais, nome_estado, regiao) VALUES
 ('PE', 'Brasil', 'Pernambuco', 'Nordeste'),
 ('RN', 'Brasil', 'Rio Grande do Norte', 'Nordeste'),
@@ -18,6 +19,7 @@ INSERT INTO Empresa (cnpj, nome, fk_endereco_cep, capital_social) VALUES
 ('11111111000111', 'Drone Nordeste', '50000000', 100000.00),
 ('22222222000122', 'SkyVision Brasil', '59000000', 150000.00),
 ('33333333000133', 'Voo Alto SP', '01000000', 200000.00);
+
 -- Relacionamento com Localização
 INSERT INTO Atua (fk_Empresa_cnpj, fk_Localizacao_Atuacao_codigo) VALUES
 ('11.111.111/0001-11', 'PE'),
