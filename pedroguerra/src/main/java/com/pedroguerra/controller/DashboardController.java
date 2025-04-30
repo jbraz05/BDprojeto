@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigDecimal;
+import java.time.Year;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -37,5 +39,14 @@ public class DashboardController {
         Map<String, Integer> status = dashboardService.buscarStatusServicos();
         model.addAttribute("status", status);
         return "grafico-status";
+    }
+
+    @GetMapping("/dashboards/receita-mensal")
+    public String receitaMensal(Model model) throws SQLException {
+        int anoAtual = Year.now().getValue();
+        Map<String, BigDecimal> receita = dashboardService.buscarReceitaMensal(anoAtual);
+        model.addAttribute("receita", receita);
+        model.addAttribute("ano", anoAtual);
+        return "grafico-receita";
     }
 }

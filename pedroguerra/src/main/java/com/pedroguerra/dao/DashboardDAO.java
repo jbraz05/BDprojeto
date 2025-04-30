@@ -2,6 +2,7 @@ package com.pedroguerra.dao;
 
 import com.pedroguerra.config.ConnectionFactory;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -76,5 +77,43 @@ public class DashboardDAO {
             }
         }
         return status;
+    }
+
+    public Map<String, BigDecimal> getReceitaMensal(int ano) throws SQLException {
+        String sql = """
+            SELECT MONTH(data_emissao_medicao) AS mes,
+                   SUM(valor_medicao)       AS total
+              FROM Servico
+             WHERE YEAR(data_emissao_medicao) = ?
+             GROUP BY mes
+             ORDER BY mes
+        """;
+
+        // Meses em ordem de Janeiro a Dezembro
+        String[] meses = {
+            "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+            "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        };
+
+        // Inicializa com zero para garantir todos os meses
+        Map<String, BigDecimal> receita = new LinkedHashMap<>();
+        for (String m : meses) {
+            receita.put(m, BigDecimal.ZERO);
+        }
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, ano);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int numMes = rs.getInt("mes");           // 1–12
+                    BigDecimal total = rs.getBigDecimal("total");
+                    String nomeMes = meses[numMes - 1];
+                    receita.put(nomeMes, total);
+                }
+            }
+        }
+        return receita;
     }
 }
