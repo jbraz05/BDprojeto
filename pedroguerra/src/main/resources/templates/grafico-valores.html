@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Serviços Mais Lucrativos</title>
+    <link rel="stylesheet" href="/graficos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Tipos de Serviço com Maior Valor Acumulado (R$)</h1>
+    <canvas id="valoresChart" width="600" height="300"></canvas>
+
+    <script th:inline="javascript"> 
+       
+        const labels = /*[[${valores.keySet()}]]*/ [];
+        const dados = /*[[${valores.values()}]]*/ [];
+
+        const ctx = document.getElementById('valoresChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Valor Total (R$)',
+                    data: dados,
+                    backgroundColor: [
+                        '#f94144',
+                        '#f3722c',
+                        '#f9c74f',
+                        '#90be6d',
+                        '#577590'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f2f5f7'
+                        }
+                    },
+                    tooltip: {
+                        bodyColor: '#ffffff',
+                        titleColor: '#ffffff'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
