@@ -116,4 +116,35 @@ public class DashboardDAO {
         }
         return receita;
     }
+
+    public Map<String, BigDecimal> getTopClientesPorReceita(int ano) throws SQLException {
+        String sql = """
+            SELECT c.nome      AS cliente,
+                   SUM(s.valor_medicao) AS total
+              FROM Contrata ct
+              JOIN Cliente c
+                ON ct.fk_cliente_cnpj_cpf = c.cnpj_cpf
+              JOIN Servico s
+                ON s.id = ct.nota_fiscal
+             WHERE YEAR(s.data_emissao_medicao) = ?
+             GROUP BY c.nome
+             ORDER BY total DESC
+             LIMIT 5
+        """;
+
+        Map<String, BigDecimal> top = new LinkedHashMap<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, ano);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String cliente = rs.getString("cliente");
+                    BigDecimal total = rs.getBigDecimal("total");
+                    top.put(cliente, total);
+                }
+            }
+        }
+        return top;
+    }
 }
