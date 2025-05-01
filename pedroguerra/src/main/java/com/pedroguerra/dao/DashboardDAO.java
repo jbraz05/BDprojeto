@@ -4,7 +4,9 @@ import com.pedroguerra.config.ConnectionFactory;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardDAO {
@@ -239,4 +241,21 @@ public class DashboardDAO {
         return resultado;
     }
     
+    public List<Integer> getAnosComServico() throws SQLException {
+        String sql = """
+            SELECT DISTINCT YEAR(data_emissao_medicao) AS ano
+            FROM Servico
+            WHERE data_emissao_medicao IS NOT NULL
+            ORDER BY ano
+        """;
+        List<Integer> anos = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                anos.add(rs.getInt("ano"));
+            }
+        }
+        return anos;
+    }
 }

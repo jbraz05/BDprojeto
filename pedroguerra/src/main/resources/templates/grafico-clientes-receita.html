@@ -7,7 +7,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Top 5 Clientes por Receita em <span th:text="${ano}"></span></h1>
+    <h1>
+        Top 5 Clientes por Receita em
+        <form th:action="@{/dashboards/clientes-receita}" method="get" style="display:inline;">
+          <select name="ano" onchange="this.form.submit()"
+                  style="background: transparent; color: #f2f5f7; border: 1px solid #f2f5f7;
+                         padding: 0.2em 0.4em; font-size: 1em;">
+            <option th:each="ano : ${anosDisponiveis}"
+                    th:value="${ano}"
+                    th:text="${ano}"
+                    th:selected="${ano} == ${anoSelecionado}">
+            </option>
+          </select>
+        </form>
+    </h1>    
+
     <canvas id="clientesReceitaChart" width="600" height="300"></canvas>
 
     <script th:inline="javascript">

@@ -4,6 +4,7 @@ import com.pedroguerra.dao.DashboardDAO;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardService {
@@ -42,4 +43,7 @@ public class DashboardService {
         return dao.getCepsMaisUsadosEmServicos();
     }
     
+    public List<Integer> buscarAnosComServico() throws SQLException {
+        return dao.getAnosComServico();
+    }
 }
