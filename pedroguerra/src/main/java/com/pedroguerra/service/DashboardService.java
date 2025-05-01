@@ -3,7 +3,6 @@ package com.pedroguerra.service;
 import com.pedroguerra.dao.DashboardDAO;
 
 import java.math.BigDecimal;
-import java.time.Year;
 import java.sql.SQLException;
 import java.util.Map;
 
