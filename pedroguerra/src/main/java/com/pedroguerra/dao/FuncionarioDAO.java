@@ -303,11 +303,38 @@ public class FuncionarioDAO {
                 // 6. Apaga contato ANTES de remover o funcionário
                 contatoDAO.remover("CTF_" + matricula, conn);
     
-                // 7. Apaga o funcionário
+                // 7. Salva o CEP antes de apagar o funcionário
+                String cep = null;
+                try (PreparedStatement cepStmt = conn.prepareStatement(
+                        "SELECT fk_endereco_cep FROM Funcionario WHERE matricula = ?")) {
+                    cepStmt.setString(1, matricula);
+                    ResultSet rsCep = cepStmt.executeQuery();
+                    if (rsCep.next()) {
+                        cep = rsCep.getString("fk_endereco_cep");
+                    }
+                }
+    
+                // 8. Apaga o funcionário
                 try (PreparedStatement stmt = conn.prepareStatement(
                         "DELETE FROM Funcionario WHERE matricula = ?")) {
                     stmt.setString(1, matricula);
                     stmt.executeUpdate();
+                }
+    
+                // 9. Se o CEP não for mais usado por ninguém, remove o endereço
+                if (cep != null) {
+                    try (PreparedStatement checkStmt = conn.prepareStatement(
+                            "SELECT COUNT(*) FROM Funcionario WHERE fk_endereco_cep = ?")) {
+                        checkStmt.setString(1, cep);
+                        ResultSet rs = checkStmt.executeQuery();
+                        if (rs.next() && rs.getInt(1) == 0) {
+                            try (PreparedStatement deleteEnderecoStmt = conn.prepareStatement(
+                                    "DELETE FROM Endereco WHERE cep = ?")) {
+                                deleteEnderecoStmt.setString(1, cep);
+                                deleteEnderecoStmt.executeUpdate();
+                            }
+                        }
+                    }
                 }
     
                 conn.commit();
@@ -319,6 +346,7 @@ public class FuncionarioDAO {
             }
         }
     }
+    
     
     
 
@@ -508,10 +536,37 @@ public class FuncionarioDAO {
             // 6. Apaga contato
             contatoDAO.remover("CTF_" + matricula, conn);
     
-            // 7. Apaga funcionário
+            // 7. Salva o CEP antes de apagar o funcionário
+            String cep = null;
+            try (PreparedStatement cepStmt = conn.prepareStatement(
+                    "SELECT fk_endereco_cep FROM Funcionario WHERE matricula = ?")) {
+                cepStmt.setString(1, matricula);
+                ResultSet rsCep = cepStmt.executeQuery();
+                if (rsCep.next()) {
+                    cep = rsCep.getString("fk_endereco_cep");
+                }
+            }
+    
+            // 8. Apaga funcionário
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
                 stmt.setString(1, matricula);
                 stmt.executeUpdate();
+            }
+    
+            // 9. Remove endereço se não for mais usado
+            if (cep != null) {
+                try (PreparedStatement checkStmt = conn.prepareStatement(
+                        "SELECT COUNT(*) FROM Funcionario WHERE fk_endereco_cep = ?")) {
+                    checkStmt.setString(1, cep);
+                    ResultSet rs = checkStmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) == 0) {
+                        try (PreparedStatement deleteEnderecoStmt = conn.prepareStatement(
+                                "DELETE FROM Endereco WHERE cep = ?")) {
+                            deleteEnderecoStmt.setString(1, cep);
+                            deleteEnderecoStmt.executeUpdate();
+                        }
+                    }
+                }
             }
     
             conn.commit();
@@ -522,6 +577,7 @@ public class FuncionarioDAO {
             conn.setAutoCommit(autoCommitOriginal); // Restaura estado anterior da conexão
         }
     }
+    
     
     
 }
