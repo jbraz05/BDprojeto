@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CEPs Mais Usados em Serviços</title>
+    <link rel="stylesheet" href="/graficos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Top 10 CEPs Mais Presentes em Serviços</h1>
+    <canvas id="cepsChart" width="600" height="300"></canvas>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const labels = /*[[${ceps.keySet()}]]*/ [];
+        const dados  = /*[[${ceps.values()}]]*/ [];
+
+        const ctx = document.getElementById('cepsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Participações em Serviços',
+                    data: dados,
+                    backgroundColor: '#ff9800'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#f2f5f7' }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.formattedValue} participações`
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Frequência de CEPs nas Entidades Relacionadas aos Serviços',
+                        color: '#f2f5f7'
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#f2f5f7' },
+                        grid: { color: '#555555' }
+                    },
+                    y: {
+                        ticks: { color: '#f2f5f7' },
+                        grid: { color: '#555555' }
+                    }
+                }
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

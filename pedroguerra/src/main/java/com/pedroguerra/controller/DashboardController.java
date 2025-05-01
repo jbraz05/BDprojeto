@@ -72,4 +72,12 @@ public class DashboardController {
         model.addAttribute("mediaSalario", mediaSalario);
         return "grafico-salario-funcao";
     }
+
+    @GetMapping("/dashboards/ceps-mais-usados")
+public String cepsMaisUsados(Model model) throws SQLException {
+    Map<String, Integer> dados = dashboardService.buscarCepsMaisUsadosEmServicos();
+    model.addAttribute("ceps", dados);
+    return "grafico-ceps";
+}
+
 }

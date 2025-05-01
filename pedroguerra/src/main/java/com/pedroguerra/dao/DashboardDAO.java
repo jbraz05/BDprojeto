@@ -200,4 +200,43 @@ public class DashboardDAO {
         }
         return medias;
     }
+
+
+    public Map<String, Integer> getCepsMaisUsadosEmServicos() throws SQLException {
+        String sql = """
+            SELECT cep, COUNT(*) AS total FROM (
+                SELECT e.cep FROM Servico s
+                JOIN Possui p ON s.id = p.fk_servico_id
+                JOIN Empresa emp ON emp.cnpj = p.fk_empresa_cnpj
+                JOIN Endereco e ON e.cep = emp.fk_endereco_cep
+    
+                UNION ALL
+    
+                SELECT e.cep FROM Servico s
+                JOIN Funcionario f ON f.matricula = s.fk_funcionario_matricula
+                JOIN Endereco e ON e.cep = f.fk_endereco_cep
+    
+                UNION ALL
+    
+                SELECT e.cep FROM Servico s
+                JOIN Contrata c ON c.nota_fiscal = s.id
+                JOIN Cliente cli ON cli.cnpj_cpf = c.fk_cliente_cnpj_cpf
+                JOIN Endereco e ON e.cep = cli.fk_endereco_cep
+            ) AS ceps_total
+            GROUP BY cep
+            ORDER BY total DESC
+            LIMIT 10
+        """;
+    
+        Map<String, Integer> resultado = new LinkedHashMap<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                resultado.put(rs.getString("cep"), rs.getInt("total"));
+            }
+        }
+        return resultado;
+    }
+    
 }

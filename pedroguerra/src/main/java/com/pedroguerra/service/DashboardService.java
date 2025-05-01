@@ -37,4 +37,9 @@ public class DashboardService {
     public Map<String, BigDecimal> buscarMediaSalarioPorFuncao() throws SQLException {
         return dao.getMediaSalarioPorFuncao();
     }
+
+    public Map<String, Integer> buscarCepsMaisUsadosEmServicos() throws SQLException {
+        return dao.getCepsMaisUsadosEmServicos();
+    }
+    
 }
