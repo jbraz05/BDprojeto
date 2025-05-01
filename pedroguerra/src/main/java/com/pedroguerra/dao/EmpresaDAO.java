@@ -48,6 +48,17 @@ public class EmpresaDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
             conn.setAutoCommit(false);
             try {
+                // 1. Buscar o CEP da empresa
+                String cep = null;
+                try (PreparedStatement stmt = conn.prepareStatement("SELECT fk_endereco_cep FROM Empresa WHERE cnpj = ?")) {
+                    stmt.setString(1, cnpj);
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        cep = rs.getString("fk_endereco_cep");
+                    }
+                }
+    
+                // 2. Buscar serviços da empresa
                 List<String> idsServicos = new ArrayList<>();
                 try (PreparedStatement stmt = conn.prepareStatement("SELECT fk_Servico_id FROM Possui WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
@@ -56,7 +67,8 @@ public class EmpresaDAO {
                         idsServicos.add(rs.getString("fk_Servico_id"));
                     }
                 }
-
+    
+                // 3. Apagar dependências dos serviços
                 for (String idServico : idsServicos) {
                     try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM VooPanoramico WHERE fk_Servico_id = ?")) {
                         stmt.setString(1, idServico);
@@ -79,29 +91,55 @@ public class EmpresaDAO {
                         stmt.executeUpdate();
                     }
                 }
-
+    
+                // 4. Apagar vínculos com a empresa
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
-
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Atua WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
-
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Empresa_cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
-
+    
+                // 5. Apagar empresa
                 try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Empresa WHERE cnpj = ?")) {
                     stmt.setString(1, cnpj);
                     stmt.executeUpdate();
                 }
-
+    
+                // 6. Apagar contato
                 contatoDAO.remover("CTE_" + cnpj, conn);
+    
+                
+                // 7. Verificar se o endereço está sendo usado por alguém
+                if (cep != null) {
+                    try (PreparedStatement checkStmt = conn.prepareStatement("""
+                        SELECT (
+                            (SELECT COUNT(*) FROM Empresa WHERE fk_endereco_cep = ?) +
+                            (SELECT COUNT(*) FROM Funcionario WHERE fk_endereco_cep = ?) +
+                            (SELECT COUNT(*) FROM Cliente WHERE fk_endereco_cep = ?)
+                        ) AS total_uso
+                    """)) {
+                        checkStmt.setString(1, cep);
+                        checkStmt.setString(2, cep);
+                        checkStmt.setString(3, cep);
+                        ResultSet rs = checkStmt.executeQuery();
+                        if (rs.next() && rs.getInt("total_uso") == 0) {
+                            try (PreparedStatement deleteEnderecoStmt = conn.prepareStatement(
+                                    "DELETE FROM Endereco WHERE cep = ?")) {
+                                deleteEnderecoStmt.setString(1, cep);
+                                deleteEnderecoStmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
 
+    
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -111,6 +149,7 @@ public class EmpresaDAO {
             }
         }
     }
+    
 
     public EmpresaDTO buscarPorCnpj(String cnpj) throws SQLException {
         String sql = "SELECT e.*, en.rua, en.numero, en.bairro, en.cidade FROM Empresa e JOIN Endereco en ON e.fk_endereco_cep = en.cep WHERE e.cnpj = ?";
