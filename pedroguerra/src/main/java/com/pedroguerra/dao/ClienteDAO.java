@@ -220,11 +220,42 @@ public class ClienteDAO {
     
     // Versão que usa uma conexão existente (não fecha conexão!)
     public void removerPorConexao(String cnpjCpf, Connection conn) throws SQLException {
-        String sql = "DELETE FROM Cliente WHERE cnpj_cpf = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String getCepSQL = "SELECT fk_Endereco_cep FROM Cliente WHERE cnpj_cpf = ?";
+        String deleteClienteSQL = "DELETE FROM Cliente WHERE cnpj_cpf = ?";
+        String checkCepUsoSQL = "SELECT COUNT(*) FROM Cliente WHERE fk_Endereco_cep = ?";
+        String deleteEnderecoSQL = "DELETE FROM Endereco WHERE cep = ?";
+    
+        String cep = null;
+    
+        // 1. Buscar o CEP do cliente antes de apagar
+        try (PreparedStatement cepStmt = conn.prepareStatement(getCepSQL)) {
+            cepStmt.setString(1, cnpjCpf);
+            ResultSet rs = cepStmt.executeQuery();
+            if (rs.next()) {
+                cep = rs.getString("fk_Endereco_cep");
+            }
+        }
+    
+        // 2. Apagar cliente
+        try (PreparedStatement stmt = conn.prepareStatement(deleteClienteSQL)) {
             stmt.setString(1, cnpjCpf);
             stmt.executeUpdate();
         }
+    
+        // 3. Verificar se o endereço ainda está sendo usado
+        if (cep != null) {
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkCepUsoSQL)) {
+                checkStmt.setString(1, cep);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    try (PreparedStatement deleteEnderecoStmt = conn.prepareStatement(deleteEnderecoSQL)) {
+                        deleteEnderecoStmt.setString(1, cep);
+                        deleteEnderecoStmt.executeUpdate();
+                    }
+                }
+            }
+        }
     }
+    
     
 }
