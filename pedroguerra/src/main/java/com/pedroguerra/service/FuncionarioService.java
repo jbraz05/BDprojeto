@@ -1,11 +1,13 @@
 package com.pedroguerra.service;
 
 import com.pedroguerra.dao.FuncionarioDAO;
+import com.pedroguerra.config.ConnectionFactory;
 import com.pedroguerra.dao.ContatoDAO;
 import com.pedroguerra.model.Contato;
 import com.pedroguerra.model.Funcionario;
 import com.pedroguerra.dto.FuncionarioDTO;
-
+import java.sql.Connection;
+g
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,8 +29,11 @@ public class FuncionarioService {
     }
 
     public void removerFuncionario(String matricula) throws SQLException {
-        funcionarioDAO.removerPorMatricula(matricula); 
+    try (Connection conn = ConnectionFactory.getConnection()) {
+        funcionarioDAO.removerPorMatriculaComConexao(matricula, conn);
     }
+}
+
 
     public List<FuncionarioDTO> listarTodos() throws SQLException {
         return funcionarioDAO.listarTodosDTO();
