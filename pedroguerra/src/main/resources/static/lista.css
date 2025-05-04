@@ -216,3 +216,23 @@ table td, table th {
     color: red;
     font-weight: bold;
 }
+
+.alerta-amarelo {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.alerta-operador {
+    color: #ffcc00; 
+    font-weight: bold;
+}
+
+
+
+
