@@ -468,52 +468,28 @@ public class FuncionarioDAO {
         conn.setAutoCommit(false); // Garante transação
     
         try {
-            // 1. Buscar todos os serviços do funcionário
-            List<String> idsServicos = new ArrayList<>();
-            try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM Servico WHERE fk_Funcionario_matricula = ?")) {
+            // 1. Atualizar serviços para desvincular o funcionário
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE Servico SET fk_funcionario_matricula = NULL WHERE fk_funcionario_matricula = ?")) {
                 stmt.setString(1, matricula);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    idsServicos.add(rs.getString("id"));
-                }
+                stmt.executeUpdate();
             }
     
-            // 2. Apagar registros dependentes de cada serviço
-            for (String idServico : idsServicos) {
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM VooPanoramico WHERE fk_Servico_id = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM MapeamentoTradicional WHERE fk_Servico_id = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM RelatorioServico WHERE fk_Servico_id = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Contrata WHERE nota_fiscal = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Possui WHERE fk_Servico_id = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
-                try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Servico WHERE id = ?")) {
-                    stmt.setString(1, idServico);
-                    stmt.executeUpdate();
-                }
+            // 2. Atualizar voos panorâmicos para desvincular o operador de drone
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE VooPanoramico SET fk_operadorDrone_matricula = NULL WHERE fk_operadorDrone_matricula = ?")) {
+                stmt.setString(1, matricula);
+                stmt.executeUpdate();
             }
     
-            // 3. Desvincula subordinados
+            // 3. Desvincular subordinados
             try (PreparedStatement stmt = conn.prepareStatement(
                     "UPDATE Funcionario SET fk_supervisor_matricula = NULL WHERE fk_supervisor_matricula = ?")) {
                 stmt.setString(1, matricula);
                 stmt.executeUpdate();
             }
     
-            // 4. Apaga especializações
+            // 4. Apagar especializações
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Socio WHERE fk_funcionario_matricula = ?")) {
                 stmt.setString(1, matricula);
                 stmt.executeUpdate();
@@ -527,13 +503,13 @@ public class FuncionarioDAO {
                 stmt.executeUpdate();
             }
     
-            // 5. Apaga vínculo com empresa
+            // 5. Apagar vínculo com empresa
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Emprega WHERE fk_funcionario_matricula = ?")) {
                 stmt.setString(1, matricula);
                 stmt.executeUpdate();
             }
     
-            // 6. Apaga contato
+            // 6. Apagar contato
             contatoDAO.remover("CTF_" + matricula, conn);
     
             // 7. Salva o CEP antes de apagar o funcionário
@@ -547,13 +523,13 @@ public class FuncionarioDAO {
                 }
             }
     
-            // 8. Apaga funcionário
+            // 8. Apagar funcionário
             try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Funcionario WHERE matricula = ?")) {
                 stmt.setString(1, matricula);
                 stmt.executeUpdate();
             }
     
-            // 9. Remove endereço se não for mais usado
+            // 9. Remover endereço se não estiver mais em uso
             if (cep != null) {
                 try (PreparedStatement checkStmt = conn.prepareStatement(
                         "SELECT COUNT(*) FROM Funcionario WHERE fk_endereco_cep = ?")) {
@@ -574,9 +550,10 @@ public class FuncionarioDAO {
             conn.rollback();
             throw e;
         } finally {
-            conn.setAutoCommit(autoCommitOriginal); // Restaura estado anterior da conexão
+            conn.setAutoCommit(autoCommitOriginal); // Restaura auto-commit original
         }
     }
+    
     
     
     

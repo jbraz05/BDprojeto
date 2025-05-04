@@ -47,15 +47,26 @@
 
                     <td>
                         <span th:if="${servico.nomeFuncionario != null}"
-                            th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></span>
-                        <span th:if="${servico.nomeFuncionario == null}" class="sem-funcionario">
+                              th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></span>
+                        <span th:unless="${servico.nomeFuncionario != null}" class="sem-funcionario">
                             <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
                         </span>
                     </td>
 
-                    <td th:text="${servico.nomeOperadorDrone != null} ? ${servico.nomeOperadorDrone} : 'Mapeamento Tradicional'"></td>
+                    <td>
+                        <span th:if="${servico.tipo.equalsIgnoreCase('Mapeamento Tradicional')}">
+                            Mapeamento Tradicional
+                        </span>
+                        <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone != null}"
+                              th:text="${servico.nomeOperadorDrone}"></span>
+                        <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone == null}"
+                              class="alerta-operador">
+                            <i class="fas fa-drone"></i> SEM OPERADOR DE DRONE
+                        </span>
+                    </td>
 
-                    <td class="status-col" th:classappend="${servico.feito} ? ' done' : ' pending'"
+                    <td class="status-col"
+                        th:classappend="${servico.feito} ? ' done' : ' pending'"
                         th:text="${servico.feito} ? 'Concluído' : 'Pendente'"></td>
 
                     <td>
