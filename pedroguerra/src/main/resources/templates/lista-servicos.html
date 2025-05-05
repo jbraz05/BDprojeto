@@ -26,6 +26,30 @@
     </div>
 
     <div class="table-container">
+
+        <div class="filtros-avancados">
+            <form method="get" action="/servicos">
+                <input type="hidden" name="filtro" th:value="${filtroSelecionado}" />
+                <label for="empresaSelect">Empresa:</label>
+                <select name="cnpjEmpresa" id="empresaSelect">
+                    <option value="">Todas</option>
+                    <option th:each="empresa : ${empresas}"
+                            th:value="${empresa.cnpj}"
+                            th:text="${empresa.nome}"
+                            th:selected="${empresa.cnpj == empresaSelecionada}"></option>
+                </select>
+        
+                <label for="ordenar">Ordenar por:</label>
+                <select name="sort" id="ordenar">
+                    <option value="">Nenhum</option>
+                    <option value="valor" th:selected="${param.sort == 'valor'}">Valor da Medição</option>
+                    <option value="area" th:selected="${param.sort == 'area'}">Área Abrangida</option>
+                </select>
+        
+                <button type="submit" class="btn">Aplicar</button>
+            </form>
+        </div>
+        
         <table>
             <thead>
                 <tr>
