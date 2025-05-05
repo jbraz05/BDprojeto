@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Receita por Localização</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/home.css">
+</head>
+<body>
+<h1>Localizações que Mais Geram Receita</h1>
+<canvas id="graficoLocalizacao" width="600" height="400"></canvas>
+<a class="btn btn-home-fixed" href="/dashboards">Voltar</a>
+
+<script th:inline="javascript">
+    const dados = /*[[${dados}]]*/ {};
+
+    const labels = Object.keys(dados);
+    const valores = Object.values(dados);
+
+    new Chart(document.getElementById("graficoLocalizacao"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Receita Total (R$)',
+                data: valores,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

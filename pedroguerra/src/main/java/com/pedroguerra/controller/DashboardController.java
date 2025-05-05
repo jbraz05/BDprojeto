@@ -1,14 +1,19 @@
 package com.pedroguerra.controller;
 
+import com.pedroguerra.config.ConnectionFactory;
 import com.pedroguerra.service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.sql.Connection;
 
 import java.math.BigDecimal;
 import java.time.Year;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,6 +93,13 @@ public class DashboardController {
     Map<String, Integer> dados = dashboardService.buscarCepsMaisUsadosEmServicos();
     model.addAttribute("ceps", dados);
     return "grafico-ceps";
+}
+
+@GetMapping("/dashboards/receita-localizacao")
+public String receitaPorLocalizacao(Model model) throws SQLException {
+    Map<String, BigDecimal> dados = dashboardService.buscarReceitaPorLocalizacao();
+    model.addAttribute("dados", dados);
+    return "grafico-localizacao";
 }
 
 
