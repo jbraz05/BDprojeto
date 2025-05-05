@@ -71,9 +71,21 @@
                 <td th:text="${func.bairroEndereco}"></td>
                 <td th:text="${func.cidadeEndereco}"></td>
                 <td th:text="${func.fkEnderecoCep}"></td>
-                <td th:text="${func.socio ? 'Sim' : 'Não'}"></td>
-                <td th:text="${func.engenheiro ? 'Sim' : 'Não'}"></td>
-                <td th:text="${func.operadorDrone ? 'Sim' : 'Não'}"></td>
+        
+                <!-- Ícones com cor para status -->
+                <td>
+                    <i class="fas fa-check" style="color: green;" th:if="${func.socio}"></i>
+                    <i class="fas fa-times" style="color: red;" th:if="${!func.socio}"></i>
+                </td>
+                <td>
+                    <i class="fas fa-check" style="color: green;" th:if="${func.engenheiro}"></i>
+                    <i class="fas fa-times" style="color: red;" th:if="${!func.engenheiro}"></i>
+                </td>
+                <td>
+                    <i class="fas fa-check" style="color: green;" th:if="${func.operadorDrone}"></i>
+                    <i class="fas fa-times" style="color: red;" th:if="${!func.operadorDrone}"></i>
+                </td>
+        
                 <td>
                     <form th:action="@{/editar-funcionario}" method="get" class="action-form">
                         <input type="hidden" name="matricula" th:value="${func.matricula}" />
@@ -87,6 +99,7 @@
                 </td>
             </tr>
         </tbody>
+        
     </table>
 
     <div class="footer">
