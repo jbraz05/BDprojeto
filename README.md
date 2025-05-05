@@ -15,7 +15,7 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <summary>Modelo Conceitual</summary>
 
-  ![image](https://github.com/user-attachments/assets/80ed9b1a-24a0-4b4a-9b58-19ba422366e8)
+  ![image](https://github.com/user-attachments/assets/01a731f7-5a84-47ba-9e28-92fd4b0f3b14)
 
 </details>
 
@@ -23,7 +23,7 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <summary>Modelo Lógico</summary>
 
-  ![image](https://github.com/user-attachments/assets/a5f0c0eb-b674-471c-b488-f7be48826811)
+  ![image](https://github.com/user-attachments/assets/73659db8-00df-4625-a2f6-8bd6005db408)
 
 </details>
 
