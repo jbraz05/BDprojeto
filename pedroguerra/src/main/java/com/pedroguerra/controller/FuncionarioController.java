@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Comparator;
 
 @Controller
 public class FuncionarioController {
@@ -79,19 +80,44 @@ public class FuncionarioController {
     }
 
     @GetMapping("/funcionarios")
-    public String listarFuncionarios(@RequestParam(required = false) String cnpj, Model model) {
-        try {
-            List<FuncionarioDTO> funcionarios = (cnpj != null && !cnpj.isEmpty())
-                    ? service.listarFuncionariosPorEmpresaDTO(cnpj)
-                    : service.listarTodos();
-    
-            model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
-            model.addAttribute("funcionarios", funcionarios);
-            return "lista-funcionarios";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao listar funcionários", e);
+public String listarFuncionarios(@RequestParam(required = false) String cnpj,
+                                 @RequestParam(required = false) String sort,
+                                 Model model) {
+    try {
+        List<FuncionarioDTO> funcionarios;
+
+        if (cnpj != null && !cnpj.isEmpty()) {
+            funcionarios = service.listarFuncionariosPorEmpresaDTO(cnpj);
+        } else {
+            funcionarios = service.listarTodos();
         }
+
+        if ("nome".equals(sort)) {
+            funcionarios.sort(Comparator.comparing(FuncionarioDTO::getNome, String.CASE_INSENSITIVE_ORDER));
+        } else if ("salario".equals(sort)) {
+            funcionarios.sort(Comparator.comparing(FuncionarioDTO::getSalario));
+        }
+
+        model.addAttribute("empresas", empresaDAO.listarTodasComLocalizacao());
+        model.addAttribute("funcionarios", funcionarios);
+        return "lista-funcionarios";
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Erro ao listar funcionários", e);
     }
+}
+
+
+
+    @GetMapping("/funcionarios/por-empresa")
+@ResponseBody
+public List<FuncionarioDTO> buscarFuncionariosPorEmpresa(@RequestParam String cnpj) {
+    try {
+        return service.listarFuncionariosPorEmpresaDTO(cnpj);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return List.of();
+    }
+}
 
 }
