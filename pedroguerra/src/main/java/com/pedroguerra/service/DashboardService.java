@@ -46,4 +46,11 @@ public class DashboardService {
     public List<Integer> buscarAnosComServico() throws SQLException {
         return dao.getAnosComServico();
     }
+
+    public Map<String, BigDecimal> buscarReceitaPorLocalizacao() throws SQLException {
+        return dao.getReceitaPorLocalizacao();
+    }
+    
+    
+//tmnc becker braz e caminha    
 }

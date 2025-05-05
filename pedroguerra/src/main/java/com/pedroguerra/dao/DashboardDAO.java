@@ -258,4 +258,28 @@ public class DashboardDAO {
         }
         return anos;
     }
+
+    public Map<String, BigDecimal> getReceitaPorLocalizacao() throws SQLException {
+        String sql = """
+            SELECT CONCAT(l.nome_estado, ', ', l.nome_pais) AS localizacao,
+                   SUM(s.valor_medicao) AS total
+            FROM Servico s
+            JOIN Possui p ON s.id = p.fk_servico_id
+            JOIN LocalizacaoAtuacao l ON p.fk_localizacao_atuacao_codigo = l.codigo
+            GROUP BY l.nome_estado, l.nome_pais
+            ORDER BY total DESC
+        """;
+    
+        Map<String, BigDecimal> resultado = new LinkedHashMap<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                resultado.put(rs.getString("localizacao"), rs.getBigDecimal("total"));
+            }
+        }
+        return resultado;
+    }
+    
+    
 }
