@@ -76,16 +76,24 @@ public class EmpresaController {
     }
 
     @GetMapping("/empresa/listar")
-    public String listarEmpresas(Model model) {
-        try {
-            List<EmpresaDTO> empresas = empresaService.listarTodasComLocalizacao();
-            model.addAttribute("empresas", empresas);
-            return "lista-empresas";
-        } catch (SQLException e) {
-            model.addAttribute("erro", "Erro ao listar empresas: " + e.getMessage());
-            return "lista-empresas";
+public String listarEmpresas(@RequestParam(required = false) String ordenarPor, Model model) {
+    try {
+        List<EmpresaDTO> empresas;
+        if ("nome".equalsIgnoreCase(ordenarPor)) {
+            empresas = empresaService.listarOrdenadoPorNome();
+        } else if ("capital".equalsIgnoreCase(ordenarPor)) {
+            empresas = empresaService.listarOrdenadoPorCapital();
+        } else {
+            empresas = empresaService.listarTodasComLocalizacao();
         }
+        model.addAttribute("empresas", empresas);
+        return "lista-empresas";
+    } catch (SQLException e) {
+        model.addAttribute("erro", "Erro ao listar empresas: " + e.getMessage());
+        return "lista-empresas";
     }
+}
+
 
     @PostMapping("/empresa/remover")
     public String removerEmpresa(@RequestParam String cnpj, Model model) {

@@ -167,4 +167,13 @@ public class EmpresaService {
     public List<Contato> listarContatos(String cnpj) throws SQLException {
         return contatoDAO.listarPorEmpresa(cnpj);
     }
+
+    public List<EmpresaDTO> listarOrdenadoPorNome() throws SQLException {
+        return empresaDAO.listarTodasComLocalizacaoOrdenado("nome");
+    }
+    
+    public List<EmpresaDTO> listarOrdenadoPorCapital() throws SQLException {
+        return empresaDAO.listarTodasComLocalizacaoOrdenado("capital_social");
+    }
+    
 }

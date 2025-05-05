@@ -239,4 +239,56 @@ public class EmpresaDAO {
         }
         return lista;
     }
+
+
+    public List<EmpresaDTO> listarTodasComLocalizacaoOrdenado(String campoOrdenacao) throws SQLException {
+        List<EmpresaDTO> lista = new ArrayList<>();
+        String baseSql = """
+            SELECT e.cnpj, e.nome, e.capital_social,
+                   en.cep, en.rua, en.numero, en.bairro, en.cidade,
+                   l.nome_estado, l.nome_pais, l.regiao
+            FROM Empresa e
+            JOIN Endereco en ON e.fk_endereco_cep = en.cep
+            LEFT JOIN Atua a ON e.cnpj = a.fk_Empresa_cnpj
+            LEFT JOIN LocalizacaoAtuacao l ON l.codigo = a.fk_Localizacao_Atuacao_codigo
+        """;
+    
+        // Proteção contra SQL Injection - só aceita essas duas colunas
+        if ("nome".equalsIgnoreCase(campoOrdenacao)) {
+            baseSql += " ORDER BY e.nome ASC";
+        } else if ("capital_social".equalsIgnoreCase(campoOrdenacao)) {
+            baseSql += " ORDER BY e.capital_social DESC";
+        }
+    
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(baseSql);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                EmpresaDTO dto = new EmpresaDTO();
+                dto.setCnpj(rs.getString("cnpj"));
+                dto.setNome(rs.getString("nome"));
+                dto.setCapitalSocial(rs.getBigDecimal("capital_social"));
+                dto.setCep(rs.getString("cep"));
+                dto.setRua(rs.getString("rua"));
+                dto.setNumero(rs.getInt("numero"));
+                dto.setBairro(rs.getString("bairro"));
+                dto.setCidade(rs.getString("cidade"));
+                dto.setNomeEstado(rs.getString("nome_estado"));
+                dto.setNomePais(rs.getString("nome_pais"));
+                dto.setRegiao(rs.getString("regiao"));
+    
+                List<Contato> contatos = contatoDAO.listarPorEmpresa(dto.getCnpj());
+                for (Contato c : contatos) {
+                    dto.setEmail(c.getEmail());
+                    dto.setTelefone(c.getTelefone());
+                }
+    
+                lista.add(dto);
+            }
+        }
+    
+        return lista;
+    }
+    
 }
