@@ -181,24 +181,56 @@ public class ServicoController {
     }
 
     @GetMapping("/servicos")
-public String listarServicos(@RequestParam(required = false, defaultValue = "todos") String filtro, Model model) {
-    try {
-        List<ServicoDTO> todos = servicoService.listarTodosDTO();
-
-        List<ServicoDTO> filtrados = switch (filtro.toLowerCase()) {
-            case "concluidos" -> todos.stream().filter(ServicoDTO::isFeito).toList();
-            case "pendentes" -> todos.stream().filter(s -> !s.isFeito()).toList();
-            default -> todos;
-        };
-
-        model.addAttribute("servicos", filtrados);
-        model.addAttribute("filtroSelecionado", filtro.toLowerCase());
-        return "lista-servicos";
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Erro ao listar serviços", e);
+    public String listarServicos(@RequestParam(required = false, defaultValue = "todos") String filtro,
+                                 @RequestParam(required = false) String sort,
+                                 @RequestParam(required = false) String cnpjEmpresa,
+                                 Model model) {
+        try {
+            List<ServicoDTO> todos = servicoService.listarTodosDTO();
+    
+            // Filtro por status
+            List<ServicoDTO> filtrados = switch (filtro.toLowerCase()) {
+                case "concluidos" -> todos.stream().filter(ServicoDTO::isFeito).toList();
+                case "pendentes" -> todos.stream().filter(s -> !s.isFeito()).toList();
+                default -> todos;
+            };
+    
+            // Filtro por empresa
+            if (cnpjEmpresa != null && !cnpjEmpresa.isEmpty()) {
+                filtrados = filtrados.stream()
+                    .filter(s -> {
+                        try {
+                            String[] empresaAtuacao = servicoService.buscarEmpresaEAtuacaoDoServico(s.getId());
+                            return empresaAtuacao != null && cnpjEmpresa.equals(empresaAtuacao[0]);
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    })
+                    .toList();
+            }
+    
+            // Ordenação
+            if ("valor".equals(sort)) {
+                filtrados = filtrados.stream()
+                    .sorted((a, b) -> a.getValorMedicao().compareTo(b.getValorMedicao()))
+                    .toList();
+            } else if ("area".equals(sort)) {
+                filtrados = filtrados.stream()
+                    .sorted((a, b) -> a.getArea().compareTo(b.getArea()))
+                    .toList();
+            }
+    
+            model.addAttribute("servicos", filtrados);
+            model.addAttribute("filtroSelecionado", filtro.toLowerCase());
+            model.addAttribute("empresas", empresaService.listarTodas());
+            model.addAttribute("empresaSelecionada", cnpjEmpresa);
+            return "lista-servicos";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar serviços", e);
+        }
     }
-}
+    
 
     @GetMapping("/servico/relatorio")
     public String verRelatorio(@RequestParam String id, Model model) {
