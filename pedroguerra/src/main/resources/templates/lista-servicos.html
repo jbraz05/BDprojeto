@@ -58,6 +58,8 @@
                     <th>Tipo</th>
                     <th>Funcionário</th>
                     <th>Operador/Voo</th>
+                    <th>Valor da Medição (R$)</th>
+                    <th>Área Abrangida</th>
                     <th>Status</th>
                     <th>Relatório</th>
                     <th>Ações</th>
@@ -78,9 +80,7 @@
                     </td>
 
                     <td>
-                        <span th:if="${servico.tipo.equalsIgnoreCase('Mapeamento Tradicional')}">
-                            Mapeamento Tradicional
-                        </span>
+                        <span th:if="${servico.tipo.equalsIgnoreCase('Mapeamento Tradicional')}">-</span>
                         <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone != null}"
                               th:text="${servico.nomeOperadorDrone}"></span>
                         <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone == null}"
@@ -88,6 +88,9 @@
                             <i class="fas fa-drone"></i> SEM OPERADOR DE DRONE
                         </span>
                     </td>
+
+                    <td th:text="'R$ ' + ${#numbers.formatDecimal(servico.valorMedicao, 2, 'COMMA', 2, 'POINT')}"></td>
+                    <td th:text="${servico.area} + ' m²'"></td>
 
                     <td class="status-col"
                         th:classappend="${servico.feito} ? ' done' : ' pending'"
