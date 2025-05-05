@@ -212,13 +212,14 @@ public class ServicoController {
             // Ordenação
             if ("valor".equals(sort)) {
                 filtrados = filtrados.stream()
-                    .sorted((a, b) -> a.getValorMedicao().compareTo(b.getValorMedicao()))
+                    .sorted((a, b) -> b.getValorMedicao().compareTo(a.getValorMedicao())) // ordem decrescente
                     .toList();
             } else if ("area".equals(sort)) {
                 filtrados = filtrados.stream()
-                    .sorted((a, b) -> a.getArea().compareTo(b.getArea()))
+                    .sorted((a, b) -> b.getArea().compareTo(a.getArea())) // ordem decrescente
                     .toList();
             }
+            
     
             model.addAttribute("servicos", filtrados);
             model.addAttribute("filtroSelecionado", filtro.toLowerCase());
