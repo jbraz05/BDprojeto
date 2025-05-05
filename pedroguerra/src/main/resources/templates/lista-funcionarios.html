@@ -14,16 +14,33 @@
         <label for="empresa">Filtrar por Empresa:</label>
         <select name="cnpj" id="empresa">
             <option value="">Todas</option>
-            <option th:each="empresa : ${empresas}" th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+            <option th:each="empresa : ${empresas}" th:value="${empresa.cnpj}"
+                    th:text="${empresa.nome}" th:selected="${param.cnpj} == ${empresa.cnpj}">
+            </option>
         </select>
         <button type="submit" class="filter-btn">Filtrar</button>
     </form>
+
+    <div class="sort-buttons">
+        <form method="get" action="/funcionarios" style="display:inline">
+            <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
+            <input type="hidden" name="sort" value="nome" />
+            <button type="submit" class="btn">Ordenar por Nome</button>
+        </form>
+
+        <form method="get" action="/funcionarios" style="display:inline">
+            <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
+            <input type="hidden" name="sort" value="salario" />
+            <button type="submit" class="btn">Ordenar por Salário</button>
+        </form>
+    </div>
 
     <table>
         <thead>
             <tr>
                 <th>Matrícula</th>
                 <th>Nome</th>
+                <th>Salário</th>
                 <th>Contato</th>
                 <th>Supervisor</th>
                 <th>Empresa</th>
@@ -42,6 +59,7 @@
             <tr th:each="func : ${funcionarios}">
                 <td th:text="${func.matricula}"></td>
                 <td th:text="${func.nome}"></td>
+                <td th:text="${func.salario}"></td>
                 <td>
                     <span th:text="'Email: ' + ${func.email}"></span><br/>
                     <span th:text="'Telefone: ' + ${func.telefone}"></span>
@@ -57,21 +75,20 @@
                 <td th:text="${func.engenheiro ? 'Sim' : 'Não'}"></td>
                 <td th:text="${func.operadorDrone ? 'Sim' : 'Não'}"></td>
                 <td>
-                <form th:action="@{/editar-funcionario}" method="get" class="action-form">
-                    <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                    <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                </form>
-                <form th:action="@{/remover-funcionario}" method="post" class="action-form"
-                      onsubmit="return confirm('Tem certeza que deseja remover este funcionário?');">
-                    <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                    <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
-                </form>
-            </td>
+                    <form th:action="@{/editar-funcionario}" method="get" class="action-form">
+                        <input type="hidden" name="matricula" th:value="${func.matricula}" />
+                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form th:action="@{/remover-funcionario}" method="post" class="action-form"
+                          onsubmit="return confirm('Tem certeza que deseja remover este funcionário?');">
+                        <input type="hidden" name="matricula" th:value="${func.matricula}" />
+                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>
 
-    
     <div class="footer">
         <a href="/" class="btn home-btn">Voltar para Home</a>
         <a class="btn" href="/funcionario">Cadastrar Novo Funcionário</a>

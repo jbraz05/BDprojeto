@@ -6,65 +6,101 @@
     <link rel="stylesheet" href="/cadastro.css">
 </head>
 <body>
-    <div class="form-container">
-        <h1>Cadastrar Funcionário</h1>
+<div class="form-container">
+    <h1 th:text="${funcionario.matricula != null ? 'Editar Funcionário' : 'Cadastrar Funcionário'}"></h1>
 
-        <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
-            <label>Matrícula:</label>
-            <input type="text" th:field="*{matricula}" th:readonly="${funcionario.matricula != null}" required />
+    <form th:action="@{/salvar-funcionario}" th:object="${funcionario}" method="post">
+        <label>Matrícula:</label>
+        <input type="text" th:field="*{matricula}" th:readonly="${funcionario.matricula != null}" required />
 
-            <label>Nome:</label>
-            <input type="text" th:field="*{nome}" required />
+        <label>Nome:</label>
+        <input type="text" th:field="*{nome}" required />
 
-            <label>Salário:</label>
-            <input type="number" step="0.01" th:field="*{salario}" required />
+        <label>Salário:</label>
+        <input type="number" step="0.01" th:field="*{salario}" required />
 
-            <label>Email:</label>
-            <input type="email" th:field="*{email}" required />
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required />
 
-            <label>Telefone:</label>
-            <input type="text" th:field="*{telefone}" required />
-        
-            <label>CEP:</label>
-            <input type="text" th:field="*{fkEnderecoCep}" required />
+        <label>Telefone:</label>
+        <input type="text" th:field="*{telefone}" required />
 
-            <label>Rua:</label>
-            <input type="text" th:field="*{ruaEndereco}" required />
+        <label>CEP:</label>
+        <input type="text" th:field="*{fkEnderecoCep}" required />
 
-            <label>Número:</label>
-            <input type="text" th:field="*{numeroEndereco}" required />
+        <label>Rua:</label>
+        <input type="text" th:field="*{ruaEndereco}" required />
 
-            <label>Bairro:</label>
-            <input type="text" th:field="*{bairroEndereco}" required />
+        <label>Número:</label>
+        <input type="text" th:field="*{numeroEndereco}" required />
 
-            <label>Cidade:</label>
-            <input type="text" th:field="*{cidadeEndereco}" required />
+        <label>Bairro:</label>
+        <input type="text" th:field="*{bairroEndereco}" required />
 
-            <label>Supervisor (Matrícula):</label>
-            <input type="text" th:field="*{fkSupervisorMatricula}" />
+        <label>Cidade:</label>
+        <input type="text" th:field="*{cidadeEndereco}" required />
 
-            <label>Tipo de Funcionário:</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" th:field="*{socio}" /> Sócio</label>
-                <label><input type="checkbox" th:field="*{engenheiro}" /> Engenheiro</label>
-                <label><input type="checkbox" th:field="*{operadorDrone}" /> Operador de Drone</label>
-            </div>
+        <label>Empresa:</label>
+        <select id="empresaSelect" th:field="*{cnpjEmpresa}" onchange="carregarSupervisores(this.value)" required>
+            <option value="">-- Selecione uma empresa --</option>
+            <th:block th:each="empresa : ${empresas}">
+                <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
+            </th:block>
+        </select>
 
-            <label>Empresa:</label>
-            <select th:field="*{cnpjEmpresa}" required>
-                <option value="">-- Selecione uma empresa --</option>
-                <th:block th:each="empresa : ${empresas}">
-                    <option th:value="${empresa.cnpj}" th:text="${empresa.nome}"></option>
-                </th:block>
-            </select>
+        <label>Supervisor:</label>
+        <select id="supervisorSelect" th:field="*{fkSupervisorMatricula}">
+            <option value="">-- Selecione um supervisor --</option>
+        </select>
 
-            <div class="buttons">
-                <a th:href="@{/}" class="button-link">
-                    <button type="button" class="back-btn">Voltar para Home</button>
-                </a>
-                <button type="submit" class="submit-btn">Cadastrar</button>
-            </div>
-        </form>
-    </div>
+        <label>Tipo de Funcionário:</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" th:field="*{socio}" /> Sócio</label>
+            <label><input type="checkbox" th:field="*{engenheiro}" /> Engenheiro</label>
+            <label><input type="checkbox" th:field="*{operadorDrone}" /> Operador de Drone</label>
+        </div>
+
+        <div class="buttons">
+            <a th:href="@{/}" class="button-link">
+                <button type="button" class="back-btn">Voltar para Home</button>
+            </a>
+            <button type="submit" class="submit-btn">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function carregarSupervisores(cnpj) {
+    const supervisorSelect = document.getElementById('supervisorSelect');
+    const matriculaAtual = document.querySelector('[name="matricula"]').value;
+    supervisorSelect.innerHTML = '<option value="">Carregando...</option>';
+
+    fetch(`/funcionarios/por-empresa?cnpj=${cnpj}`)
+        .then(response => response.json())
+        .then(data => {
+            supervisorSelect.innerHTML = '<option value="">-- Selecione um supervisor --</option>';
+            data.forEach(func => {
+                if (func.matricula !== matriculaAtual) {
+                    const option = document.createElement('option');
+                    option.value = func.matricula;
+                    option.text = `${func.nome} (${func.matricula})`;
+                    supervisorSelect.appendChild(option);
+                }
+            });
+        })
+        .catch(() => {
+            supervisorSelect.innerHTML = '<option value="">Erro ao carregar supervisores</option>';
+        });
+}
+
+
+    // Se estiver editando e já tiver uma empresa selecionada, carregar os supervisores
+    window.addEventListener('DOMContentLoaded', () => {
+        const empresaSelect = document.getElementById('empresaSelect');
+        if (empresaSelect.value) {
+            carregarSupervisores(empresaSelect.value);
+        }
+    });
+</script>
 </body>
 </html>
