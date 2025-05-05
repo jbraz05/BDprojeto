@@ -61,3 +61,18 @@ header {
     text-align: center;
     margin-top: 1rem;
 }
+
+.btn-home-fixed {
+    border-radius: 6px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 20px;
+    left: 5%;
+    transform: translateX(-50%);
+    background-color: #6c757d;
+    z-index: 1000;
+}
+
+.btn-home-fixed:hover {
+    background-color: #495057;
+}
