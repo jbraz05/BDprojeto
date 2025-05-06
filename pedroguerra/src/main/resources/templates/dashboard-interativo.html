@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard Interativo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+    <h1>Dashboard Interativo</h1>
+
+    <form method="post" th:action="@{/dashboard-interativo}">
+        <label>Escolha a entidade:</label>
+        <select name="entidade">
+            <option value="empresa">Empresa</option>
+            <option value="cliente">Cliente</option>
+        </select>
+        <button type="submit">Gerar Gráfico</button>
+    </form>
+
+    <div th:if="${dados}">
+        <canvas id="grafico"></canvas>
+
+        <!-- Dados como JSON usando th:utext -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            /* Define os dados como um objeto JavaScript */
+            let rawData = /*[[${dados}]]*/ {};
+            let labels = Object.keys(rawData);
+            let valores = Object.values(rawData);
+
+            new Chart(document.getElementById('grafico'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Valor total (R$)',
+                        data: valores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        title: {
+                            display: true,
+                            text: 'Receita por [[${tipoSelecionado}]]'
+                        }
+                    }
+                }
+            });
+            /*]]>*/
+        </script>
+    </div>
+</body>
+</html>
