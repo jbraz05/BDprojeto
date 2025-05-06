@@ -10,15 +10,21 @@ import java.util.Map;
 
 public class DashboardInterativoService {
 
-    public Map<String, BigDecimal> obterDados(String tipo) throws SQLException {
+    public Map<String, Number> obterDados(String entidade, String metrica) throws SQLException {
         try (Connection connection = ConnectionFactory.getConnection()) {
             DashboardInterativoDAO dao = new DashboardInterativoDAO(connection);
-            if ("empresa".equalsIgnoreCase(tipo)) {
-                return dao.getDadosPorEmpresa();
-            } else if ("cliente".equalsIgnoreCase(tipo)) {
-                return dao.getDadosPorCliente();
+    
+            if ("empresa".equals(entidade)) {
+                return "quantidade".equals(metrica)
+                    ? dao.getQuantidadeServicosPorEmpresa()
+                    : dao.getValorTotalServicosPorEmpresa();
+            } else if ("cliente".equals(entidade)) {
+                return "quantidade".equals(metrica)
+                    ? dao.getQuantidadeServicosPorCliente()
+                    : dao.getValorTotalServicosPorCliente();
             }
             return Map.of();
         }
     }
+    
 }
