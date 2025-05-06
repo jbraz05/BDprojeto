@@ -11,7 +11,7 @@
     
     <form th:action="${empresa.cnpj} != null ? @{/empresa/atualizar} : @{/empresa/cadastrar}" method="post">
         <label>CNPJ:</label>
-        <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required>
+        <input type="text" name="cnpj" th:value="${empresa.cnpj}" th:readonly="${empresa.cnpj} != null" required minlength="14" maxlength="14" pattern="\d{14}" title="CNPJ deve conter exatamente 14 números">
 
         <label>Nome:</label>
         <input type="text" name="nome" th:value="${empresa.nome}" required>
@@ -26,7 +26,7 @@
         <input type="text" name="telefone" th:value="${contato.telefone}" required>
 
         <label>CEP:</label>
-        <input type="text" name="cep" th:value="${endereco.cep}" required>
+        <input type="text" name="cep" th:value="${endereco.cep}" th:readonly="${endereco.cep} != null" required minlength="8" maxlength="8" pattern="\d{8}" title="CEP deve conter exatamente 8 números">
 
         <div class="row">
             <div>
