@@ -25,6 +25,14 @@
             <option value="tempo">Tempo Médio Total (dias)</option>
         </select>
 
+        <label>Escolha o tipo de gráfico:</label>
+        <select name="tipoGrafico" id="tipoGrafico">
+            <option value="bar">Barras</option>
+            <option value="pie">Pizza</option>
+            <option value="line">Linha</option>
+            <option value="doughnut">Rosquinha</option>
+        </select>
+
         <button type="submit">Gerar Gráfico</button>
     </form>
 
@@ -36,15 +44,24 @@
             let rawData = /*[[${dados}]]*/ {};
             let labels = Object.keys(rawData);
             let valores = Object.values(rawData);
+            let tipoGrafico = /*[[${tipoGrafico}]]*/ 'bar';
 
             new Chart(document.getElementById('grafico'), {
-                type: 'bar',
+                type: tipoGrafico,
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Resultado',
                         data: valores,
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(255, 159, 64, 0.6)'
+                        ],
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -61,5 +78,7 @@
             /*]]>*/
         </script>
     </div>
+
+    <a class="btn btn-home-fixed" href="/">Voltar</a>
 </body>
 </html>

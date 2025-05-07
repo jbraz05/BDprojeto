@@ -1,11 +1,11 @@
 package com.pedroguerra.service;
 
-import com.pedroguerra.dao.DashboardDAO;
-
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import com.pedroguerra.dao.DashboardDAO;
 
 public class DashboardService {
 
@@ -50,7 +50,4 @@ public class DashboardService {
     public Map<String, BigDecimal> buscarReceitaPorLocalizacao() throws SQLException {
         return dao.getReceitaPorLocalizacao();
     }
-    
-    
-//tmnc becker braz e caminha    
 }

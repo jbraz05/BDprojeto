@@ -75,3 +75,31 @@ canvas {
     max-width: 800px;
     width: 100%;
 }
+
+.btn {
+    margin: 10px 0;
+    padding: 10px 15px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-home-fixed {
+    position: fixed;
+    bottom: 20px;
+    left: 5%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: #769dbf;
+}
+
+.btn-home-fixed:hover {
+    background-color: #769dbf;
+}

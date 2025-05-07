@@ -1,12 +1,16 @@
 package com.pedroguerra.controller;
 
-import com.pedroguerra.service.DashboardInterativoService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
 import java.sql.SQLException;
 import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.pedroguerra.service.DashboardInterativoService;
 
 @Controller
 @RequestMapping("/dashboard-interativo")
@@ -22,11 +26,13 @@ public class DashboardInterativoController {
     @PostMapping
     public String gerarGrafico(@RequestParam("entidade") String entidade,
                                @RequestParam("metrica") String metrica,
+                               @RequestParam("tipoGrafico") String tipoGrafico,
                                Model model) throws SQLException {
 
         Map<String, Number> dados = dashboardService.obterDados(entidade, metrica);
         model.addAttribute("dados", dados);
         model.addAttribute("tipoSelecionado", entidade);
+        model.addAttribute("tipoGrafico", tipoGrafico); // envia o tipo para o HTML
 
         String titulo = "";
         if ("empresa".equals(entidade) && "quantidade".equals(metrica)) {
@@ -65,5 +71,4 @@ public class DashboardInterativoController {
 
         return "dashboard-interativo";
     }
-
 }
