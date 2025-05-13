@@ -301,6 +301,25 @@ table td, table th {
     font-weight: bold;
 }
 
+/* Código da Scrollbar */
 
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
 
+/* "Trilho" da barra */
+::-webkit-scrollbar-track {
+    background: #17181e;
+}
 
+/* "Puxador" (scrollbar que se move) */
+::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 4px;
+}
+
+/* Ao passar o mouse */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #c8c8c8;
+}
