@@ -45,7 +45,7 @@ header {
 .sidebar a {
     color: #ccc;
     text-decoration: none;
-    padding: 8px 0;
+    padding: 10px 0;
     transition: color 0.3s;
     transition: background-color 0.3s;
 }
@@ -65,7 +65,7 @@ header {
 }
 
 .main-content {
-    margin-left: 220px; /* espaço da sidebar */
+    margin-left: 220px;
     padding: 20px;
     width: calc(100% - 220px);
 }

@@ -1,10 +1,62 @@
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom, #303438, #000000);
+    background: #25262e;
     color: #f0f0f0;
     margin: 0;
     padding: 2rem;
     min-height: 100vh;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #17181e;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.sidebar a {
+    color: #ccc;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: color 0.3s;
+    transition: background-color 0.3s;
+}
+
+.sidebar a.active {
+    background-color: #004cff;
+    border-right: 4px solid white;
+    color: white;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.sidebar a.topic:hover {
+    background-color: #2c2d35;
+    color: #fff;
+    padding-left: 10px;
+}
+
+.main-content {
+    margin-left: 220px; /* espaço da sidebar */
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1250px;
+    overflow-x: auto;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -14,19 +66,26 @@ h1 {
 
 .btn, .filter-btn {
     padding: 10px 18px;
-    background-color: #007bff;
+    background-color: #004cff;
     color: white;
     text-decoration: none;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
     margin: 0.5rem 0;
-    transition: background-color 0.3s;
+    transition: background-color 0.5s;
 }
 
 .btn:hover, .filter-btn:hover {
-    background-color: #0056b3;
+    background-color: #ffffff;
+    color: #17181e
+}
+
+.fixed-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
 select {
@@ -45,14 +104,14 @@ form {
 
 .table-container {
     overflow-x: auto;
+    margin-left: 100px;
 }
 
 table {
     width: max-content;
     min-width: 100%;
     border-collapse: collapse;
-    background-color: #3a4353;
-    border-radius: 12px;
+    background-color: #34363e;
     overflow: auto;
     font-size: 14px;
 }
@@ -66,12 +125,8 @@ th, td {
 }
 
 th {
-    background-color: #2e3440;
+    background-color: #17181e;
     color: white;
-}
-
-tr:hover {
-    background-color: #444b5a;
 }
 
 a.action-link {
@@ -145,24 +200,6 @@ a.action-link:hover {
 
 .home-btn:hover {
     background-color: #495057;
-}
-
-/* Arredondar os cantos superiores da tabela */
-table thead tr:first-child th:first-child {
-    border-top-left-radius: 12px;
-}
-
-table thead tr:first-child th:last-child {
-    border-top-right-radius: 12px;
-}
-
-/* Arredondar os cantos inferiores da tabela */
-table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-}
-
-table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
 }
 
 /* Remover a borda clara visível embaixo */
