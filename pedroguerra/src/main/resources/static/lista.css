@@ -171,6 +171,7 @@ a.action-link:hover {
 
 .action-form {
     display: inline;
+    margin-left: 5px;
 }
 
 .action-button {
