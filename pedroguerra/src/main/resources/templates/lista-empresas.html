@@ -19,17 +19,18 @@
     </nav>
 
     <main class="main-content">
-        <div class="table-container">
 
-            <form action="/empresa/listar" method="get">
-                <label for="ordenarPor">Ordenar por:</label>
-                <select name="ordenarPor" id="ordenarPor">
-                    <option value="">Selecione</option>
-                    <option value="nome">Nome</option>
-                    <option value="capital">Capital Social</option>
-                </select>
-                <button type="submit">Aplicar</button>
-            </form>
+        <form action="/empresa/listar" method="get">
+            <label for="ordenarPor">Ordenar por:</label>
+            <select name="ordenarPor" id="ordenarPor">
+                <option value="">Selecione</option>
+                <option value="nome">Nome</option>
+                <option value="capital">Capital Social</option>
+            </select>
+            <button type="submit">Aplicar</button>
+        </form>
+
+        <div class="table-container">
             
             <table>
                 <thead>
