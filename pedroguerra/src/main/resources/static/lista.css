@@ -90,7 +90,6 @@ h1 {
 
 select {
     padding: 8px;
-    border-radius: 6px;
     background-color: #373d44;
     color: white;
     border: 1px solid #444;
@@ -98,8 +97,25 @@ select {
 }
 
 form {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 2rem;
+    margin-top: -2rem;
+    margin-left: 110px;
+}
+
+form button {
+    background-color: #004cff;
+    border: none;
+    padding: 8px 16px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #002fd7;
 }
 
 .table-container {
@@ -111,9 +127,16 @@ table {
     width: max-content;
     min-width: 100%;
     border-collapse: collapse;
-    background-color: #34363e;
     overflow: auto;
     font-size: 14px;
+}
+
+table tbody td:nth-child(odd) {
+    background-color: #34363e;
+}
+
+table tbody td:nth-child(even) {
+    background-color: #43454f;
 }
 
 th, td {
@@ -124,8 +147,15 @@ th, td {
     vertical-align: middle;
 }
 
-th {
+table thead th:nth-child(odd) {
     background-color: #17181e;
+}
+
+table thead th:nth-child(even) {
+    background-color: #21222a;
+}
+
+th {
     color: white;
 }
 
@@ -144,11 +174,11 @@ a.action-link:hover {
 }
 
 .action-button {
-    background-color: #6c757d;
+    background-color: #004cff;
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
     margin-right: 5px;
@@ -157,7 +187,7 @@ a.action-link:hover {
 }
 
 .action-button:hover {
-    background-color: #495057;
+    background-color: #002fd7;
 }
 
 .action-button.delete {
