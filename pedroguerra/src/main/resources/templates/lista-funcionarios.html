@@ -7,105 +7,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Menu</h2>
+        <a href="/" class="topic">Página Principal</a>
+        <a href="/empresa/listar" class="topic">Empresas</a>
+        <a class="active">Funcionários</a>
+        <a href="/localizacao/listar" class="topic">Localizações</a>
+        <a href="/servicos" class="topic">Serviços</a>
+        <a href="/clientes" class="topic">Clientes</a>
+        <a href="/dashboards" class="topic">Dashboards</a>
+    </nav>
 
-    <h1>Lista de Funcionários</h1>
+    <main class="main-content">
 
-    <form method="get" action="/funcionarios">
-        <label for="empresa">Filtrar por Empresa:</label>
-        <select name="cnpj" id="empresa">
-            <option value="">Todas</option>
-            <option th:each="empresa : ${empresas}" th:value="${empresa.cnpj}"
-                    th:text="${empresa.nome}" th:selected="${param.cnpj} == ${empresa.cnpj}">
-            </option>
-        </select>
-        <button type="submit" class="filter-btn">Filtrar</button>
-    </form>
-
-    <div class="sort-buttons">
-        <form method="get" action="/funcionarios" style="display:inline">
-            <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
-            <input type="hidden" name="sort" value="nome" />
-            <button type="submit" class="btn">Ordenar por Nome</button>
-        </form>
-
-        <form method="get" action="/funcionarios" style="display:inline">
-            <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
-            <input type="hidden" name="sort" value="salario" />
-            <button type="submit" class="btn">Ordenar por Salário</button>
-        </form>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Matrícula</th>
-                <th>Nome</th>
-                <th>Salário</th>
-                <th>Contato</th>
-                <th>Supervisor</th>
-                <th>Empresa</th>
-                <th>Rua</th>
-                <th>Número</th>
-                <th>Bairro</th>
-                <th>Cidade</th>
-                <th>CEP</th>
-                <th>Sócio</th>
-                <th>Engenheiro</th>
-                <th>Operador</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="func : ${funcionarios}">
-                <td th:text="${func.matricula}"></td>
-                <td th:text="${func.nome}"></td>
-                <td th:text="${func.salario}"></td>
-                <td>
-                    <span th:text="'Email: ' + ${func.email}"></span><br/>
-                    <span th:text="'Telefone: ' + ${func.telefone}"></span>
-                </td>
-                <td th:text="${func.fkSupervisorMatricula}"></td>
-                <td th:text="${func.cnpjEmpresa}"></td>
-                <td th:text="${func.ruaEndereco}"></td>
-                <td th:text="${func.numeroEndereco}"></td>
-                <td th:text="${func.bairroEndereco}"></td>
-                <td th:text="${func.cidadeEndereco}"></td>
-                <td th:text="${func.fkEnderecoCep}"></td>
+        <div class="linha-superior">
+            <div class="lado-esquerdo">
+                <form method="get" action="/funcionarios" class="filtro-form">
+                    <label for="empresa">Filtrar por Empresa:</label>
+                    <select name="cnpj" id="empresa">
+                        <option value="">Todas</option>
+                        <option th:each="empresa : ${empresas}" th:value="${empresa.cnpj}"
+                                th:text="${empresa.nome}" th:selected="${param.cnpj} == ${empresa.cnpj}">
+                        </option>
+                    </select>
+                    <button type="submit" class="filter-btn">Filtrar</button>
+                </form>
+            </div>
         
-                <!-- Ícones com cor para status -->
-                <td>
-                    <i class="fas fa-check" style="color: green;" th:if="${func.socio}"></i>
-                    <i class="fas fa-times" style="color: red;" th:if="${!func.socio}"></i>
-                </td>
-                <td>
-                    <i class="fas fa-check" style="color: green;" th:if="${func.engenheiro}"></i>
-                    <i class="fas fa-times" style="color: red;" th:if="${!func.engenheiro}"></i>
-                </td>
-                <td>
-                    <i class="fas fa-check" style="color: green;" th:if="${func.operadorDrone}"></i>
-                    <i class="fas fa-times" style="color: red;" th:if="${!func.operadorDrone}"></i>
-                </td>
+            <div class="lado-direito">
+                <form method="get" action="/funcionarios" style="display:inline">
+                    <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
+                    <input type="hidden" name="sort" value="nome" />
+                    <button type="submit" class="btn">Ordenar por Nome</button>
+                </form>
         
-                <td>
-                    <form th:action="@{/editar-funcionario}" method="get" class="action-form">
-                        <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form th:action="@{/remover-funcionario}" method="post" class="action-form"
-                          onsubmit="return confirm('Tem certeza que deseja remover este funcionário?');">
-                        <input type="hidden" name="matricula" th:value="${func.matricula}" />
-                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-        
-    </table>
-
-    <div class="footer">
-        <a href="/" class="btn home-btn">Voltar para Home</a>
-        <a class="btn" href="/funcionario">Cadastrar Novo Funcionário</a>
-    </div>
-
+                <form method="get" action="/funcionarios" style="display:inline">
+                    <input type="hidden" name="cnpj" th:value="${param.cnpj}" />
+                    <input type="hidden" name="sort" value="salario" />
+                    <button type="submit" class="btn">Ordenar por Salário</button>
+                </form>
+            </div>
+        </div>            
+           
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>MATRÍCULA</th>
+                        <th>NOME</th>
+                        <th>SALÁRIO</th>
+                        <th>CONTATO</th>
+                        <th>SUPERVISOR</th>
+                        <th>EMPRESA</th>
+                        <th>RUA</th>
+                        <th>NÚMERO</th>
+                        <th>BAIRRO</th>
+                        <th>CIDADE</th>
+                        <th>CEP</th>
+                        <th>SÓCIO</th>
+                        <th>ENGENHEIRO</th>
+                        <th>OPERADOR</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="func : ${funcionarios}">
+                        <td th:text="${func.matricula}"></td>
+                        <td th:text="${func.nome}"></td>
+                        <td th:text="${func.salario}"></td>
+                        <td>
+                            <span th:text="'Email: ' + ${func.email}"></span><br/>
+                            <span th:text="'Telefone: ' + ${func.telefone}"></span>
+                        </td>
+                        <td th:text="${func.fkSupervisorMatricula}"></td>
+                        <td th:text="${func.cnpjEmpresa}"></td>
+                        <td th:text="${func.ruaEndereco}"></td>
+                        <td th:text="${func.numeroEndereco}"></td>
+                        <td th:text="${func.bairroEndereco}"></td>
+                        <td th:text="${func.cidadeEndereco}"></td>
+                        <td th:text="${func.fkEnderecoCep}"></td>
+                
+                        <!-- Ícones com cor para status -->
+                        <td>
+                            <i class="fas fa-check" style="color: #004cff;" th:if="${func.socio}"></i>
+                            <i class="fas fa-times" style="color: red;" th:if="${!func.socio}"></i>
+                        </td>
+                        <td>
+                            <i class="fas fa-check" style="color: #004cff;" th:if="${func.engenheiro}"></i>
+                            <i class="fas fa-times" style="color: red;" th:if="${!func.engenheiro}"></i>
+                        </td>
+                        <td>
+                            <i class="fas fa-check" style="color: #004cff;" th:if="${func.operadorDrone}"></i>
+                            <i class="fas fa-times" style="color: red;" th:if="${!func.operadorDrone}"></i>
+                        </td>
+                
+                        <td>
+                            <form th:action="@{/editar-funcionario}" method="get" class="action-form">
+                                <input type="hidden" name="matricula" th:value="${func.matricula}" />
+                                <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                            </form>
+                            <form th:action="@{/remover-funcionario}" method="post" class="action-form"
+                                  onsubmit="return confirm('Tem certeza que deseja remover este funcionário?');">
+                                <input type="hidden" name="matricula" th:value="${func.matricula}" />
+                                <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>      
+            </table>
+        </div>
+    
+        <a class="btn fixed-btn" href="/funcionario">Cadastrar Funcionário</a>
+    </main>
 </body>
 </html>
