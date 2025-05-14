@@ -8,49 +8,58 @@
 </head>
 <body>
 
-    <h1>Localizações de Atuação</h1>
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Menu</h2>
+        <a href="/" class="topic">Página Principal</a>
+        <a href="/empresa/listar" class="topic">Empresas</a>
+        <a href="/funcionarios" class="topic">Funcionários</a>
+        <a class="active">Localizações</a>
+        <a href="/servicos" class="topic">Serviços</a>
+        <a href="/clientes" class="topic">Clientes</a>
+        <a href="/dashboards" class="topic">Dashboards</a>
+    </nav>
 
-
-    <div th:if="${erro}" style="color:red; font-weight: bold; margin-bottom: 10px;">
-        <p th:text="${erro}"></p>
-    </div>
+    <main class="main-content">
+        <div th:if="${erro}" style="color:red; font-weight: bold; margin-bottom: 10px;">
+            <p th:text="${erro}"></p>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>PAÍS</th>
+                        <th>ESTADO</th>
+                        <th>REGIÃO</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="l : ${localizacoes}">
+                        <td th:text="${l.codigo}"></td>
+                        <td th:text="${l.nomePais}"></td>
+                        <td th:text="${l.nomeEstado}"></td>
+                        <td th:text="${l.regiao}"></td>
+                        <td>
+                            <form th:action="@{/localizacao/editar}" method="get" class="action-form" style="display:inline;">
+                                <input type="hidden" name="codigo" th:value="${l.codigo}" />
+                                <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                            </form>
+                            <form th:action="@{/localizacao/remover}" method="post" class="action-form"
+                                  onsubmit="return confirm('Tem certeza que deseja remover esta localização?');"
+                                  style="display:inline;">
+                                <input type="hidden" name="codigo" th:value="${l.codigo}" />
+                                <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>País</th>
-                <th>Estado</th>
-                <th>Região</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="l : ${localizacoes}">
-                <td th:text="${l.codigo}"></td>
-                <td th:text="${l.nomePais}"></td>
-                <td th:text="${l.nomeEstado}"></td>
-                <td th:text="${l.regiao}"></td>
-                <td>
-                    <form th:action="@{/localizacao/editar}" method="get" class="action-form" style="display:inline;">
-                        <input type="hidden" name="codigo" th:value="${l.codigo}" />
-                        <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form th:action="@{/localizacao/remover}" method="post" class="action-form"
-                          onsubmit="return confirm('Tem certeza que deseja remover esta localização?');"
-                          style="display:inline;">
-                        <input type="hidden" name="codigo" th:value="${l.codigo}" />
-                        <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="footer">
-        <a href="/" class="btn home-btn">Voltar para Home</a>
-        <a class="btn" href="/localizacao">Cadastrar Nova Localização</a>
-    </div>
+        <a class="btn fixed-btn" href="/localizacao">Cadastrar Localização</a>
+    </main>
 
 </body>
 </html>
