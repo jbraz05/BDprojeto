@@ -115,7 +115,8 @@ form button {
 }
 
 form button:hover {
-    background-color: #002fd7;
+    background-color: white;
+    color:#17181e;
 }
 
 .table-container {
@@ -199,26 +200,6 @@ a.action-link:hover {
     background-color: #a71d2a;
 }
 
-.footer {
-    margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
-    justify-content: left;
-    flex-wrap: wrap;
-}
-
-.footer-link {
-    display: block;
-    margin-top: 2rem;
-    text-align: center;
-    color: #cccccc;
-    text-decoration: none;
-}
-
-.footer-link:hover {
-    text-decoration: underline;
-}
-
 .error-message {
     color: #ff6b6b;
     text-align: center;
@@ -238,9 +219,27 @@ table td, table th {
     border-bottom: none;
 }
 
+.linha-superior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 0 0;
+    flex-wrap: wrap;
+}
+
+.lado-esquerdo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lado-direito {
+    display: flex;
+    gap: 0px;
+}
+
 .filtro-botoes {
     text-align: center;
-    margin-bottom: 1.5rem;
 }
 
 .filtro-botoes form {
@@ -249,7 +248,7 @@ table td, table th {
 
 .filtro-botoes button {
     padding: 8px 16px;
-    margin: 0 5px;
+    margin: 0 2px;
     border: none;
     border-radius: 6px;
     background-color: #6c757d;
