@@ -283,6 +283,12 @@ button.btn-done.active {
 button.btn-pending.active {
     background-color: #ff5252;
 }
+button.btn-done.active:hover{
+    background-color: white;
+}
+button.btn-pending.active:hover {
+    background-color: white;
+}
 
 .status-col {
     font-weight: bold;
