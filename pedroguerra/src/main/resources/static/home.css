@@ -168,3 +168,49 @@ header {
 ::-webkit-scrollbar-thumb:hover {
     background-color: #c8c8c8;
 }
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 280px;
+    background-color: #004cff;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    font-size: 18px;
+    z-index: 1001;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: left 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+    overflow: hidden;
+    padding: 20px 5px;
+}
+
+.sidebar.collapsed .sidebar-title {
+    display: none;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar.collapsed a {
+    justify-content: center;
+}
+
+.sidebar.collapsed .link-text {
+    display: none;
+}
+
+.main-content.collapsed {
+    margin-left: 80px;
+}
+
+.sidebar.collapsed ~ .toggle-btn {
+    left: 80px;
+}

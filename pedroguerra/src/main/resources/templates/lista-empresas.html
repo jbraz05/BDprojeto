@@ -6,16 +6,19 @@
     <link rel="stylesheet" href="/lista.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
+    <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
     <nav class="sidebar">
         <h2 class="sidebar-title">Menu</h2>
-        <a href="/" class="topic"><i class="fas fa-house"></i>Home</a>
-        <a class="active"><i class="fas fa-building"></i>Empresas</a>
-        <a href="/funcionarios" class="topic"><i class="fas fa-user"></i>Funcionários</a>
-        <a href="/localizacao/listar" class="topic"><i class="fas fa-map-marker-alt"></i>Localizações</a>
-        <a href="/servicos" class="topic"><i class="fas fa-tools"></i>Serviços</a>
-        <a href="/clientes" class="topic"><i class="fas fa-users"></i>Clientes</a>
-        <a href="/dashboards" class="topic"><i class="fas fa-chart-line"></i>Dashboards</a>
+        <a href="/" class="topic"><i class="fas fa-house"></i><span class="link-text">Home</span></a>
+        <a href="/empresa/listar" class="topic"><i class="fas fa-building"></i><span class="link-text">Empresas</span></a>
+        <a href="/funcionarios" class="topic"><i class="fas fa-user"></i><span class="link-text">Funcionários</span></a>
+        <a href="/localizacao/listar" class="topic"><i class="fas fa-map-marker-alt"></i><span class="link-text">Localizações</span></a>
+        <a href="/servicos" class="topic"><i class="fas fa-tools"></i><span class="link-text">Serviços</span></a>
+        <a href="/clientes" class="topic"><i class="fas fa-users"></i><span class="link-text">Clientes</span></a>
+        <a href="/dashboards" class="topic"><i class="fas fa-chart-line"></i><span class="link-text">Dashboards</span></a>
     </nav>
 
     <main class="main-content">
@@ -89,4 +92,23 @@
         </div>
     </main>
 </body>
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.main-content');
+    const toggleBtn = document.querySelector('.toggle-btn');
+
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    content.classList.toggle('collapsed');
+
+    // Move dinamicamente o botão
+    toggleBtn.style.left = isCollapsed ? '80px' : '280px';
+}
+document.querySelectorAll('.sidebar a').forEach(link => {
+    if (link.href === window.location.href) {
+        link.classList.add('active');
+    }
+});
+</script>
+</script>
 </html>
