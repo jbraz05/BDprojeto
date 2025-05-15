@@ -14,6 +14,17 @@ header {
     margin-top: 40px;
 }
 
+.topic i {
+    margin-right: 8px;
+    width: 18px; /* alinhamento uniforme */
+    text-align: center;
+}
+.active i {
+    margin-right: 8px;
+    width: 18px; /* alinhamento uniforme */
+    text-align: center;
+}
+
 .main-content {
     padding: 40px 20px;
     max-width: 1200px;

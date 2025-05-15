@@ -7,6 +7,17 @@ body {
     min-height: 100vh;
 }
 
+.topic i {
+    margin-right: 8px;
+    width: 18px; /* alinhamento uniforme */
+    text-align: center;
+}
+.active i {
+    margin-right: 8px;
+    width: 18px; /* alinhamento uniforme */
+    text-align: center;
+}
+
 .sidebar {
     width: 300px;
     background-color: #17181e;
