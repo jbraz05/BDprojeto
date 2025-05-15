@@ -6,57 +6,67 @@
     <link rel="stylesheet" href="/home.css">
 </head>
 <body>
-    <header>
-        <h1 class="main-title">Dashboards</h1>
-    </header>
-    <div class="grid-container">
-        <div class="card">
-            <h2>Clientes com Mais Serviços</h2>
-            <a class="btn" href="/dashboards/clientes-top">Visualizar</a>
-        </div>
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Menu</h2>
+        <a href="/" class="topic">Página Principal</a>
+        <a href="/empresa/listar" class="topic">Empresas</a>
+        <a href="/funcionarios" class="topic">Funcionários</a>
+        <a href="/localizacao/listar" class="topic">Localizações</a>
+        <a href="/servicos" class="topic">Serviços</a>
+        <a href="/clientes" class="topic">Clientes</a>
+        <a class="active">Dashboards</a>
+    </nav>
 
-        <div class="card">
-            <h2>Serviços com Maior Valor (R$)</h2>
-            <a class="btn" href="/dashboards/servicos-mais-caros">Visualizar</a>
+    <main class="main-content">
+        <div class="grid-container">
+            <div class="card">
+                <h2>Clientes com Mais Serviços</h2>
+                <a class="btn" href="/dashboards/clientes-top">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Serviços com Maior Valor (R$)</h2>
+                <a class="btn" href="/dashboards/servicos-mais-caros">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Status de Serviços</h2>
+                <a class="btn" href="/dashboards/servicos-status">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Receita Mensal</h2>
+                <a class="btn" href="/dashboards/receita-mensal">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Top 5 Clientes por Receita Por Ano</span></h2>
+                <a class="btn" href="/dashboards/clientes-receita">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Serviços por Tipo</h2>
+                <a class="btn" href="/dashboards/servicos-tipo">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>Localizações que Mais Geram Receita</h2>
+                <a class="btn" href="/dashboards/receita-localizacao">Visualizar</a>
+            </div>
+            
+            
+    
+            <div class="card">
+                <h2>Salário Médio por Função</h2>
+                <a class="btn" href="/dashboards/salario-funcao">Visualizar</a>
+            </div>
+    
+            <div class="card">
+                <h2>CEPs Mais Usados em Serviços</h2>
+                <a class="btn" href="/dashboards/ceps-mais-usados">Visualizar</a>
+            </div>
         </div>
+    </main>
 
-        <div class="card">
-            <h2>Status de Serviços</h2>
-            <a class="btn" href="/dashboards/servicos-status">Visualizar</a>
-        </div>
-
-        <div class="card">
-            <h2>Receita Mensal</h2>
-            <a class="btn" href="/dashboards/receita-mensal">Visualizar</a>
-        </div>
-
-        <div class="card">
-            <h2>Top 5 Clientes por Receita Por Ano</span></h2>
-            <a class="btn" href="/dashboards/clientes-receita">Visualizar</a>
-        </div>
-
-        <div class="card">
-            <h2>Serviços por Tipo</h2>
-            <a class="btn" href="/dashboards/servicos-tipo">Visualizar</a>
-        </div>
-
-        <div class="card">
-            <h2>Localizações que Mais Geram Receita</h2>
-            <a class="btn" href="/dashboards/receita-localizacao">Visualizar</a>
-        </div>
-        
-        
-
-        <div class="card">
-            <h2>Salário Médio por Função</h2>
-            <a class="btn" href="/dashboards/salario-funcao">Visualizar</a>
-        </div>
-
-        <div class="card">
-            <h2>CEPs Mais Usados em Serviços</h2>
-            <a class="btn" href="/dashboards/ceps-mais-usados">Visualizar</a>
-        </div>
-    </div>
-    <a class="btn btn-home-fixed" href="/">Voltar</a>
 </body>
 </html>
