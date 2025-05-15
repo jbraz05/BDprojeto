@@ -93,22 +93,41 @@
     </main>
 </body>
 <script>
-function toggleSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const content = document.querySelector('.main-content');
-    const toggleBtn = document.querySelector('.toggle-btn');
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.main-content');
+        const toggleBtn = document.querySelector('.toggle-btn');
 
-    const isCollapsed = sidebar.classList.toggle('collapsed');
-    content.classList.toggle('collapsed');
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+        toggleBtn.style.left = isCollapsed ? '80px' : '280px';
 
-    // Move dinamicamente o botão
-    toggleBtn.style.left = isCollapsed ? '80px' : '280px';
-}
-document.querySelectorAll('.sidebar a').forEach(link => {
-    if (link.href === window.location.href) {
-        link.classList.add('active');
+        // Salva o estado no localStorage
+        localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
     }
-});
-</script>
+
+    // Aplica o estado salvo ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.main-content');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            content.classList.add('collapsed');
+            toggleBtn.style.left = '80px';
+        } else {
+            toggleBtn.style.left = '280px';
+        }
+
+        // Marca como ativo o link da URL atual
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+    });
 </script>
 </html>
