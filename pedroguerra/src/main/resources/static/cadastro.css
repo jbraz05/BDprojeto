@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom, #303438, #000000);
+    background: #25262e;
     margin: 0;
     padding: 0;
     display: flex;
@@ -10,14 +10,14 @@ body {
 }
 
 .form-container {
-    background-color: #3a4353;
+    background-color: #17181e;
     padding: 2rem 3rem;
     padding-right: 3rem;
     margin-top: 3rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
     max-width: 600px;
     width: 100%;
+    border: 1px solid white;
 }
 
 h1 {
@@ -37,18 +37,16 @@ input, select, textarea {
     width: 100%;
     padding: 10px 12px;
     margin-top: 5px;
-    background-color: #373d44;
-    border: 1px solid #282b2e;
+    background-color: #25262e;
+    border: 1px solid white;
     color: white;
-    border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
 }
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    border-color: #004cff;
 }
 
 .row {
@@ -70,7 +68,6 @@ input:focus, select:focus, textarea:focus {
 button, .back-btn {
     padding: 12px;
     border: none;
-    border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -79,12 +76,13 @@ button, .back-btn {
 }
 
 .submit-btn {
-    background-color: #007bff;
+    background-color: #004cff;
     color: white;
 }
 
 .submit-btn:hover {
-    background-color: #0056b3;
+    background-color: white;
+    color:#17181e;
     transform: translateY(-1px);
 }
 
@@ -94,7 +92,8 @@ button, .back-btn {
 }
 
 .back-btn:hover {
-    background-color: #5a6268;
+    background-color: white;
+    color: #17181e;
     transform: translateY(-1px);
 }
 
@@ -107,9 +106,8 @@ button, .back-btn {
 }
 
 .checkbox-group label {
-    background-color: #282b2e;
+    background-color: #2d2e37;
     padding: 0.5rem 0.75rem;
-    border-radius: 6px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -119,7 +117,7 @@ button, .back-btn {
 }
 
 .checkbox-group label:hover {
-    background-color: #373d44;
+    background-color: #40434d;
 }
 
 .checkbox-group input[type="checkbox"] {
