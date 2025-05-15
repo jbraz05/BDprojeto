@@ -180,7 +180,6 @@ a.action-link:hover {
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
     margin-right: 5px;
@@ -247,23 +246,31 @@ table td, table th {
 }
 
 .filtro-botoes button {
-    padding: 8px 16px;
-    margin: 0 2px;
+    padding: 8px 20px;
+    margin-bottom: 35px;
     border: none;
-    border-radius: 6px;
     background-color: #6c757d;
     color: white;
     font-weight: bold;
+    font-size: large;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .filtro-botoes button:hover {
-    background-color: #495057;
+    background-color: white;
+    color:#17181e;
 }
 
 .filtro-botoes .active {
-    background-color: #007bff;
+    background-color: #004cff;
+}
+
+button.btn-done.active {
+    background-color: #00e676;
+}
+button.btn-pending.active {
+    background-color: #ff5252;
 }
 
 .status-col {

@@ -7,26 +7,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Menu</h2>
+        <a href="/" class="topic">Página Principal</a>
+        <a href="/empresa/listar" class="topic">Empresas</a>
+        <a href="funcionarios" class="topic">Funcionários</a>
+        <a href="/localizacao/listar" class="topic">Localizações</a>
+        <a class="active">Serviços</a>
+        <a href="/clientes" class="topic">Clientes</a>
+        <a href="/dashboards" class="topic">Dashboards</a>
+    </nav>
 
-    <h1>Serviços Cadastrados</h1>
-
-    <div class="filtro-botoes">
-        <form action="/servicos" method="get">
-            <input type="hidden" name="filtro" value="todos">
-            <button type="submit" th:classappend="${filtroSelecionado == 'todos'} ? 'active'">Todos</button>
-        </form>
-        <form action="/servicos" method="get">
-            <input type="hidden" name="filtro" value="concluidos">
-            <button type="submit" th:classappend="${filtroSelecionado == 'concluidos'} ? 'active'">Concluídos</button>
-        </form>
-        <form action="/servicos" method="get">
-            <input type="hidden" name="filtro" value="pendentes">
-            <button type="submit" th:classappend="${filtroSelecionado == 'pendentes'} ? 'active'">Pendentes</button>
-        </form>
-    </div>
-
-    <div class="table-container">
-
+    <main class="main-content">
+        <div class="filtro-botoes">
+            <form action="/servicos" method="get">
+                <input type="hidden" name="filtro" value="todos">
+                <button type="submit" th:classappend="${filtroSelecionado == 'todos'} ? 'active'">Todos</button>
+            </form>
+            <form action="/servicos" method="get">
+                <input type="hidden" name="filtro" value="concluidos">
+                <button type="submit" class="btn-done" th:classappend="${filtroSelecionado == 'concluidos'} ? 'active'">Concluídos</button>
+            </form>
+            <form action="/servicos" method="get">
+                <input type="hidden" name="filtro" value="pendentes">
+                <button type="submit" class="btn-pending" th:classappend="${filtroSelecionado == 'pendentes'} ? 'active'">Pendentes</button>
+            </form>
+        </div>
         <div class="filtros-avancados">
             <form method="get" action="/servicos">
                 <input type="hidden" name="filtro" th:value="${filtroSelecionado}" />
@@ -49,80 +55,78 @@
                 <button type="submit" class="btn">Aplicar</button>
             </form>
         </div>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Tipo</th>
-                    <th>Funcionário</th>
-                    <th>Operador/Voo</th>
-                    <th>Valor da Medição (R$)</th>
-                    <th>Área Abrangida</th>
-                    <th>Status</th>
-                    <th>Relatório</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="servico : ${servicos}">
-                    <td th:text="${servico.id}"></td>
-                    <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${servico.tipo}"></td>
+    
+        <div class="table-container">        
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>DATA</th>
+                        <th>TIPO</th>
+                        <th>FUNCIONÁRIO</th>
+                        <th>OPERADOR/VOO</th>
+                        <th>VALOR DA MEDIÇÃO (R$)</th>
+                        <th>ÁREA ABRANGIDA</th>
+                        <th>STATUS</th>
+                        <th>RELATÓRIO</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="servico : ${servicos}">
+                        <td th:text="${servico.id}"></td>
+                        <td th:text="${#dates.format(servico.data, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${servico.tipo}"></td>
+    
+                        <td>
+                            <span th:if="${servico.nomeFuncionario != null}"
+                                  th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></span>
+                            <span th:unless="${servico.nomeFuncionario != null}" class="sem-funcionario">
+                                <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
+                            </span>
+                        </td>
+    
+                        <td>
+                            <span th:if="${servico.tipo.equalsIgnoreCase('Mapeamento Tradicional')}">-</span>
+                            <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone != null}"
+                                  th:text="${servico.nomeOperadorDrone}"></span>
+                            <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone == null}"
+                                  class="alerta-operador">
+                                <i class="fas fa-drone"></i> SEM OPERADOR DE DRONE
+                            </span>
+                        </td>
+    
+                        <td th:text="'R$ ' + ${#numbers.formatDecimal(servico.valorMedicao, 2, 'COMMA', 2, 'POINT')}"></td>
+                        <td th:text="${servico.area} + ' ha'"></td>
+    
+                        <td class="status-col"
+                            th:classappend="${servico.feito} ? ' done' : ' pending'"
+                            th:text="${servico.feito} ? 'Concluído' : 'Pendente'"></td>
+    
+                        <td>
+                            <form th:action="@{/servico/relatorio}" method="get" class="action-form">
+                                <input type="hidden" name="id" th:value="${servico.id}" />
+                                <button type="submit" class="action-button">Ver Relatório</button>
+                            </form>
+                        </td>
+    
+                        <td>
+                            <form th:action="@{/editar-servico}" method="get" class="action-form">
+                                <input type="hidden" name="id" th:value="${servico.id}" />
+                                <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
+                            </form>
+                            <form th:action="@{/remover-servico}" method="post" class="action-form"
+                                  onsubmit="return confirm('Tem certeza que deseja remover este serviço?');">
+                                <input type="hidden" name="id" th:value="${servico.id}" />
+                                <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
-                    <td>
-                        <span th:if="${servico.nomeFuncionario != null}"
-                              th:text="${servico.nomeFuncionario + ' (' + servico.fkFuncionarioMatricula + ')'}"></span>
-                        <span th:unless="${servico.nomeFuncionario != null}" class="sem-funcionario">
-                            <i class="fas fa-exclamation-triangle"></i> SEM FUNCIONÁRIO
-                        </span>
-                    </td>
-
-                    <td>
-                        <span th:if="${servico.tipo.equalsIgnoreCase('Mapeamento Tradicional')}">-</span>
-                        <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone != null}"
-                              th:text="${servico.nomeOperadorDrone}"></span>
-                        <span th:if="${servico.tipo.equalsIgnoreCase('Voo Panorâmico') and servico.nomeOperadorDrone == null}"
-                              class="alerta-operador">
-                            <i class="fas fa-drone"></i> SEM OPERADOR DE DRONE
-                        </span>
-                    </td>
-
-                    <td th:text="'R$ ' + ${#numbers.formatDecimal(servico.valorMedicao, 2, 'COMMA', 2, 'POINT')}"></td>
-                    <td th:text="${servico.area} + ' ha'"></td>
-
-                    <td class="status-col"
-                        th:classappend="${servico.feito} ? ' done' : ' pending'"
-                        th:text="${servico.feito} ? 'Concluído' : 'Pendente'"></td>
-
-                    <td>
-                        <form th:action="@{/servico/relatorio}" method="get" class="action-form">
-                            <input type="hidden" name="id" th:value="${servico.id}" />
-                            <button type="submit" class="action-button">Ver Relatório</button>
-                        </form>
-                    </td>
-
-                    <td>
-                        <form th:action="@{/editar-servico}" method="get" class="action-form">
-                            <input type="hidden" name="id" th:value="${servico.id}" />
-                            <button type="submit" class="action-button"><i class="fas fa-edit"></i></button>
-                        </form>
-                        <form th:action="@{/remover-servico}" method="post" class="action-form"
-                              onsubmit="return confirm('Tem certeza que deseja remover este serviço?');">
-                            <input type="hidden" name="id" th:value="${servico.id}" />
-                            <button type="submit" class="action-button delete"><i class="fas fa-trash-alt"></i></button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="footer">
-        <a href="/" class="btn home-btn">Voltar para Home</a>
-        <a class="btn" href="/servico">Cadastrar Novo Serviço</a>
-    </div>
-
+    <a class="btn fixed-btn" href="/servico">Cadastrar Serviço</a>
 </body>
 </html>
