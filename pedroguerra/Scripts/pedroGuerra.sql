@@ -10,7 +10,7 @@ CREATE TABLE Endereco (
     rua VARCHAR(150) NOT NULL
 );
 
-CREATE TABLE Empresa (
+    CREATE TABLE Empresa (
     cnpj VARCHAR(14) PRIMARY KEY,
     nome VARCHAR(25) NOT NULL,
     capital_social DECIMAL(10,2) NOT NULL,
