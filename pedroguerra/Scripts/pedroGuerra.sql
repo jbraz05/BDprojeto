@@ -146,3 +146,10 @@ CREATE TABLE RelatorioServico (
     PRIMARY KEY (fk_servico_id),
     FOREIGN KEY (fk_servico_id) REFERENCES Servico(id)
 );
+
+#nova tabela pro trigger
+CREATE TABLE LogFuncionario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_funcionario VARCHAR(25),
+    data_insercao DATETIME
+);
