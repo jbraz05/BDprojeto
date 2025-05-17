@@ -1,29 +1,23 @@
+-- Script de criação do trigger de log para inserção de funcionários
+-- Banco de dados: pedroguerra
+
 USE pedroguerra;
 
-DROP TRIGGER IF EXISTS trg_incrementa_capital_empresa;
+-- Criação da tabela de log (caso não exista)
+CREATE TABLE IF NOT EXISTS LogFuncionario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_funcionario VARCHAR(25),
+    data_insercao DATETIME
+);
 
-DELIMITER //
+-- Remoção do trigger anterior, se existir
+DROP TRIGGER IF EXISTS trg_log_funcionario_insert;
 
-CREATE TRIGGER trg_incrementa_capital_empresa
-AFTER UPDATE ON Servico
+-- Criação do trigger que registra inserções na tabela Funcionario
+CREATE TRIGGER trg_log_funcionario_insert
+AFTER INSERT ON Funcionario
 FOR EACH ROW
 BEGIN
-    DECLARE cnpj_empresa VARCHAR(14);
-
-    IF NEW.feito = TRUE AND OLD.feito = FALSE THEN
-        SELECT fk_empresa_cnpj
-        INTO cnpj_empresa
-        FROM Possui
-        WHERE fk_servico_id = NEW.id
-        LIMIT 1;
-
-        IF cnpj_empresa IS NOT NULL AND NEW.valor_medicao IS NOT NULL THEN
-            UPDATE Empresa
-            SET capital_social = capital_social + NEW.valor_medicao
-            WHERE cnpj = cnpj_empresa;
-        END IF;
-    END IF;
+    INSERT INTO LogFuncionario (nome_funcionario, data_insercao)
+    VALUES (NEW.nome, NOW());
 END;
-//
-
-DELIMITER ;
