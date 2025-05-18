@@ -12,17 +12,25 @@
 <table>
     <thead>
         <tr>
-            <th>ID do Serviço</th>
-            <th>Área (ha)</th>
-            <th>Data do Relatório</th>
+            <th>ID</th>
+            <th>Data Relatório</th>
+            <th>Data Emissão da Medição</th>
+            <th>Prazo de Trabalho</th>
+            <th>Período Preparatório</th>
+            <th>Trabalho de Campo</th>
+            <th>Trabalho de Escritório</th>
             <th>Observações</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td th:text="${servico.id}"></td>
-            <td th:text="${#numbers.formatDecimal(servico.area, 1, 2)}"></td> 
             <td th:text="${#dates.format(servico.dataRelatorio, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#dates.format(servico.dataEmissaoMedicao, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#dates.format(servico.prazoTrabalho, 'dd/MM/yyyy')}"></td>
+            <td th:text="${servico.periodoPreparatorio} + ' dias'" ></td>
+            <td th:text="${servico.periodoTrabalhoCampo} + ' dias'"></td>
+            <td th:text="${servico.periodoTrabalhoEscritorio} + ' dias'"></td>
             <td th:text="${servico.observacoes}"></td>
         </tr>
     </tbody>
@@ -31,5 +39,6 @@
 <div class="footer">
     <a href="/servicos" class="btn home-btn">Voltar</a>
 </div>
+
 </body>
 </html>
