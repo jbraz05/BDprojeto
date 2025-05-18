@@ -1,84 +1,224 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dashboard Interativo (Procedure)</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="/dashboard-interativo.css">
+    <meta charset="UTF-8">
+    <title>Dashboard Interativo</title>
+    <link rel="stylesheet" href="/dashboard-interativo-procedure.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Dashboard Interativo com Procedure</h1>
+<main class="dashboard-content">
+    <h1>Dashboard Interativo</h1>
+    <a href="/" class="btn-voltar">Voltar para Home</a>
 
-    <form method="post" th:action="@{/dashboard-interativo-procedure}">
-        <label>Escolha a entidade:</label>
-        <select name="entidade">
-            <option value="empresa">Empresa</option>
-            <option value="cliente">Cliente</option>
-            <option value="funcionario">Funcionário</option>
-        </select>
+    <div class="grade-graficos">
+        <div class="grafico-box">
+            <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico1')">
+                <label>Entidade:
+                    <select name="entidade">
+                        <option value="empresa">Empresa</option>
+                        <option value="cliente">Cliente</option>
+                        <option value="funcionario">Funcionário</option>
+                    </select>
+                </label>
+                <label>Métrica:
+                    <select name="metrica">
+                        <option value="valor">Valor</option>
+                        <option value="quantidade">Quantidade</option>
+                        <option value="area">Área</option>
+                        <option value="concluidos">Concluídos</option>
+                        <option value="tempo">Tempo Médio</option>
+                    </select>
+                </label>
+                <label>Tipo:
+                    <select name="tipo">
+                        <option value="bar">Barra</option>
+                        <option value="line">Linha</option>
+                        <option value="pie">Pizza</option>
+                        <option value="doughnut">Rosquinha</option>
+                        <option value="radar">Radar</option>
+                    </select>
+                </label>
+                <button type="submit">Gerar</button>
+            </form>
+            <canvas id="grafico1"></canvas>
+        </div>
 
-        <label>Escolha a métrica:</label>
-        <select name="metrica">
-            <option value="quantidade">Quantidade de Serviços</option>
-            <option value="valor">Valor Total das Medições</option>
-            <option value="area">Área Total (ha)</option>
-            <option value="concluidos">Serviços Concluídos</option>
-            <option value="tempo">Tempo Médio Total (dias)</option>
-        </select>
+        <div class="grafico-box">
+            <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico2')">
+                <label>Entidade:
+                    <select name="entidade">
+                        <option value="empresa">Empresa</option>
+                        <option value="cliente">Cliente</option>
+                        <option value="funcionario">Funcionário</option>
+                    </select>
+                </label>
+                <label>Métrica:
+                    <select name="metrica">
+                        <option value="valor">Valor</option>
+                        <option value="quantidade">Quantidade</option>
+                        <option value="area">Área</option>
+                        <option value="concluidos">Concluídos</option>
+                        <option value="tempo">Tempo Médio</option>
+                    </select>
+                </label>
+                <label>Tipo:
+                    <select name="tipo">
+                        <option value="bar">Barra</option>
+                        <option value="line">Linha</option>
+                        <option value="pie">Pizza</option>
+                        <option value="doughnut">Rosquinha</option>
+                        <option value="radar">Radar</option>
+                    </select>
+                </label>
+                <button type="submit">Gerar</button>
+            </form>
+            <canvas id="grafico2"></canvas>
+        </div>
 
-        <label>Escolha o tipo de gráfico:</label>
-        <select name="tipoGrafico" id="tipoGrafico">
-            <option value="bar">Barras</option>
-            <option value="pie">Pizza</option>
-            <option value="line">Linha</option>
-            <option value="doughnut">Rosquinha</option>
-        </select>
+        <div class="grafico-box">
+            <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico3')">
+                <label>Entidade:
+                    <select name="entidade">
+                        <option value="empresa">Empresa</option>
+                        <option value="cliente">Cliente</option>
+                        <option value="funcionario">Funcionário</option>
+                    </select>
+                </label>
+                <label>Métrica:
+                    <select name="metrica">
+                        <option value="valor">Valor</option>
+                        <option value="quantidade">Quantidade</option>
+                        <option value="area">Área</option>
+                        <option value="concluidos">Concluídos</option>
+                        <option value="tempo">Tempo Médio</option>
+                    </select>
+                </label>
+                <label>Tipo:
+                    <select name="tipo">
+                        <option value="bar">Barra</option>
+                        <option value="line">Linha</option>
+                        <option value="pie">Pizza</option>
+                        <option value="doughnut">Rosquinha</option>
+                        <option value="radar">Radar</option>
+                    </select>
+                </label>
+                <button type="submit">Gerar</button>
+            </form>
+            <canvas id="grafico3"></canvas>
+        </div>
+    </div>
+</main>
 
-        <button type="submit">Gerar Gráfico</button>
-    </form>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const charts = {};
 
-    <div th:if="${dados}">
-        <canvas id="grafico"></canvas>
+function gerarGrafico(event, canvasId) {
+    event.preventDefault();
+    const form = event.target;
+    const entidade = form.entidade.value;
+    const metrica = form.metrica.value;
+    const tipo = form.tipo.value;
 
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            let rawData = /*[[${dados}]]*/ {};
-            let labels = Object.keys(rawData);
-            let valores = Object.values(rawData);
-            let tipoGrafico = /*[[${tipoGrafico}]]*/ 'bar';
+    fetch('/dashboard-interativo-procedure/dados', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entidade, metrica })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const labels = Object.keys(data);
+        const valores = Object.values(data);
+        const ctx = document.getElementById(canvasId).getContext('2d');
 
-            new Chart(document.getElementById('grafico'), {
-                type: tipoGrafico,
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
+
+        charts[canvasId] = new Chart(ctx, {
+            type: tipo,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: `${metrica} por ${entidade}`,
+                    data: valores,
+                    backgroundColor: [
+                        'rgba(0, 123, 255, 0.7)',
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(220, 53, 69, 0.7)',
+                        'rgba(108, 117, 125, 0.7)'
+                    ],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const presets = [
+        { entidade: 'empresa', metrica: 'valor', tipo: 'bar', canvasId: 'grafico1' },
+        { entidade: 'cliente', metrica: 'quantidade', tipo: 'pie', canvasId: 'grafico2' },
+        { entidade: 'funcionario', metrica: 'concluidos', tipo: 'doughnut', canvasId: 'grafico3' }
+    ];
+
+    presets.forEach(({ entidade, metrica, tipo, canvasId }) => {
+        fetch('/dashboard-interativo-procedure/dados', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entidade, metrica })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const labels = Object.keys(data);
+            const valores = Object.values(data);
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: tipo,
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Resultado',
+                        label: `${metrica} por ${entidade}`,
                         data: valores,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)',
-                            'rgba(255, 159, 64, 0.6)'
+                            'rgba(0, 123, 255, 0.7)',
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(108, 117, 125, 0.7)'
                         ],
-                        borderWidth: 1
+                        borderRadius: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: { display: true },
-                        title: {
-                            display: true,
-                            text: '[[${tituloGrafico}]]'
-                        }
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
+                        y: { beginAtZero: true }
                     }
                 }
             });
-            /*]]>*/
-        </script>
-    </div>
-
-    <a class="btn btn-home-fixed" href="/">Voltar</a>
+        });
+    });
+});
+</script>
 </body>
 </html>

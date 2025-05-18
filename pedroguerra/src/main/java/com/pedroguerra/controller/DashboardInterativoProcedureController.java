@@ -3,12 +3,10 @@ package com.pedroguerra.controller;
 import com.pedroguerra.service.DashboardInterativoProcedureService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -17,13 +15,16 @@ public class DashboardInterativoProcedureController {
 
     private final DashboardInterativoProcedureService service = new DashboardInterativoProcedureService();
 
-    // Suporte para GET: renderiza a tela inicial
+    // GET: Renderiza a tela inicial com dados vazios
     @GetMapping
-    public String abrirTela() {
+    public String abrirTela(Model model) {
+        model.addAttribute("dados", new HashMap<>()); // previne erro de template
+        model.addAttribute("tipoGrafico", "bar");
+        model.addAttribute("tituloGrafico", "Dashboard Interativo");
         return "dashboard-interativo-procedure";
     }
 
-    // Suporte para POST: gera o gráfico com base no formulário
+    // POST tradicional (formulário): gera gráfico fixo
     @PostMapping
     public String gerarGrafico(
             @RequestParam("entidade") String entidade,
@@ -40,10 +41,25 @@ public class DashboardInterativoProcedureController {
             model.addAttribute("tituloGrafico", tituloGrafico);
 
         } catch (SQLException e) {
-            e.printStackTrace(); // ou log de erro
+            e.printStackTrace();
             model.addAttribute("erro", "Erro ao gerar gráfico: " + e.getMessage());
         }
 
         return "dashboard-interativo-procedure";
+    }
+
+    // NOVO: Suporte a requisição AJAX para geração dinâmica dos gráficos
+    @PostMapping("/dados")
+    @ResponseBody
+    public Map<String, Number> consultarDadosAjax(@RequestBody Map<String, String> payload) {
+        String entidade = payload.get("entidade");
+        String metrica = payload.get("metrica");
+
+        try {
+            return service.obterDados(entidade, metrica);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new HashMap<>();
+        }
     }
 }
