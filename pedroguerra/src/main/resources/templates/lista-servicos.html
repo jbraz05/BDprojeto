@@ -70,7 +70,7 @@
                         <th>VALOR DA MEDIÇÃO (R$)</th>
                         <th>ÁREA ABRANGIDA</th>
                         <th>STATUS</th>
-                        <th>RELATÓRIO</th>
+                        <th>DADOS</th>
                         <th>AÇÕES</th>
                     </tr>
                 </thead>
@@ -108,7 +108,7 @@
                         <td>
                             <form th:action="@{/servico/relatorio}" method="get" class="action-form">
                                 <input type="hidden" name="id" th:value="${servico.id}" />
-                                <button type="submit" class="action-button">Ver Relatório</button>
+                                <button type="submit" class="action-button">Ver Dados</button>
                             </form>
                         </td>
     
