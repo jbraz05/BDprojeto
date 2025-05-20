@@ -6,7 +6,7 @@ body {
     background: #25262e;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 header {
@@ -26,10 +26,15 @@ header {
 }
 
 .main-content {
-    padding: 40px 20px;
-    max-width: 1200px;
-    width: 100%;
-    box-sizing: border-box;
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #25262e;
+    transition: margin-left 0.3s ease;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -209,8 +214,22 @@ header {
 
 .main-content.collapsed {
     margin-left: 80px;
+    width: calc(100% - 80px);
 }
 
 .sidebar.collapsed ~ .toggle-btn {
     left: 80px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 40px;
+}
+
+.empresa-logo {
+    max-width: 80%;
+    height: auto;
 }
