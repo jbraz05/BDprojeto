@@ -15,7 +15,8 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <summary>Modelo Conceitual</summary>
 
-  ![image](https://github.com/user-attachments/assets/01a731f7-5a84-47ba-9e28-92fd4b0f3b14)
+![image](https://github.com/user-attachments/assets/259070bb-c3a9-4ab9-afa1-deda0eb869ee)
+
 
 </details>
 
