@@ -22,8 +22,6 @@ BEGIN
     VALUES (NEW.nome, NOW());
 END;
 
-
-
 -- Criação da tabela de log de serviços
 CREATE TABLE IF NOT EXISTS LogServico (
     id INT AUTO_INCREMENT PRIMARY KEY,

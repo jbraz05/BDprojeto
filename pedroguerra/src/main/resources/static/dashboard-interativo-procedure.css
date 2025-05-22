@@ -1,35 +1,62 @@
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
-    background-color: #1e1e2f;
+    background-color: #25262e;
     color: #f0f0f0;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #17181e;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.sidebar a {
+    color: #ccc;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: color 0.3s;
+    transition: background-color 0.3s;
+}
+
+.sidebar a.active {
+    background-color: #004cff;
+    border-right: 4px solid white;
+    color: white;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.sidebar a.topic:hover {
+    background-color: #2c2d35;
+    color: #fff;
+    padding-left: 10px;
 }
 
 .dashboard-content {
     padding: 2rem;
-    background-color: #1e1e2f;
     text-align: center;
+    margin-left: 340px;
 }
 
 .dashboard-content h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
-}
-
-.dashboard-content .btn-voltar {
-    display: inline-block;
-    background-color: #00bfff;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    text-decoration: none;
-    margin-bottom: 2rem;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.dashboard-content .btn-voltar:hover {
-    background-color: #008fd1;
 }
 
 .grade-graficos {
@@ -39,13 +66,12 @@ body {
 }
 
 .grafico-box {
-    background-color: #2b2b3d;
+    background-color: #17181e;
     padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    height: 680px;
 }
 
 .grafico-form {
@@ -62,24 +88,83 @@ body {
 .grafico-form select,
 .grafico-form button {
     padding: 0.4rem;
-    border-radius: 6px;
     border: none;
     font-size: 0.9rem;
+    background-color: #25262e;
+    color: white;
+    border: 1px solid white;
 }
 
 .grafico-form button {
-    background-color: #00bfff;
+    margin-top: 10px;
+    background-color: #004cff;
     color: white;
     font-weight: bold;
+    font-size: 18px;
     cursor: pointer;
     transition: background-color 0.3s;
+    height: 40px;
+    border: 0px;
 }
 
 .grafico-form button:hover {
-    background-color: #008fd1;
+    background-color: white;
+    color:#17181e;
+}
+
+.grafico-container {
+    height: 500px;
 }
 
 canvas {
     max-width: 100%;
-    height: 300px;
+    height: 100%;
+}
+
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 280px;
+    background-color: #004cff;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    font-size: 18px;
+    z-index: 1001;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: left 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+    overflow: hidden;
+    padding: 20px 5px;
+}
+
+.sidebar.collapsed .sidebar-title {
+    display: none;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar.collapsed a {
+    justify-content: center;
+}
+
+.sidebar.collapsed .link-text {
+    display: none;
+}
+
+.sidebar.collapsed ~ .toggle-btn {
+    left: 80px;
+}
+
+.dashboard-content.collapsed {
+    margin-left: 100px;
+    transition: margin-left 0.3s ease;
 }

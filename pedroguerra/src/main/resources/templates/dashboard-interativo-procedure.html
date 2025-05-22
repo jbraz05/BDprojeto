@@ -5,12 +5,22 @@
     <title>Dashboard Interativo</title>
     <link rel="stylesheet" href="/dashboard-interativo-procedure.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<main class="dashboard-content">
-    <h1>Dashboard Interativo</h1>
-    <a href="/" class="btn-voltar">Voltar para Home</a>
+    <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Menu</h2>
+        <a href="/" class="topic"><i class="fas fa-house"></i><span class="link-text">Home</span></a>
+        <a href="/empresa/listar" class="topic"><i class="fas fa-building"></i><span class="link-text">Empresas</span></a>
+        <a href="/funcionarios" class="topic"><i class="fas fa-user"></i><span class="link-text">Funcionários</span></a>
+        <a href="/localizacao/listar" class="topic"><i class="fas fa-map-marker-alt"></i><span class="link-text">Localizações</span></a>
+        <a href="/servicos" class="topic"><i class="fas fa-tools"></i><span class="link-text">Serviços</span></a>
+        <a href="/clientes" class="topic"><i class="fas fa-users"></i><span class="link-text">Clientes</span></a>
+        <a href="/dashboard-interativo-procedure" class="active"><i class="fas fa-chart-line"></i><span class="link-text">Dashboards</span></a>
+    </nav>
 
+<main class="dashboard-content">
     <div class="grade-graficos">
         <div class="grafico-box">
             <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico1')">
@@ -41,7 +51,9 @@
                 </label>
                 <button type="submit">Gerar</button>
             </form>
-            <canvas id="grafico1"></canvas>
+            <div class="grafico-container">
+                <canvas id="grafico1"></canvas>
+            </div>
         </div>
 
         <div class="grafico-box">
@@ -73,7 +85,9 @@
                 </label>
                 <button type="submit">Gerar</button>
             </form>
-            <canvas id="grafico2"></canvas>
+            <div class="grafico-container">
+                <canvas id="grafico2"></canvas>
+            </div>
         </div>
 
         <div class="grafico-box">
@@ -105,7 +119,9 @@
                 </label>
                 <button type="submit">Gerar</button>
             </form>
-            <canvas id="grafico3"></canvas>
+           <div class="grafico-container">
+                <canvas id="grafico3"></canvas>
+            </div>
         </div>
     </div>
 </main>
@@ -130,6 +146,8 @@ function gerarGrafico(event, canvasId) {
     .then(data => {
         const labels = Object.keys(data);
         const valores = Object.values(data);
+        const canvas = document.getElementById(canvasId);
+        canvas.height = 330; // aumenta a altura do canvas
         const ctx = document.getElementById(canvasId).getContext('2d');
 
         if (charts[canvasId]) {
@@ -143,24 +161,26 @@ function gerarGrafico(event, canvasId) {
                 datasets: [{
                     label: `${metrica} por ${entidade}`,
                     data: valores,
+                    borderColor: 'white',
                     backgroundColor: [
-                        'rgba(0, 123, 255, 0.7)',
-                        'rgba(40, 167, 69, 0.7)',
-                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(0, 76, 255, 0.7)',
                         'rgba(220, 53, 69, 0.7)',
-                        'rgba(108, 117, 125, 0.7)'
+                        'rgba(0, 24, 81, 0.7)',
+                        'rgba(83, 15, 21, 0.7)',
+                        'rgba(0, 230, 118, 0.7)'
                     ],
-                    borderRadius: 10
+                    tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: true },
+                    legend: { display: true, labels: {color: 'white'} },
                     tooltip: { mode: 'index', intersect: false }
                 },
                 scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
-                    y: { beginAtZero: true }
+                    y: { beginAtZero: true,  beginAtZero: true, ticks:{color: 'white'}, title:{color: 'white'}},
+                    x: { ticks:{color: 'white'}, title:{color: 'white'}}
                 }
             }
         });
@@ -184,6 +204,8 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const labels = Object.keys(data);
             const valores = Object.values(data);
+            const canvas = document.getElementById(canvasId);
+            canvas.height = 330; // aumenta a altura do canvas
             const ctx = document.getElementById(canvasId).getContext('2d');
 
             if (charts[canvasId]) charts[canvasId].destroy();
@@ -195,30 +217,69 @@ window.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: `${metrica} por ${entidade}`,
                         data: valores,
+                        borderColor: 'white',
                         backgroundColor: [
-                            'rgba(0, 123, 255, 0.7)',
-                            'rgba(40, 167, 69, 0.7)',
-                            'rgba(255, 193, 7, 0.7)',
+                            'rgba(0, 76, 255, 0.7)',
                             'rgba(220, 53, 69, 0.7)',
-                            'rgba(108, 117, 125, 0.7)'
+                            'rgba(0, 24, 81, 0.7)',
+                            'rgba(83, 15, 21, 0.7)',
+                            'rgba(0, 230, 118, 0.7)'
                         ],
-                        borderRadius: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { display: true },
+                        legend: { display: true, labels: {color: 'white'} },
                         tooltip: { mode: 'index', intersect: false }
                     },
                     scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
-                        y: { beginAtZero: true }
+                        y: { beginAtZero: true, ticks:{color: 'white'}, title:{color: 'white'}},
+                        x: { ticks:{color: 'white'}, title:{color: 'white'}}
                     }
                 }
             });
         });
     });
 });
+</script>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.dashboard-content');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+        toggleBtn.style.left = isCollapsed ? '80px' : '280px';
+
+        // Salva o estado no localStorage
+        localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
+    }
+
+    // Aplica o estado salvo ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.main-content');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            content.classList.add('collapsed');
+            toggleBtn.style.left = '80px';
+        } else {
+            toggleBtn.style.left = '280px';
+        }
+
+        // Marca como ativo o link da URL atual
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+    });
 </script>
 </body>
 </html>

@@ -173,6 +173,7 @@ header {
 ::-webkit-scrollbar-thumb:hover {
     background-color: #c8c8c8;
 }
+
 .toggle-btn {
     position: fixed;
     top: 20px;

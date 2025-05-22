@@ -383,6 +383,7 @@ button.btn-pending.active:hover {
 
 .main-content.collapsed {
     margin-left: 80px;
+    transition: margin-left 0.3s ease;
 }
 
 .sidebar.collapsed ~ .toggle-btn {
