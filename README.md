@@ -24,7 +24,9 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <summary>Modelo Lógico</summary>
 
-  ![image](https://github.com/user-attachments/assets/73659db8-00df-4625-a2f6-8bd6005db408)
+![image](https://github.com/user-attachments/assets/1f6fd7ad-6473-46a9-a164-f619ac68759f)
+
+
 
 </details>
 
