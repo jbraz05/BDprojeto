@@ -9,7 +9,8 @@
 
 <h1>Dados do Serviço</h1>
 
-<table>
+<main class="table-servico">
+    <table>
     <thead>
         <tr>
             <th>ID</th>
@@ -31,14 +32,13 @@
             <td th:text="${servico.periodoPreparatorio} + ' dias'" ></td>
             <td th:text="${servico.periodoTrabalhoCampo} + ' dias'"></td>
             <td th:text="${servico.periodoTrabalhoEscritorio} + ' dias'"></td>
-            <td th:text="${servico.observacoes}"></td>
+            <td th:text="${servico.observacoes}" class="observacoes"></td>
         </tr>
     </tbody>
 </table>
+</main>
 
-<div class="footer">
-    <a href="/servicos" class="btn home-btn">Voltar</a>
-</div>
+<a class="btn fixed-btn" href="/servicos">Voltar para Serviços</a>
 
 </body>
 </html>
