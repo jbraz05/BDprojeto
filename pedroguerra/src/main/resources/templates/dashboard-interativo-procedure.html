@@ -22,6 +22,7 @@
 
 <main class="dashboard-content">
     <div class="grade-graficos">
+        <!-- Gráfico 1 -->
         <div class="grafico-box">
             <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico1')">
                 <label>Entidade:
@@ -56,6 +57,7 @@
             </div>
         </div>
 
+        <!-- Gráfico 2 -->
         <div class="grafico-box">
             <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico2')">
                 <label>Entidade:
@@ -90,6 +92,7 @@
             </div>
         </div>
 
+        <!-- Gráfico 3 -->
         <div class="grafico-box">
             <form class="grafico-form" onsubmit="gerarGrafico(event, 'grafico3')">
                 <label>Entidade:
@@ -137,6 +140,10 @@ function gerarGrafico(event, canvasId) {
     const metrica = form.metrica.value;
     const tipo = form.tipo.value;
 
+    gerarGraficoComParametros(canvasId, entidade, metrica, tipo);
+}
+
+function gerarGraficoComParametros(canvasId, entidade, metrica, tipo) {
     fetch('/dashboard-interativo-procedure/dados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -146,8 +153,6 @@ function gerarGrafico(event, canvasId) {
     .then(data => {
         const labels = Object.keys(data);
         const valores = Object.values(data);
-        const canvas = document.getElementById(canvasId);
-        canvas.height = 330; // aumenta a altura do canvas
         const ctx = document.getElementById(canvasId).getContext('2d');
 
         if (charts[canvasId]) {
@@ -161,7 +166,6 @@ function gerarGrafico(event, canvasId) {
                 datasets: [{
                     label: `${metrica} por ${entidade}`,
                     data: valores,
-                    borderColor: 'white',
                     backgroundColor: [
                         'rgba(0, 76, 255, 0.7)',
                         'rgba(220, 53, 69, 0.7)',
@@ -169,6 +173,7 @@ function gerarGrafico(event, canvasId) {
                         'rgba(83, 15, 21, 0.7)',
                         'rgba(0, 230, 118, 0.7)'
                     ],
+                    borderColor: 'white',
                     tension: 0.3
                 }]
             },
@@ -179,107 +184,51 @@ function gerarGrafico(event, canvasId) {
                     tooltip: { mode: 'index', intersect: false }
                 },
                 scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
-                    y: { beginAtZero: true,  beginAtZero: true, ticks:{color: 'white'}, title:{color: 'white'}},
-                    x: { ticks:{color: 'white'}, title:{color: 'white'}}
+                    y: { beginAtZero: true, ticks:{color: 'white'}, title:{color: 'white'} },
+                    x: { ticks:{color: 'white'}, title:{color: 'white'} }
                 }
             }
         });
     });
 }
 
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.dashboard-content');
+    const toggleBtn = document.querySelector('.toggle-btn');
+
+    const isCollapsed = sidebar.classList.toggle('collapsed');
+    content.classList.toggle('collapsed');
+    toggleBtn.style.left = isCollapsed ? '80px' : '280px';
+    localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-    const presets = [
-        { entidade: 'empresa', metrica: 'valor', tipo: 'bar', canvasId: 'grafico1' },
-        { entidade: 'cliente', metrica: 'quantidade', tipo: 'pie', canvasId: 'grafico2' },
-        { entidade: 'funcionario', metrica: 'concluidos', tipo: 'doughnut', canvasId: 'grafico3' }
-    ];
+    const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.dashboard-content');
+    const toggleBtn = document.querySelector('.toggle-btn');
 
-    presets.forEach(({ entidade, metrica, tipo, canvasId }) => {
-        fetch('/dashboard-interativo-procedure/dados', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ entidade, metrica })
-        })
-        .then(res => res.json())
-        .then(data => {
-            const labels = Object.keys(data);
-            const valores = Object.values(data);
-            const canvas = document.getElementById(canvasId);
-            canvas.height = 330; // aumenta a altura do canvas
-            const ctx = document.getElementById(canvasId).getContext('2d');
+    const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
 
-            if (charts[canvasId]) charts[canvasId].destroy();
-
-            charts[canvasId] = new Chart(ctx, {
-                type: tipo,
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: `${metrica} por ${entidade}`,
-                        data: valores,
-                        borderColor: 'white',
-                        backgroundColor: [
-                            'rgba(0, 76, 255, 0.7)',
-                            'rgba(220, 53, 69, 0.7)',
-                            'rgba(0, 24, 81, 0.7)',
-                            'rgba(83, 15, 21, 0.7)',
-                            'rgba(0, 230, 118, 0.7)'
-                        ],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true, labels: {color: 'white'} },
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: tipo === 'pie' || tipo === 'doughnut' || tipo === 'radar' ? {} : {
-                        y: { beginAtZero: true, ticks:{color: 'white'}, title:{color: 'white'}},
-                        x: { ticks:{color: 'white'}, title:{color: 'white'}}
-                    }
-                }
-            });
-        });
-    });
-});
-</script>
-<script>
-    function toggleSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        const content = document.querySelector('.dashboard-content');
-        const toggleBtn = document.querySelector('.toggle-btn');
-
-        const isCollapsed = sidebar.classList.toggle('collapsed');
-        content.classList.toggle('collapsed');
-        toggleBtn.style.left = isCollapsed ? '80px' : '280px';
-
-        // Salva o estado no localStorage
-        localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
+    if (collapsed) {
+        sidebar.classList.add('collapsed');
+        content.classList.add('collapsed');
+        toggleBtn.style.left = '80px';
+    } else {
+        toggleBtn.style.left = '280px';
     }
 
-    // Aplica o estado salvo ao carregar a página
-    window.addEventListener('DOMContentLoaded', () => {
-        const sidebar = document.querySelector('.sidebar');
-        const content = document.querySelector('.main-content');
-        const toggleBtn = document.querySelector('.toggle-btn');
-
-        const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-
-        if (collapsed) {
-            sidebar.classList.add('collapsed');
-            content.classList.add('collapsed');
-            toggleBtn.style.left = '80px';
-        } else {
-            toggleBtn.style.left = '280px';
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
         }
-
-        // Marca como ativo o link da URL atual
-        document.querySelectorAll('.sidebar a').forEach(link => {
-            if (link.href === window.location.href) {
-                link.classList.add('active');
-            }
-        });
     });
+
+    // Carregar dashboards predefinidos
+    gerarGraficoComParametros('grafico1', 'empresa', 'valor', 'bar');
+    gerarGraficoComParametros('grafico2', 'cliente', 'quantidade', 'pie');
+    gerarGraficoComParametros('grafico3', 'funcionario', 'concluidos', 'doughnut');
+});
 </script>
 </body>
 </html>

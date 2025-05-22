@@ -1,8 +1,7 @@
 package com.pedroguerra.dao;
 
-import java.math.BigDecimal;
-import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -16,62 +15,25 @@ public class DashboardInterativoProcedureDAO {
         this.connection = connection;
     }
 
-    private Map<String, BigDecimal> executarProcedure(String nomeProcedure) throws SQLException {
-        Map<String, BigDecimal> resultado = new LinkedHashMap<>();
+    public Map<String, Double> obterDados(String entidade, String metrica) {
+        Map<String, Double> dados = new LinkedHashMap<>();
+        String sql = "CALL proc_dashboard_interativo(?, ?)";
 
-        try (CallableStatement stmt = connection.prepareCall("{CALL " + nomeProcedure + "()}");
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, entidade);
+            stmt.setString(2, metrica);
 
-            while (rs.next()) {
-                resultado.put(rs.getString("nome"), rs.getBigDecimal("total"));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nome = rs.getString(1); // Nome da entidade (empresa, cliente, funcionario)
+                    double valor = rs.getDouble(2); // Valor agregado
+                    dados.put(nome, valor);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return resultado;
-    }
-
-    public Map<String, BigDecimal> getValorTotalPorEntidade(String entidade) throws SQLException {
-        return switch (entidade.toLowerCase()) {
-            case "empresa" -> executarProcedure("proc_valor_total_por_empresa");
-            case "cliente" -> executarProcedure("proc_valor_total_por_cliente");
-            case "funcionario" -> executarProcedure("proc_valor_total_por_funcionario");
-            default -> Map.of(); // vazio
-        };
-    }
-
-    public Map<String, BigDecimal> getQuantidadeServicosPorEntidade(String entidade) throws SQLException {
-        return switch (entidade.toLowerCase()) {
-            case "empresa" -> executarProcedure("proc_quantidade_servicos_por_empresa");
-            case "cliente" -> executarProcedure("proc_quantidade_servicos_por_cliente");
-            case "funcionario" -> executarProcedure("proc_quantidade_servicos_por_funcionario");
-            default -> Map.of();
-        };
-    }
-
-    public Map<String, BigDecimal> getAreaTotalPorEntidade(String entidade) throws SQLException {
-        return switch (entidade.toLowerCase()) {
-            case "empresa" -> executarProcedure("proc_area_total_por_empresa");
-            case "cliente" -> executarProcedure("proc_area_total_por_cliente");
-            case "funcionario" -> executarProcedure("proc_area_total_por_funcionario");
-            default -> Map.of();
-        };
-    }
-
-    public Map<String, BigDecimal> getServicosConcluidosPorEntidade(String entidade) throws SQLException {
-        return switch (entidade.toLowerCase()) {
-            case "empresa" -> executarProcedure("proc_servicos_concluidos_por_empresa");
-            case "cliente" -> executarProcedure("proc_servicos_concluidos_por_cliente");
-            case "funcionario" -> executarProcedure("proc_servicos_concluidos_por_funcionario");
-            default -> Map.of();
-        };
-    }
-
-    public Map<String, BigDecimal> getTempoMedioTotalPorEntidade(String entidade) throws SQLException {
-        return switch (entidade.toLowerCase()) {
-            case "empresa" -> executarProcedure("proc_tempo_medio_total_por_empresa");
-            case "cliente" -> executarProcedure("proc_tempo_medio_total_por_cliente");
-            case "funcionario" -> executarProcedure("proc_tempo_medio_total_por_funcionario");
-            default -> Map.of();
-        };
+        return dados;
     }
 }
