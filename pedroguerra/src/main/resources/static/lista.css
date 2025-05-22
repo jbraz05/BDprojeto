@@ -135,6 +135,16 @@ form button:hover {
     margin-left: 100px;
 }
 
+.table-servico {
+    overflow-x: auto;
+}
+
+td.observacoes {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 400px;
+}
+
 table {
     width: max-content;
     min-width: 100%;
