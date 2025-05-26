@@ -20,17 +20,30 @@
     </nav>
 
     <main class="main-content">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; margin-bottom: 40px;">
-        <div style="flex: 1 1 400px; background-color: #1a1a1a; padding: 25px; border-radius: 12px; min-width: 280px;">
-            <h1 style="font-size: 26px; color: #00d4ff; margin-bottom: 10px;">Bem-vindo ao Sistema de Gestão</h1>
-            <p style="font-size: 16px; color: #ccc;">
-                Este sistema permite cadastrar empresas, funcionários, serviços, clientes, localizações e visualizar dashboards
-                com dados analíticos interativos. Use o menu lateral ou os atalhos abaixo para navegar pelas funcionalidades.
-            </p>
-        </div>
-
         <div class="logo-container">
             <img src="/images/GUERRA ENGENHARIA.png" alt="Logo da Empresa" class="empresa-logo">
+        </div>
+        <div class="grid-box">
+            <a href="/empresa/listar" class="card">
+                <i class="fas fa-building"></i>
+                <h3>Empresas</h3>
+                <p>Gerencie as empresas.</p>
+            </a>
+            <a href="/funcionarios" class="card">
+                <i class="fas fa-user"></i>
+                <h3>Funcionários</h3>
+                <p>Visualize os colaboradores.</p>
+            </a>
+            <a href="/servicos" class="card">
+                <i class="fas fa-tools"></i>
+                <h3>Serviços</h3>
+                <p>Controle os serviços prestados.</p>
+            </a>
+            <a href="/dashboard-interativo-procedure" class="card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Dashboards</h3>
+                <p>Acompanhe indicadores.</p>
+            </a>
         </div>
     </main>
 

@@ -26,15 +26,55 @@ header {
 }
 
 .main-content {
-    margin-left: 220px;
+    margin-left: 200px;
     width: calc(100% - 220px);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #25262e;
     transition: margin-left 0.3s ease;
     overflow: hidden;
+}
+
+.grid-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+    margin-left: 180px;
+}
+
+.card {
+    background-color: #17181e;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card i {
+    font-size: 2rem;
+    color: #004cff;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.card p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
 }
 
 .sidebar {
@@ -80,39 +120,10 @@ header {
     padding-left: 10px;
 }
 
-.main-content {
-    margin-left: 220px;
-    padding: 20px;
-    width: calc(100% - 220px);
-}
-
 .main-title {
     font-size: 32px;
     color: #ffffff;
     margin-bottom: 30px;
-}
-
-.grid-container {
-    margin-left: 250px; 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    padding: 20px;
-}
-
-.card {
-    background-color: #3a4353;
-    padding: 25px 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    width: 250px;
-    text-align: center;
-}
-
-.card h2 {
-    margin-bottom: 15px;
-    color: #f2f5f7;
 }
 
 .btn {
@@ -214,7 +225,6 @@ header {
 }
 
 .main-content.collapsed {
-    margin-left: 80px;
     width: calc(100% - 80px);
 }
 
@@ -226,8 +236,9 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     padding: 40px;
+    width: 90%;
+    margin-left: 120px;
 }
 
 .empresa-logo {
