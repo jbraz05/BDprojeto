@@ -7,7 +7,8 @@ Projeto da Disciplina de Banco de Dados do 4º Período
 
 <summary>Links Gerais</summary>
 
-  - Relatório: https://docs.google.com/document/d/10fnU7U5O56TH1g30A9MZzKfAZ_S37P5FUuB6zCR-rLA/edit?tab=t.0
+  - Relatório 1: https://docs.google.com/document/d/10fnU7U5O56TH1g30A9MZzKfAZ_S37P5FUuB6zCR-rLA/edit?tab=t.0
+  - Relatório 2: https://docs.google.com/document/d/1-rUbIUBDdSKfVMSRTcTPKtVu4rAfgXs3_LiSbOpjjNw/edit?usp=sharing
   
 </details>
 
